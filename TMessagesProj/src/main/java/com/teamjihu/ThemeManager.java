@@ -11,7 +11,8 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 
 public class ThemeManager {
-	private static final String CUSTOM_PERMISSION = "kr.co.iconnect.inputmethod.ikeypad.theme.V1";
+    private static final String CUSTOM_PERMISSION = "kr.co.iconnect.inputmethod.ikeypad.theme.V1";
+    private static final String DEFAULT_THEME_NAME = "com.teamjihu.telegram";
 	private PackageManager mPackageManager = null;
 	private String mCurrentTheme = null;
 	private Resources mCurrentThemeResource = null;
@@ -27,7 +28,7 @@ public class ThemeManager {
 		try {
 			mCurrentThemeResource = mPackageManager.getResourcesForApplication(mCurrentTheme);
 		} catch (NameNotFoundException e) {
-			setCurrentTheme("com.teamjihu.taroplayer");
+			setCurrentTheme(DEFAULT_THEME_NAME);
 		}
 	}
 	
@@ -88,7 +89,7 @@ public class ThemeManager {
 			if(nullIfNotExist)
 				return null;
 			String currentTheme = getCurrentTheme();
-			setCurrentTheme("com.teamjihu.taroplayer");
+			setCurrentTheme(DEFAULT_THEME_NAME);
 			Drawable ret = getDrawable(name, false);
 			setCurrentTheme(currentTheme);
 			return ret;
@@ -101,7 +102,7 @@ public class ThemeManager {
 			return mCurrentThemeResource.getColor(id);
 		} catch(Resources.NotFoundException ex) {
 			String currentTheme = getCurrentTheme();
-			setCurrentTheme("com.teamjihu.taroplayer");
+			setCurrentTheme(DEFAULT_THEME_NAME);
 			int ret = getColor(name);
 			setCurrentTheme(currentTheme);
 			return ret;
