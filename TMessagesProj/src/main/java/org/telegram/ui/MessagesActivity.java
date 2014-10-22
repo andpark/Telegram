@@ -130,6 +130,7 @@ public class MessagesActivity extends BaseFragment implements NotificationCenter
     public View createView(LayoutInflater inflater, ViewGroup container) {
         if (fragmentView == null) {
             ActionBarMenu menu = actionBarLayer.createMenu();
+
             menu.addItem(0, R.drawable.ic_ab_search).setIsSearchField(true).setActionBarMenuItemSearchListener(new ActionBarMenuItem.ActionBarMenuItemSearchListener() {
                 @Override
                 public void onSearchExpand() {
