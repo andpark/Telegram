@@ -98,6 +98,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
     private int contactsSectionRow;
     private int contactsReimportRow;
     private int contactsSortRow;
+    private int selectThemeRow;
     private int rowCount;
 
     private static class LinkMovementMethodMy extends LinkMovementMethod {
@@ -179,6 +180,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
         numberSectionRow = rowCount++;
         numberRow = rowCount++;
         settingsSectionRow = rowCount++;
+        selectThemeRow = rowCount++;
         enableAnimationsRow = rowCount++;
         languageRow = rowCount++;
         notificationRow = rowCount++;
@@ -294,6 +296,8 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                         presentFragment(new SettingsBlockedUsersActivity());
                     } else if (i == backgroundRow) {
                         presentFragment(new SettingsWallpapersActivity());
+                    } else if (i == selectThemeRow) {
+                        presentFragment(new SettingsThemeActivity());
                     } else if (i == askQuestionRow) {
                         if (getParentActivity() == null) {
                             return;
@@ -724,7 +728,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
             return i == textSizeRow || i == enableAnimationsRow || i == blockedRow || i == notificationRow || i == backgroundRow ||
                     i == askQuestionRow || i == sendLogsRow || i == sendByEnterRow || i == terminateSessionsRow || i == wifiDownloadRow ||
                     i == mobileDownloadRow || i == clearLogsRow || i == roamingDownloadRow || i == languageRow ||
-                    i == switchBackendButtonRow || i == telegramFaqRow || i == contactsSortRow || i == contactsReimportRow || i == saveToGalleryRow;
+                    i == switchBackendButtonRow || i == telegramFaqRow || i == contactsSortRow || i == contactsReimportRow || i == saveToGalleryRow || i == selectThemeRow;
         }
 
         @Override
@@ -900,6 +904,9 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                 } else if (i == contactsReimportRow) {
                     textView.setText(LocaleController.getString("ImportContacts", R.string.ImportContacts));
                     divider.setVisibility(View.INVISIBLE);
+                } else if(i == selectThemeRow) {
+                    textView.setText(LocaleController.getString("SelectTheme", R.string.SelectTheme));
+                    divider.setVisibility(View.VISIBLE);
                 }
             } else if (type == 3) {
                 if (view == null) {
@@ -1079,7 +1086,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                 return 5;
             } else if (i == enableAnimationsRow || i == sendByEnterRow || i == saveToGalleryRow) {
                 return 3;
-            } else if (i == numberRow || i == notificationRow || i == blockedRow || i == backgroundRow || i == askQuestionRow || i == sendLogsRow || i == terminateSessionsRow || i == clearLogsRow || i == switchBackendButtonRow || i == telegramFaqRow || i == contactsReimportRow) {
+            } else if (i == numberRow || i == notificationRow || i == blockedRow || i == backgroundRow || i == askQuestionRow || i == sendLogsRow || i == terminateSessionsRow || i == clearLogsRow || i == switchBackendButtonRow || i == telegramFaqRow || i == contactsReimportRow || i == selectThemeRow) {
                 return 2;
             } else if (i == logoutRow) {
                 return 4;
