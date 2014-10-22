@@ -6,8 +6,8 @@
     android:layout_height="wrap_content"
     android:paddingTop="13dp"
     android:paddingBottom="12dp">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="abcvd" />
+    <ListView
+        android:id="@+id/theme_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></ListView>
 </LinearLayout>
