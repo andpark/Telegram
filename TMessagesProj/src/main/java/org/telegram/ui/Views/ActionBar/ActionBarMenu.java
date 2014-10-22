@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.graphics.drawable.Drawable;
 
 import org.telegram.android.AndroidUtilities;
 
@@ -58,6 +59,38 @@ public class ActionBarMenu extends LinearLayout {
             }
         });
         return view;
+    }
+
+    public ActionBarMenuItem addItem(int id, Drawable icon) {
+        return addItem(id, icon, parentActionBarLayer.itemsBackgroundResourceId);
+    }
+
+    public ActionBarMenuItem addItem(int id, Drawable icon, int backgroundResource) {
+        ActionBarMenuItem menuItem = new ActionBarMenuItem(getContext(), this, parentActionBar, backgroundResource);
+        menuItem.setTag(id);
+        menuItem.setScaleType(ImageView.ScaleType.CENTER);
+        menuItem.setImageDrawable(icon);
+        addView(menuItem);
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams)menuItem.getLayoutParams();
+        layoutParams.height = FrameLayout.LayoutParams.MATCH_PARENT;
+        layoutParams.width = AndroidUtilities.dp(56);
+        menuItem.setLayoutParams(layoutParams);
+        menuItem.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ActionBarMenuItem item = (ActionBarMenuItem)view;
+                if (item.hasSubMenu()) {
+                    if (parentActionBarLayer.actionBarMenuOnItemClick.canOpenMenu()) {
+                        item.toggleSubMenu();
+                    }
+                } else if (item.isSearchField()) {
+                    parentActionBarLayer.onSearchFieldVisibilityChanged(item.toggleSearch());
+                } else {
+                    onItemClick((Integer)view.getTag());
+                }
+            }
+        });
+        return menuItem;
     }
 
     public ActionBarMenuItem addItem(int id, int icon) {
