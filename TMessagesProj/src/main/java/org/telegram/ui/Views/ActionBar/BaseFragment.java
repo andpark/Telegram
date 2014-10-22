@@ -19,7 +19,7 @@ import android.view.ViewGroup;
 
 import org.telegram.messenger.ConnectionsManager;
 import org.telegram.messenger.FileLog;
-import org.telegram.messenger.R;
+import org.telegram.messenger.phonethemeshop.R;
 
 public class BaseFragment {
     private boolean isFinished = false;

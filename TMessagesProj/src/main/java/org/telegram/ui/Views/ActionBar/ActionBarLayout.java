@@ -33,7 +33,7 @@ import android.widget.FrameLayout;
 import org.telegram.android.AndroidUtilities;
 import org.telegram.android.NotificationCenter;
 import org.telegram.messenger.FileLog;
-import org.telegram.messenger.R;
+import org.telegram.messenger.phonethemeshop.R;
 
 import java.util.ArrayList;
 

@@ -33,7 +33,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.telegram.messenger.R;
+import org.telegram.messenger.phonethemeshop.R;
 
 public class PagerSlidingTabStrip extends HorizontalScrollView {
 
