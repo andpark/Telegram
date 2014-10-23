@@ -41,7 +41,7 @@ public class SettingsThemeActivity extends BaseFragment {
             });
 
             fragmentView = inflater.inflate(R.layout.settings_theme_layout, container, false);
-            mThemeManager = new ThemeManager(getParentActivity().getPackageManager());
+            mThemeManager = new ThemeManager(getParentActivity());
             getThemeList();
         } else {
             ViewGroup parent = (ViewGroup)fragmentView.getParent();

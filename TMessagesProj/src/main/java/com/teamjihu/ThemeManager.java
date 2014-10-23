@@ -9,21 +9,50 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.PermissionInfo;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.content.Context;
+import android.content.SharedPreferences;
 
 public class ThemeManager {
 	private static final String CUSTOM_PERMISSION = "com.teamjihu.theme.telegram.v1";
     private static final String DEFAULT_THEME_PACKAGE = "org.telegram.messenger.phonethemeshop";
+    private static final String PREF_NAME = "THEME_PREF";
+    private static final String PREF_THEME_PACKAGE = "PREF_THEME_PACKAGE";
 	private PackageManager mPackageManager = null;
 	private String mCurrentTheme = null;
 	private Resources mCurrentThemeResource = null;
+    private Context mContext = null;
 	
-	public ThemeManager(PackageManager pm) {
-		mPackageManager = pm;
-        setCurrentTheme(DEFAULT_THEME_PACKAGE);
+	public ThemeManager(Context context) {
+        if(mContext != context) {
+            mContext = context;
+            mPackageManager = mContext.getPackageManager();
+        }
+
+        setTheme();
 	}
-	
-	
-	public void setCurrentTheme(String themePkgName) {
+
+    private void setTheme() {
+        String curTheme = getPreference(mContext, PREF_THEME_PACKAGE, DEFAULT_THEME_PACKAGE);
+        setCurrentTheme(curTheme);
+    }
+
+    public void applyTheme(String themePackageName) {
+        setPreference(mContext, PREF_THEME_PACKAGE, themePackageName);
+        setTheme();
+    }
+
+    private static String getPreference(Context context, String name, String defaultValue) {
+        SharedPreferences prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        return prefs.getString(name, defaultValue);
+    }
+    private static void setPreference(Context context, String name, String data) {
+        SharedPreferences prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(name, data);
+        editor.commit();
+    }
+
+	private void setCurrentTheme(String themePkgName) {
 		mCurrentTheme = themePkgName;
 		
 		try {
