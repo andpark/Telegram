@@ -46,6 +46,7 @@ import org.telegram.ui.Views.ActionBar.BaseFragment;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+import com.teamjihu.ThemeManager;
 
 public class MessagesActivity extends BaseFragment implements NotificationCenter.NotificationCenterDelegate {
     private ListView messagesListView;
@@ -80,6 +81,8 @@ public class MessagesActivity extends BaseFragment implements NotificationCenter
     private final static int messages_list_menu_settings = 5;
     private final static int messages_list_menu_new_broadcast = 6;
 
+    private ThemeManager themeManager;
+
     public static interface MessagesActivityDelegate {
         public abstract void didSelectDialog(MessagesActivity fragment, long dialog_id, boolean param);
     }
@@ -109,6 +112,7 @@ public class MessagesActivity extends BaseFragment implements NotificationCenter
             MessagesController.getInstance().loadDialogs(0, 0, 100, true);
             dialogsLoaded = true;
         }
+
         return true;
     }
 
@@ -130,8 +134,10 @@ public class MessagesActivity extends BaseFragment implements NotificationCenter
     public View createView(LayoutInflater inflater, ViewGroup container) {
         if (fragmentView == null) {
             ActionBarMenu menu = actionBarLayer.createMenu();
-
-            menu.addItem(0, R.drawable.ic_ab_search).setIsSearchField(true).setActionBarMenuItemSearchListener(new ActionBarMenuItem.ActionBarMenuItemSearchListener() {
+            //menu.addItem(0, R.drawable.ic_ab_search).setIsSearchField(true).setActionBarMenuItemSearchListener(new ActionBarMenuItem.ActionBarMenuItemSearchListener() {
+            // initialize theme manager
+            themeManager = new ThemeManager(getParentActivity());
+            menu.addItem(0, themeManager.getDrawable("ic_ab_search", false)).setIsSearchField(true).setActionBarMenuItemSearchListener(new ActionBarMenuItem.ActionBarMenuItemSearchListener() {
                 @Override
                 public void onSearchExpand() {
                     searching = true;
