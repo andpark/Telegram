@@ -3,6 +3,9 @@
 <!--Translated by Telegram Team, corrected by Florian Keller-->
 
 <resources>
+    <!--theme name-->
+    <string name="theme_title">기본테마</string>
+    <!-- -->
     <string name="AppName">Telegram for PhoneThemeShop</string>
     <string name="LanguageName">English</string>
     <string name="LanguageNameInEnglish">English</string>

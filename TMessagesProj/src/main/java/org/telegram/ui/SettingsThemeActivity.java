@@ -58,12 +58,12 @@ public class SettingsThemeActivity extends BaseFragment {
 
         ListView themeList = (ListView)fragmentView.findViewById(R.id.theme_list);
         mThemeManager.GetThemeList(pkgs, names);
-        for ( int i = 0; i < pkgs.size(); i++ ) {
-            FrameLayout themeItem = (FrameLayout)INFLATER.inflate(R.layout.theme_item, themeList, false);
-            TextView themeName = (TextView)themeItem.findViewById(R.id.theme_name);
-            themeName.setText(names.get(i));
-
-            themeList.addView(themeItem);
-        }
+//        for ( int i = 0; i < pkgs.size(); i++ ) {
+//            FrameLayout themeItem = (FrameLayout)INFLATER.inflate(R.layout.theme_item, themeList, false);
+//            TextView themeName = (TextView)themeItem.findViewById(R.id.theme_name);
+//            themeName.setText(names.get(i));
+//
+//            themeList.addView(themeItem);
+//        }
     }
 }
