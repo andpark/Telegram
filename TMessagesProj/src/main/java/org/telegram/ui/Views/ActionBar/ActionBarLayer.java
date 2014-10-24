@@ -21,10 +21,13 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.teamjihu.ThemeManager;
+
 import org.telegram.android.AndroidUtilities;
 import org.telegram.messenger.phonethemeshop.R;
 
 public class ActionBarLayer extends FrameLayout {
+    private ThemeManager themeManager;
 
     public static class ActionBarMenuOnItemClick {
         public void onItemClick(int id) {
@@ -44,7 +47,9 @@ public class ActionBarLayer extends FrameLayout {
     private ActionBarMenu menu;
     private ActionBarMenu actionMode;
     private int logoResourceId;
+    private Drawable logoResourceDrawable;
     private int backResourceId;
+    private Drawable backResourceDrawable;
     protected ActionBar parentActionBar;
     private boolean oldUseLogo;
     private boolean oldUseBack;
@@ -80,6 +85,8 @@ public class ActionBarLayer extends FrameLayout {
             }
         });
         backButtonFrameLayout.setEnabled(false);
+
+        themeManager = new ThemeManager(context);
     }
 
     public ActionBarLayer(Context context) {
@@ -216,6 +223,7 @@ public class ActionBarLayer extends FrameLayout {
         menu.measure(width, height);
     }
 
+    /*
     public void setDisplayUseLogoEnabled(boolean value, int resource) {
         if (value && logoImageView == null) {
             logoResourceId = resource;
@@ -229,7 +237,22 @@ public class ActionBarLayer extends FrameLayout {
             positionLogoImage(getMeasuredHeight());
         }
     }
+    */
+    public void setDisplayUseLogoEnabled(boolean value, Drawable d) {
+        if (value && logoImageView == null) {
+            logoResourceDrawable = d;
+            logoImageView = new ImageView(getContext());
+            logoImageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+            backButtonFrameLayout.addView(logoImageView);
+        }
+        if (logoImageView != null) {
+            logoImageView.setVisibility(value ? VISIBLE : GONE);
+            logoImageView.setImageDrawable(d);
+            positionLogoImage(getMeasuredHeight());
+        }
+    }
 
+    /*
     public void setDisplayHomeAsUpEnabled(boolean value, int resource) {
         if (value && backButtonImageView == null) {
             backResourceId = resource;
@@ -240,6 +263,20 @@ public class ActionBarLayer extends FrameLayout {
             backButtonImageView.setVisibility(value ? VISIBLE : GONE);
             backButtonFrameLayout.setEnabled(value);
             backButtonImageView.setImageResource(resource);
+            positionBackImage(getMeasuredHeight());
+        }
+    }
+    */
+    public void setDisplayHomeAsUpEnabled(boolean value, Drawable d) {
+        if (value && backButtonImageView == null) {
+            backResourceDrawable = d;
+            backButtonImageView = new ImageView(getContext());
+            backButtonFrameLayout.addView(backButtonImageView);
+        }
+        if (backButtonImageView != null) {
+            backButtonImageView.setVisibility(value ? VISIBLE : GONE);
+            backButtonFrameLayout.setEnabled(value);
+            backButtonImageView.setImageDrawable(d);
             positionBackImage(getMeasuredHeight());
         }
     }
@@ -414,15 +451,15 @@ public class ActionBarLayer extends FrameLayout {
         backButtonFrameLayout.setPadding(0, 0, visible ? 0 : AndroidUtilities.dp(4), 0);
         if (visible) {
             oldUseLogo = logoImageView != null && logoImageView.getVisibility() == VISIBLE;
-            setDisplayUseLogoEnabled(true, R.drawable.ic_ab_search);
+            setDisplayUseLogoEnabled(true, themeManager.getDrawable("ic_ab_search", false));
         } else {
-            setDisplayUseLogoEnabled(oldUseLogo, logoResourceId);
+            setDisplayUseLogoEnabled(oldUseLogo, logoResourceDrawable);
         }
         if (visible) {
             oldUseBack = backButtonImageView != null && backButtonImageView.getVisibility() == VISIBLE;
-            setDisplayHomeAsUpEnabled(true, R.drawable.ic_ab_back);
+            setDisplayHomeAsUpEnabled(true, themeManager.getDrawable("ic_ab_back", false));
         } else {
-            setDisplayHomeAsUpEnabled(oldUseBack, backResourceId);
+            setDisplayHomeAsUpEnabled(oldUseBack, backResourceDrawable);
         }
         positionBackOverlay(getMeasuredWidth(), getMeasuredHeight());
     }

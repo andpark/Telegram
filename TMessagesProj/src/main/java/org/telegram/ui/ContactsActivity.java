@@ -28,6 +28,8 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.teamjihu.ThemeManager;
+
 import org.telegram.android.AndroidUtilities;
 import org.telegram.android.LocaleController;
 import org.telegram.android.MessagesStorage;
@@ -76,6 +78,8 @@ public class ContactsActivity extends BaseFragment implements NotificationCenter
     private boolean allowUsernameSearch = true;
     private ContactsActivityDelegate delegate;
 
+    private ThemeManager themeManager;
+
     public static interface ContactsActivityDelegate {
         public abstract void didSelectContact(TLRPC.User user, String param);
     }
@@ -123,7 +127,8 @@ public class ContactsActivity extends BaseFragment implements NotificationCenter
     @Override
     public View createView(LayoutInflater inflater, ViewGroup container) {
         if (fragmentView == null) {
-            actionBarLayer.setDisplayHomeAsUpEnabled(true, R.drawable.ic_ab_back);
+            themeManager = new ThemeManager(getParentActivity());
+            actionBarLayer.setDisplayHomeAsUpEnabled(true, themeManager.getDrawable("ic_ab_back", false));
             actionBarLayer.setBackOverlay(R.layout.updating_state_layout);
             if (destroyAfterSelect) {
                 actionBarLayer.setTitle(LocaleController.getString("SelectContact", R.string.SelectContact));
@@ -141,7 +146,8 @@ public class ContactsActivity extends BaseFragment implements NotificationCenter
             });
 
             ActionBarMenu menu = actionBarLayer.createMenu();
-            menu.addItem(0, R.drawable.ic_ab_search).setIsSearchField(true).setActionBarMenuItemSearchListener(new ActionBarMenuItem.ActionBarMenuItemSearchListener() {
+            //menu.addItem(0, R.drawable.ic_ab_search).setIsSearchField(true).setActionBarMenuItemSearchListener(new ActionBarMenuItem.ActionBarMenuItemSearchListener() {
+            menu.addItem(0, themeManager.getDrawable("ic_ab_search", false)).setIsSearchField(true).setActionBarMenuItemSearchListener(new ActionBarMenuItem.ActionBarMenuItemSearchListener() {
                 @Override
                 public void onSearchExpand() {
                     searching = true;

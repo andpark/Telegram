@@ -179,13 +179,14 @@ public class MessagesActivity extends BaseFragment implements NotificationCenter
                 }
             });
             if (onlySelect) {
-                actionBarLayer.setDisplayHomeAsUpEnabled(true, R.drawable.ic_ab_back);
+                //actionBarLayer.setDisplayHomeAsUpEnabled(true, themeManager.getDrawable("ic_ab_back", false));
+                actionBarLayer.setDisplayHomeAsUpEnabled(true, themeManager.getDrawable("ic_ab_back", false));
                 actionBarLayer.setTitle(LocaleController.getString("SelectChat", R.string.SelectChat));
             } else {
-                actionBarLayer.setDisplayUseLogoEnabled(true, R.drawable.ic_ab_logo);
+                actionBarLayer.setDisplayUseLogoEnabled(true, themeManager.getDrawable("ic_ab_logo", false));
                 actionBarLayer.setTitle(LocaleController.getString("AppName", R.string.AppName));
-                menu.addItem(messages_list_menu_new_messages, R.drawable.ic_ab_compose);
-                ActionBarMenuItem item = menu.addItem(0, R.drawable.ic_ab_other);
+                menu.addItem(messages_list_menu_new_messages, themeManager.getDrawable("ic_ab_compose", false));
+                ActionBarMenuItem item = menu.addItem(0, themeManager.getDrawable("ic_ab_other", false));
                 item.addSubItem(messages_list_menu_new_chat, LocaleController.getString("NewGroup", R.string.NewGroup), 0);
                 item.addSubItem(messages_list_menu_new_secret_chat, LocaleController.getString("NewSecretChat", R.string.NewSecretChat), 0);
                 item.addSubItem(messages_list_menu_new_broadcast, LocaleController.getString("NewBroadcastList", R.string.NewBroadcastList), 0);

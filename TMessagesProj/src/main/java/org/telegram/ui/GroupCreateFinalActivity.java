@@ -21,6 +21,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.teamjihu.ThemeManager;
+
 import org.telegram.android.AndroidUtilities;
 import org.telegram.messenger.ConnectionsManager;
 import org.telegram.android.LocaleController;
@@ -58,6 +60,8 @@ public class GroupCreateFinalActivity extends BaseFragment implements Notificati
     private boolean isBroadcast = false;
 
     private final static int done_button = 1;
+
+    private ThemeManager themeManager;
 
     public GroupCreateFinalActivity(Bundle args) {
         super(args);
@@ -120,7 +124,9 @@ public class GroupCreateFinalActivity extends BaseFragment implements Notificati
     @Override
     public View createView(LayoutInflater inflater, ViewGroup container) {
         if (fragmentView == null) {
-            actionBarLayer.setDisplayHomeAsUpEnabled(true, R.drawable.ic_ab_back);
+            themeManager = new ThemeManager(getParentActivity());
+            //actionBarLayer.setDisplayHomeAsUpEnabled(true, R.drawable.ic_ab_back);
+            actionBarLayer.setDisplayHomeAsUpEnabled(true, themeManager.getDrawable("ic_ab_back", false));
             actionBarLayer.setBackOverlay(R.layout.updating_state_layout);
             if (isBroadcast) {
                 actionBarLayer.setTitle(LocaleController.getString("NewBroadcastList", R.string.NewBroadcastList));

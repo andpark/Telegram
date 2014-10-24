@@ -24,6 +24,8 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.teamjihu.ThemeManager;
+
 import org.telegram.android.AndroidUtilities;
 import org.telegram.android.LocaleController;
 import org.telegram.android.MediaController;
@@ -41,6 +43,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class PhotoPickerActivity extends BaseFragment implements NotificationCenter.NotificationCenterDelegate, PhotoViewer.PhotoViewerProvider {
+    private ThemeManager themeManager;
 
     public static interface PhotoPickerActivityDelegate {
         public abstract void didSelectPhotos(ArrayList<String> photos);
@@ -84,10 +87,12 @@ public class PhotoPickerActivity extends BaseFragment implements NotificationCen
     @Override
     public View createView(LayoutInflater inflater, ViewGroup container) {
         if (fragmentView == null) {
+            themeManager = new ThemeManager(getParentActivity());
             actionBarLayer.setBackgroundColor(0xff333333);
             actionBarLayer.setItemsBackground(R.drawable.bar_selector_picker);
-            actionBarLayer.setDisplayUseLogoEnabled(true, R.drawable.gallery);
-            actionBarLayer.setDisplayHomeAsUpEnabled(true, R.drawable.photo_back);
+            actionBarLayer.setDisplayUseLogoEnabled(true, themeManager.getDrawable("gallery", false));
+            //actionBarLayer.setDisplayHomeAsUpEnabled(true, R.drawable.photo_back);
+            actionBarLayer.setDisplayHomeAsUpEnabled(true, themeManager.getDrawable("photo_back", false));
             actionBarLayer.setTitle(LocaleController.getString("Gallery", R.string.Gallery));
             actionBarLayer.setActionBarMenuOnItemClick(new ActionBarLayer.ActionBarMenuOnItemClick() {
                 @Override
@@ -115,7 +120,8 @@ public class PhotoPickerActivity extends BaseFragment implements NotificationCen
             });
 
             ActionBarMenu menu = actionBarLayer.createMenu();
-            menu.addItem(1, R.drawable.ic_ab_other_white2);
+            //menu.addItem(1, R.drawable.ic_ab_other_white2);
+            menu.addItem(1, themeManager.getDrawable("ic_ab_other_white2", false));
 
             fragmentView = inflater.inflate(R.layout.photo_picker_layout, container, false);
 

@@ -11,6 +11,7 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.view.View;
 
 public class ThemeManager {
 	private static final String CUSTOM_PERMISSION = "com.teamjihu.theme.telegram.v1";
@@ -140,4 +141,11 @@ public class ThemeManager {
 			return ret;
 		}
 	}
+
+    public void setBackgroundDrawable( View v, Drawable d ) {
+        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN)
+            v.setBackgroundDrawable(d);
+        else
+            v.setBackground(d);
+    }
 }

@@ -33,6 +33,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.teamjihu.ThemeManager;
+
 import org.telegram.android.AndroidUtilities;
 import org.telegram.PhoneFormat.PhoneFormat;
 import org.telegram.android.LocaleController;
@@ -59,6 +61,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class GroupCreateActivity extends BaseFragment implements NotificationCenter.NotificationCenterDelegate {
+
+    private ThemeManager themeManager;
 
     public static class XImageSpan extends ImageSpan {
         public int uid;
@@ -138,7 +142,9 @@ public class GroupCreateActivity extends BaseFragment implements NotificationCen
     @Override
     public View createView(LayoutInflater inflater, ViewGroup container) {
         if (fragmentView == null) {
-            actionBarLayer.setDisplayHomeAsUpEnabled(true, R.drawable.ic_ab_back);
+            themeManager = new ThemeManager(getParentActivity());
+            //actionBarLayer.setDisplayHomeAsUpEnabled(true, R.drawable.ic_ab_back);
+            actionBarLayer.setDisplayHomeAsUpEnabled(true, themeManager.getDrawable("ic_ab_back", false));
             actionBarLayer.setBackOverlay(R.layout.updating_state_layout);
             if (isBroadcast) {
                 actionBarLayer.setTitle(LocaleController.getString("NewBroadcastList", R.string.NewBroadcastList));
@@ -562,8 +568,13 @@ public class GroupCreateActivity extends BaseFragment implements NotificationCen
             if (user.photo != null) {
                 photo = user.photo.photo_small;
             }
-            int placeHolderId = AndroidUtilities.getUserAvatarForId(user.id);
-            holder.avatarImage.setImage(photo, "50_50", placeHolderId);
+            String placeHolderId = AndroidUtilities.getUserAvatarForId(user.id);
+            //holder.avatarImage.setImage(photo, "50_50", placeHolderId);
+
+            Drawable d = themeManager.getDrawable(placeHolderId, false);
+            Bitmap bm = ((BitmapDrawable)d).getBitmap();
+            Bitmap bm2 = Bitmap.createScaledBitmap(bm, 50, 50, true);
+            holder.avatarImage.setImage(photo, "50_50", bm2);
 
             holder.messageTextView.setText(LocaleController.formatUserStatus(user));
             if (user.status != null && user.status.expires > ConnectionsManager.getInstance().getCurrentTime()) {

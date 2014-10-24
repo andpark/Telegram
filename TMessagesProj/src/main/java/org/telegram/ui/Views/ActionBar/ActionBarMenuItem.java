@@ -10,6 +10,7 @@ package org.telegram.ui.Views.ActionBar;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -121,6 +122,7 @@ public class ActionBarMenuItem extends ImageView {
         return super.onTouchEvent(event);
     }
 
+
     public void addSubItem(int id, String text, int icon) {
         if (popupLayout == null) {
             rect = new Rect();
@@ -180,6 +182,86 @@ public class ActionBarMenuItem extends ImageView {
                 textView.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(icon), null, null, null);
             } else {
                 textView.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(icon), null);
+            }
+        }
+        popupLayout.addView(textView);
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams)textView.getLayoutParams();
+        if (LocaleController.isRTL) {
+            layoutParams.gravity = Gravity.RIGHT;
+        }
+        layoutParams.width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        layoutParams.height = AndroidUtilities.dp(48);
+        textView.setLayoutParams(layoutParams);
+        textView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                parentMenu.onItemClick((Integer) view.getTag());
+                if (popupWindow != null && popupWindow.isShowing()) {
+                    popupWindow.dismiss();
+                }
+            }
+        });
+    }
+
+    public void addSubItem(int id, String text, Drawable icon) {
+        if (popupLayout == null) {
+            rect = new Rect();
+            location = new int[2];
+            popupLayout = new ActionBarPopupWindow.ActionBarPopupWindowLayout(getContext());
+            popupLayout.setOrientation(LinearLayout.VERTICAL);
+            popupLayout.setBackgroundResource(R.drawable.popup_fixed);
+            popupLayout.setOnTouchListener(new OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                        if (popupWindow != null && popupWindow.isShowing()) {
+                            v.getHitRect(rect);
+                            if (!rect.contains((int)event.getX(), (int)event.getY())) {
+                                popupWindow.dismiss();
+                            }
+                        }
+                    }
+                    return false;
+                }
+            });
+            popupLayout.setDispatchKeyEventListener(new ActionBarPopupWindow.OnDispatchKeyEventListener() {
+                @Override
+                public void onDispatchKeyEvent(KeyEvent keyEvent) {
+                    if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_BACK && keyEvent.getRepeatCount() == 0 && popupWindow != null && popupWindow.isShowing()) {
+                        popupWindow.dismiss();
+                    }
+                }
+            });
+        }
+        if (popupLayout.getChildCount() != 0) {
+            View delimeter = new View(getContext());
+            delimeter.setBackgroundColor(0xffdcdcdc);
+            popupLayout.addView(delimeter);
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams)delimeter.getLayoutParams();
+            layoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT;
+            layoutParams.height = AndroidUtilities.density >= 3 ? 2 : 1;
+            delimeter.setLayoutParams(layoutParams);
+            delimeter.setTag(100 + id);
+        }
+        TextView textView = new TextView(getContext());
+        textView.setTextColor(0xff000000);
+        textView.setBackgroundResource(R.drawable.list_selector);
+        if (!LocaleController.isRTL) {
+            textView.setGravity(Gravity.CENTER_VERTICAL);
+        } else {
+            textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
+        }
+        textView.setPadding(AndroidUtilities.dp(16), 0, AndroidUtilities.dp(16), 0);
+        textView.setTextSize(18);
+        textView.setMinWidth(AndroidUtilities.dp(196));
+        textView.setTag(id);
+        textView.setText(text);
+        if (icon != null) {
+            textView.setCompoundDrawablePadding(AndroidUtilities.dp(12));
+            if (!LocaleController.isRTL) {
+                textView.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
+            } else {
+                textView.setCompoundDrawablesWithIntrinsicBounds(null, null, icon, null);
             }
         }
         popupLayout.addView(textView);

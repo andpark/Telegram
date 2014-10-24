@@ -16,7 +16,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
@@ -33,6 +36,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.teamjihu.ThemeManager;
 
 import org.telegram.android.AndroidUtilities;
 import org.telegram.android.ContactsController;
@@ -103,6 +108,8 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
     private int contactsSortRow;
     private int selectThemeRow;
     private int rowCount;
+
+    private ThemeManager themeManager;
 
     private static class LinkMovementMethodMy extends LinkMovementMethod {
         @Override
@@ -229,7 +236,9 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
     @Override
     public View createView(LayoutInflater inflater, ViewGroup container) {
         if (fragmentView == null) {
-            actionBarLayer.setDisplayHomeAsUpEnabled(true, R.drawable.ic_ab_back);
+            themeManager = new ThemeManager(getParentActivity());
+            //actionBarLayer.setDisplayHomeAsUpEnabled(true, R.drawable.ic_ab_back);
+            actionBarLayer.setDisplayHomeAsUpEnabled(true, themeManager.getDrawable("ic_ab_back", false));
             actionBarLayer.setBackOverlay(R.layout.updating_state_layout);
             actionBarLayer.setTitle(LocaleController.getString("Settings", R.string.Settings));
             actionBarLayer.setActionBarMenuOnItemClick(new ActionBarLayer.ActionBarMenuOnItemClick() {
@@ -830,7 +839,14 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                         photo = user.photo.photo_small;
                         photoBig = user.photo.photo_big;
                     }
-                    avatarImage.setImage(photo, "50_50", AndroidUtilities.getUserAvatarForId(user.id));
+                    //avatarImage.setImage(photo, "50_50", AndroidUtilities.getUserAvatarForId(user.id));
+                    String placeHolderId = AndroidUtilities.getUserAvatarForId(user.id);
+
+                    Drawable d = themeManager.getDrawable(placeHolderId, false);
+                    Bitmap bm = ((BitmapDrawable)d).getBitmap();
+                    Bitmap bm2 = Bitmap.createScaledBitmap(bm, 50, 50, true);
+                    avatarImage.setImage(photo, "50_50", bm2);
+
                     avatarImage.imageReceiver.setVisible(!PhotoViewer.getInstance().isShowingImage(photoBig), false);
                 }
                 return view;

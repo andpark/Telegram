@@ -13,6 +13,9 @@ import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.util.AttributeSet;
@@ -28,6 +31,8 @@ import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.teamjihu.ThemeManager;
 
 import org.telegram.android.AndroidUtilities;
 import org.telegram.android.ContactsController;
@@ -85,6 +90,8 @@ public class PopupNotificationActivity extends Activity implements NotificationC
     private float moveStartX = -1;
     private boolean startedMoving = false;
     private Runnable onAnimationEndRunnable = null;
+
+    private ThemeManager themeManager;
 
     private class FrameLayoutTouch extends FrameLayoutFixed {
         public FrameLayoutTouch(Context context) {
@@ -187,8 +194,11 @@ public class PopupNotificationActivity extends Activity implements NotificationC
         layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
         actionBar.setLayoutParams(layoutParams);
 
+        themeManager = new ThemeManager(this);
+
         actionBarLayer = actionBar.createLayer();
-        actionBarLayer.setDisplayHomeAsUpEnabled(true, R.drawable.ic_ab_back);
+        //actionBarLayer.setDisplayHomeAsUpEnabled(true, R.drawable.ic_ab_back);
+        actionBarLayer.setDisplayHomeAsUpEnabled(true, themeManager.getDrawable("ic_ab_back", false));
         actionBarLayer.setBackgroundResource(R.color.header);
         actionBarLayer.setItemsBackground(R.drawable.bar_selector);
         actionBar.setCurrentActionBarLayer(actionBarLayer);
@@ -791,7 +801,7 @@ public class PopupNotificationActivity extends Activity implements NotificationC
 
     private void checkAndUpdateAvatar() {
         TLRPC.FileLocation newPhoto = null;
-        int placeHolderId = 0;
+        String placeHolderId = "";
         if (currentChat != null) {
             TLRPC.Chat chat = MessagesController.getInstance().getChat(currentChat.id);
             if (chat == null) {
@@ -814,7 +824,12 @@ public class PopupNotificationActivity extends Activity implements NotificationC
             placeHolderId = AndroidUtilities.getUserAvatarForId(currentUser.id);
         }
         if (avatarImageView != null) {
-            avatarImageView.setImage(newPhoto, "50_50", placeHolderId);
+            //avatarImageView.setImage(newPhoto, "50_50", placeHolderId);
+
+            Drawable d = themeManager.getDrawable(placeHolderId, false);
+            Bitmap bm = ((BitmapDrawable)d).getBitmap();
+            Bitmap bm2 = Bitmap.createScaledBitmap(bm, 50, 50, true);
+            avatarImageView.setImage(newPhoto, "50_50", bm2);
         }
     }
 

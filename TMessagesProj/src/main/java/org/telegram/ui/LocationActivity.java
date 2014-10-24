@@ -9,6 +9,9 @@
 package org.telegram.ui;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.view.LayoutInflater;
@@ -26,6 +29,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.teamjihu.ThemeManager;
 
 import org.telegram.android.AndroidUtilities;
 import org.telegram.android.ContactsController;
@@ -63,6 +67,8 @@ public class LocationActivity extends BaseFragment implements NotificationCenter
     private final static int map_list_menu_satellite = 3;
     private final static int map_list_menu_hybrid = 4;
 
+    private ThemeManager themeManager;
+
     public static interface LocationActivityDelegate {
         public abstract void didSelectLocation(double latitude, double longitude);
     }
@@ -91,7 +97,9 @@ public class LocationActivity extends BaseFragment implements NotificationCenter
     @Override
     public View createView(LayoutInflater inflater, ViewGroup container) {
         if (fragmentView == null) {
-            actionBarLayer.setDisplayHomeAsUpEnabled(true, R.drawable.ic_ab_back);
+            themeManager = new ThemeManager(getParentActivity());
+            //actionBarLayer.setDisplayHomeAsUpEnabled(true, R.drawable.ic_ab_back);
+            actionBarLayer.setDisplayHomeAsUpEnabled(true, themeManager.getDrawable("ic_ab_back", false));
             actionBarLayer.setBackOverlay(R.layout.updating_state_layout);
             if (messageObject != null) {
                 actionBarLayer.setTitle(LocaleController.getString("ChatLocation", R.string.ChatLocation));
@@ -131,7 +139,8 @@ public class LocationActivity extends BaseFragment implements NotificationCenter
             ActionBarMenu menu = actionBarLayer.createMenu();
             menu.addItem(map_to_my_location, R.drawable.ic_ab_location);
 
-            ActionBarMenuItem item = menu.addItem(0, R.drawable.ic_ab_other);
+            //ActionBarMenuItem item = menu.addItem(0, R.drawable.ic_ab_other);
+            ActionBarMenuItem item = menu.addItem(0, themeManager.getDrawable("ic_ab_other", false));
             item.addSubItem(map_list_menu_map, LocaleController.getString("Map", R.string.Map), 0);
             item.addSubItem(map_list_menu_satellite, LocaleController.getString("Satellite", R.string.Satellite), 0);
             item.addSubItem(map_list_menu_hybrid, LocaleController.getString("Hybrid", R.string.Hybrid), 0);
@@ -236,7 +245,14 @@ public class LocationActivity extends BaseFragment implements NotificationCenter
                         if (user.photo != null) {
                             photo = user.photo.photo_small;
                         }
-                        avatarImageView.setImage(photo, "50_50", AndroidUtilities.getUserAvatarForId(user.id));
+                        //avatarImageView.setImage(photo, "50_50", AndroidUtilities.getUserAvatarForId(user.id));
+                        String placeHolderId = AndroidUtilities.getUserAvatarForId(user.id);
+
+                        Drawable d = themeManager.getDrawable(placeHolderId, false);
+                        Bitmap bm = ((BitmapDrawable)d).getBitmap();
+                        Bitmap bm2 = Bitmap.createScaledBitmap(bm, 50, 50, true);
+                        avatarImageView.setImage(photo, "50_50", bm2);
+
                         nameTextView.setText(ContactsController.formatName(user.first_name, user.last_name));
                     }
                     userLocation = new Location("network");
@@ -285,7 +301,14 @@ public class LocationActivity extends BaseFragment implements NotificationCenter
                 if (user.photo != null) {
                     photo = user.photo.photo_small;
                 }
-                avatarImageView.setImage(photo, null, AndroidUtilities.getUserAvatarForId(user.id));
+                //avatarImageView.setImage(photo, null, AndroidUtilities.getUserAvatarForId(user.id));
+                String placeHolderId = AndroidUtilities.getUserAvatarForId(user.id);
+
+                Drawable d = themeManager.getDrawable(placeHolderId, false);
+                Bitmap bm = ((BitmapDrawable)d).getBitmap();
+                Bitmap bm2 = Bitmap.createScaledBitmap(bm, 50, 50, true);
+                avatarImageView.setImage(photo, null, bm2);
+
                 nameTextView.setText(ContactsController.formatName(user.first_name, user.last_name));
             }
         }

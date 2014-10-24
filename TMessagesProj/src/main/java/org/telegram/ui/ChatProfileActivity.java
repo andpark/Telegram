@@ -12,7 +12,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -22,6 +25,8 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.teamjihu.ThemeManager;
 
 import org.telegram.android.AndroidUtilities;
 import org.telegram.android.LocaleController;
@@ -75,6 +80,8 @@ public class ChatProfileActivity extends BaseFragment implements NotificationCen
     private int rowCount = 0;
 
     private static final int done_button = 1;
+
+    private ThemeManager themeManager;
 
     public ChatProfileActivity(Bundle args) {
         super(args);
@@ -172,7 +179,8 @@ public class ChatProfileActivity extends BaseFragment implements NotificationCen
 
     public View createView(LayoutInflater inflater, ViewGroup container) {
         if (fragmentView == null) {
-            actionBarLayer.setDisplayHomeAsUpEnabled(true, R.drawable.ic_ab_back);
+            themeManager = new ThemeManager(getParentActivity());
+            actionBarLayer.setDisplayHomeAsUpEnabled(true, themeManager.getDrawable("ic_ab_back", false));
             actionBarLayer.setBackOverlay(R.layout.updating_state_layout);
             if (chat_id > 0) {
                 actionBarLayer.setTitle(LocaleController.getString("GroupInfo", R.string.GroupInfo));
@@ -643,7 +651,14 @@ public class ChatProfileActivity extends BaseFragment implements NotificationCen
                     photo = chat.photo.photo_small;
                     photoBig = chat.photo.photo_big;
                 }
-                avatarImage.setImage(photo, "50_50", chat_id > 0 ? AndroidUtilities.getGroupAvatarForId(chat.id) : AndroidUtilities.getBroadcastAvatarForId(chat.id));
+                //avatarImage.setImage(photo, "50_50", chat_id > 0 ? AndroidUtilities.getGroupAvatarForId(chat.id) : AndroidUtilities.getBroadcastAvatarForId(chat.id));
+
+                String placeHolderId =  chat_id > 0 ? AndroidUtilities.getGroupAvatarForId(chat.id) : AndroidUtilities.getBroadcastAvatarForId(chat.id);
+                Drawable d = themeManager.getDrawable(placeHolderId, false);
+                Bitmap bm = ((BitmapDrawable)d).getBitmap();
+                Bitmap bm2 = Bitmap.createScaledBitmap(bm, 50, 50, true);
+                avatarImage.setImage(photo, "50_50", bm2);
+
                 avatarImage.imageReceiver.setVisible(!PhotoViewer.getInstance().isShowingImage(photoBig), false);
                 return view;
             } else if (type == 1) {

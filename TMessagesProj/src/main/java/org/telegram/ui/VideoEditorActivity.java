@@ -39,6 +39,7 @@ import com.coremedia.iso.boxes.TrackBox;
 import com.coremedia.iso.boxes.TrackHeaderBox;
 import com.googlecode.mp4parser.util.Matrix;
 import com.googlecode.mp4parser.util.Path;
+import com.teamjihu.ThemeManager;
 
 import org.telegram.android.AndroidUtilities;
 import org.telegram.android.LocaleController;
@@ -94,6 +95,8 @@ public class VideoEditorActivity extends BaseFragment implements TextureView.Sur
     private int estimatedSize = 0;
     private long esimatedDuration = 0;
     private long originalSize = 0;
+
+    private ThemeManager themeManager;
 
     public interface VideoEditorActivityDelegate {
         public abstract void didFinishEditVideo(String videoPath, long startTime, long endTime, int resultWidth, int resultHeight, int rotationValue, int originalWidth, int originalHeight, int bitrate, long estimatedSize, long estimatedDuration);
@@ -220,9 +223,11 @@ public class VideoEditorActivity extends BaseFragment implements TextureView.Sur
     @Override
     public View createView(LayoutInflater inflater, ViewGroup container) {
         if (fragmentView == null) {
+            themeManager = new ThemeManager(getParentActivity());
+            //actionBarLayer.setDisplayHomeAsUpEnabled(true, R.drawable.photo_back);
+            actionBarLayer.setDisplayHomeAsUpEnabled(true, themeManager.getDrawable("photo_back", false));
             actionBarLayer.setBackgroundColor(0xff333333);
             actionBarLayer.setItemsBackground(R.drawable.bar_selector_white);
-            actionBarLayer.setDisplayHomeAsUpEnabled(true, R.drawable.photo_back);
             actionBarLayer.setTitle(LocaleController.getString("EditVideo", R.string.EditVideo));
             actionBarLayer.setActionBarMenuOnItemClick(new ActionBarLayer.ActionBarMenuOnItemClick() {
                 @Override

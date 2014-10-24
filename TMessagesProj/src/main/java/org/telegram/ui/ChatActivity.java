@@ -21,6 +21,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -44,6 +45,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.teamjihu.ThemeManager;
 
 import org.telegram.android.AndroidUtilities;
 import org.telegram.PhoneFormat.PhoneFormat;
@@ -183,7 +186,9 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     private final static int attach_location = 10;
     private final static int chat_menu_avatar = 11;
 
-    AdapterView.OnItemLongClickListener onItemLongClickListener = new AdapterView.OnItemLongClickListener() {
+    private ThemeManager themeManager;
+
+        AdapterView.OnItemLongClickListener onItemLongClickListener = new AdapterView.OnItemLongClickListener() {
         @Override
         public boolean onItemLongClick(AdapterView<?> adapter, View view, int position, long id) {
             if (!actionBarLayer.isActionModeShowed()) {
@@ -434,7 +439,8 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
 
     public View createView(LayoutInflater inflater, ViewGroup container) {
         if (fragmentView == null) {
-            actionBarLayer.setDisplayHomeAsUpEnabled(true, R.drawable.ic_ab_back);
+            themeManager = new ThemeManager(getParentActivity());
+            actionBarLayer.setDisplayHomeAsUpEnabled(true, themeManager.getDrawable("ic_ab_back", false));
             if (AndroidUtilities.isTablet()) {
                 actionBarLayer.setExtraLeftMargin(4);
             }
@@ -641,12 +647,18 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 timeItem = menu.addItemResource(chat_enc_timer, R.layout.chat_header_enc_layout);
             }
 
-            ActionBarMenuItem item = menu.addItem(chat_menu_attach, R.drawable.ic_ab_attach);
-            item.addSubItem(attach_photo, LocaleController.getString("ChatTakePhoto", R.string.ChatTakePhoto), R.drawable.ic_attach_photo);
-            item.addSubItem(attach_gallery, LocaleController.getString("ChatGallery", R.string.ChatGallery), R.drawable.ic_attach_gallery);
-            item.addSubItem(attach_video, LocaleController.getString("ChatVideo", R.string.ChatVideo), R.drawable.ic_attach_video);
-            item.addSubItem(attach_document, LocaleController.getString("ChatDocument", R.string.ChatDocument), R.drawable.ic_ab_doc);
-            item.addSubItem(attach_location, LocaleController.getString("ChatLocation", R.string.ChatLocation), R.drawable.ic_attach_location);
+            //ActionBarMenuItem item = menu.addItem(chat_menu_attach, R.drawable.ic_ab_attach);
+            ActionBarMenuItem item = menu.addItem(0, themeManager.getDrawable("ic_ab_attach", false));
+//            item.addSubItem(attach_photo, LocaleController.getString("ChatTakePhoto", R.string.ChatTakePhoto), R.drawable.ic_attach_photo);
+//            item.addSubItem(attach_gallery, LocaleController.getString("ChatGallery", R.string.ChatGallery), R.drawable.ic_attach_gallery);
+//            item.addSubItem(attach_video, LocaleController.getString("ChatVideo", R.string.ChatVideo), R.drawable.ic_attach_video);
+//            item.addSubItem(attach_document, LocaleController.getString("ChatDocument", R.string.ChatDocument), R.drawable.ic_ab_doc);
+//            item.addSubItem(attach_location, LocaleController.getString("ChatLocation", R.string.ChatLocation), R.drawable.ic_attach_location);
+            item.addSubItem(attach_photo, LocaleController.getString("ChatTakePhoto", R.string.ChatTakePhoto), themeManager.getDrawable("ic_attach_photo", false));
+            item.addSubItem(attach_gallery, LocaleController.getString("ChatGallery", R.string.ChatGallery),themeManager.getDrawable("ic_attach_gallery", false));
+            item.addSubItem(attach_video, LocaleController.getString("ChatVideo", R.string.ChatVideo), themeManager.getDrawable("ic_attach_video", false));
+            item.addSubItem(attach_document, LocaleController.getString("ChatDocument", R.string.ChatDocument), themeManager.getDrawable("ic_ab_doc", false));
+            item.addSubItem(attach_location, LocaleController.getString("ChatLocation", R.string.ChatLocation), themeManager.getDrawable("ic_attach_location", false));
             menuItem = item;
 
             actionModeViews.clear();
@@ -1187,7 +1199,8 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
 
         if (avatarImageView != null) {
             TLRPC.FileLocation photo = null;
-            int placeHolderId = 0;
+            //int placeHolderId = 0;
+            String placeHolderId = "";
             if (currentUser != null) {
                 if (currentUser.photo != null) {
                     photo = currentUser.photo.photo_small;
@@ -1203,7 +1216,11 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                     placeHolderId = AndroidUtilities.getGroupAvatarForId(currentChat.id);
                 }
             }
-            avatarImageView.setImage(photo, "50_50", placeHolderId);
+            //avatarImageView.setImage(photo, "50_50", placeHolderId);
+            Drawable d = themeManager.getDrawable(placeHolderId, false);
+            Bitmap bm = ((BitmapDrawable)d).getBitmap();
+            Bitmap bm2 = Bitmap.createScaledBitmap(bm, 50, 50, true);
+            avatarImageView.setImage(photo, "50_50", bm2);
         }
     }
 
@@ -1452,7 +1469,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
 
     private void checkAndUpdateAvatar() {
         TLRPC.FileLocation newPhoto = null;
-        int placeHolderId = 0;
+        String placeHolderId = "";
         if (currentUser != null) {
             TLRPC.User user = MessagesController.getInstance().getUser(currentUser.id);
             if (user == null) {
@@ -1479,7 +1496,11 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             }
         }
         if (avatarImageView != null) {
-            avatarImageView.setImage(newPhoto, "50_50", placeHolderId);
+            //avatarImageView.setImage(newPhoto, "50_50", placeHolderId);
+            Drawable d = themeManager.getDrawable(placeHolderId, false);
+            Bitmap bm = ((BitmapDrawable)d).getBitmap();
+            Bitmap bm2 = Bitmap.createScaledBitmap(bm, 50, 50, true);
+            avatarImageView.setImage(newPhoto, "50_50", bm2);
         }
     }
 
@@ -3237,6 +3258,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                         });
                     } else if (view instanceof ChatContactCell) {
                         ((ChatContactCell)view).setContactDelegate(new ChatContactCell.ChatContactCellDelegate() {
+
                             @Override
                             public void didClickAddButton(ChatContactCell cell, TLRPC.User user) {
                                 if (actionBarLayer.isActionModeShowed()) {

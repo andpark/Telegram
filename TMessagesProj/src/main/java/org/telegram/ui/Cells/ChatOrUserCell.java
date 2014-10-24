@@ -17,6 +17,8 @@ import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.text.TextUtils;
 
+import com.teamjihu.ThemeManager;
+
 import org.telegram.android.AndroidUtilities;
 import org.telegram.PhoneFormat.PhoneFormat;
 import org.telegram.android.ContactsController;
@@ -56,8 +58,11 @@ public class ChatOrUserCell extends BaseCell {
     public boolean useSeparator = false;
     public float drawAlpha = 1;
 
+    private ThemeManager themeManager;
+
     public ChatOrUserCell(Context context) {
         super(context);
+        themeManager = new ThemeManager(context);
         init();
     }
 
@@ -151,7 +156,7 @@ public class ChatOrUserCell extends BaseCell {
     }
 
     public void update(int mask) {
-        int placeHolderId = 0;
+        String placeHolderId = "";
         TLRPC.FileLocation photo = null;
         if (user != null) {
             if (user.photo != null) {
@@ -215,7 +220,8 @@ public class ChatOrUserCell extends BaseCell {
 
 
         lastAvatar = photo;
-        avatarImage.setImage(photo, "50_50", placeHolderId == 0 ? null : getResources().getDrawable(placeHolderId), false);
+        //avatarImage.setImage(photo, "50_50", placeHolderId == 0 ? null : getResources().getDrawable(placeHolderId), false);
+        avatarImage.setImage(photo, "50_50", placeHolderId == "" ? null : themeManager.getDrawable(placeHolderId, false), false);
 
         if (getMeasuredWidth() != 0 || getMeasuredHeight() != 0) {
             buildLayout();
