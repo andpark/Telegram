@@ -681,7 +681,8 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 chatListView.setCacheColorHint(0);
                 try {
                     if (selectedBackground == 1000001) {
-                        ((SizeNotifierRelativeLayout) contentView).setBackgroundImage(R.drawable.background_hd);
+                        //((SizeNotifierRelativeLayout) contentView).setBackgroundImage(R.drawable.background_hd);
+                        ((SizeNotifierRelativeLayout) contentView).setBackgroundImage(themeManager.getDrawable("background_hd", false));
                     } else {
                         File toFile = new File(ApplicationLoader.applicationContext.getFilesDir(), "wallpaper.jpg");
                         if (toFile.exists()) {
@@ -699,7 +700,8 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                             }
                             isCustomTheme = true;
                         } else {
-                            ((SizeNotifierRelativeLayout) contentView).setBackgroundImage(R.drawable.background_hd);
+                            //((SizeNotifierRelativeLayout) contentView).setBackgroundImage(R.drawable.background_hd);
+                            ((SizeNotifierRelativeLayout) contentView).setBackgroundImage(themeManager.getDrawable("background_hd", false));
                         }
                     }
                 } catch (Exception e) {

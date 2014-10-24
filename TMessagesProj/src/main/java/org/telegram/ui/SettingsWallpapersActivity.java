@@ -29,6 +29,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.teamjihu.ThemeManager;
+
 import org.telegram.android.AndroidUtilities;
 import org.telegram.android.ImageLoader;
 import org.telegram.android.LocaleController;
@@ -67,6 +69,8 @@ public class SettingsWallpapersActivity extends BaseFragment implements Notifica
     private TLRPC.PhotoSize loadingSize = null;
     private String currentPicturePath;
 
+    private ThemeManager themeManager;
+
     @Override
     public boolean onFragmentCreate() {
         super.onFragmentCreate();
@@ -97,6 +101,7 @@ public class SettingsWallpapersActivity extends BaseFragment implements Notifica
     @Override
     public View createView(LayoutInflater inflater, ViewGroup container) {
         if (fragmentView == null) {
+            themeManager = new ThemeManager(getParentActivity());
             actionBarLayer.setCustomView(R.layout.settings_do_action_layout);
             Button cancelButton = (Button)actionBarLayer.findViewById(R.id.cancel_button);
             cancelButton.setOnClickListener(new View.OnClickListener() {
@@ -304,7 +309,8 @@ public class SettingsWallpapersActivity extends BaseFragment implements Notifica
                 FileLoader.getInstance().cancelLoadFile(loadingSize);
             }
             if (selectedBackground == 1000001) {
-                backgroundImage.setImageResource(R.drawable.background_hd);
+                //backgroundImage.setImageResource(R.drawable.background_hd);
+                backgroundImage.setImageDrawable(themeManager.getDrawable("background_hd", false));
                 backgroundImage.setBackgroundColor(0);
                 selectedColor = 0;
             } else if (selectedBackground == -1) {
