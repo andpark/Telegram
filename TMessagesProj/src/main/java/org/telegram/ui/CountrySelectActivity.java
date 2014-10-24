@@ -19,6 +19,8 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.teamjihu.ThemeManager;
+
 import org.telegram.android.AndroidUtilities;
 import org.telegram.messenger.FileLog;
 import org.telegram.android.LocaleController;
@@ -60,6 +62,8 @@ public class CountrySelectActivity extends BaseFragment {
 
     private Timer searchTimer;
     public ArrayList<Country> searchResult;
+
+    private ThemeManager themeManager;
 
     public static class Country {
         public String name;
@@ -121,7 +125,8 @@ public class CountrySelectActivity extends BaseFragment {
     @Override
     public View createView(LayoutInflater inflater, ViewGroup container) {
         if (fragmentView == null) {
-            actionBarLayer.setDisplayHomeAsUpEnabled(true, R.drawable.ic_ab_back);
+            themeManager = new ThemeManager(getParentActivity());
+            actionBarLayer.setDisplayHomeAsUpEnabled(true, themeManager.getDrawable("ic_ab_back", false));
             actionBarLayer.setBackOverlay(R.layout.updating_state_layout);
             actionBarLayer.setTitle(LocaleController.getString("ChooseCountry", R.string.ChooseCountry));
 
@@ -135,7 +140,8 @@ public class CountrySelectActivity extends BaseFragment {
             });
 
             ActionBarMenu menu = actionBarLayer.createMenu();
-            menu.addItem(0, R.drawable.ic_ab_search).setIsSearchField(true).setActionBarMenuItemSearchListener(new ActionBarMenuItem.ActionBarMenuItemSearchListener() {
+            //menu.addItem(0, R.drawable.ic_ab_search).setIsSearchField(true).setActionBarMenuItemSearchListener(new ActionBarMenuItem.ActionBarMenuItemSearchListener() {
+            menu.addItem(0, themeManager.getDrawable("ic_ab_search", false)).setIsSearchField(true).setActionBarMenuItemSearchListener(new ActionBarMenuItem.ActionBarMenuItemSearchListener() {
                 @Override
                 public void onSearchExpand() {
                     searching = true;

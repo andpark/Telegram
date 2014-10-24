@@ -12,10 +12,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.teamjihu.ThemeManager;
 
 import org.telegram.messenger.ConnectionsManager;
 import org.telegram.messenger.FileLog;
@@ -30,6 +33,8 @@ public class BaseFragment {
     protected Bundle arguments;
     private AlertDialog visibleDialog = null;
     protected boolean swipeBackEnabled = true;
+
+    private ThemeManager themeManager;
 
     public BaseFragment() {
         classGuid = ConnectionsManager.getInstance().generateClassGuid();
@@ -64,7 +69,10 @@ public class BaseFragment {
                 }
                 actionBarLayer = parentLayout.getInternalActionBar().createLayer();
                 actionBarLayer.parentFragment = this;
-                actionBarLayer.setBackgroundResource(R.color.header);
+
+                themeManager = new ThemeManager(getParentActivity());
+                themeManager.setBackgroundDrawable(actionBarLayer, themeManager.getDrawable("bg_actionbar", false));
+
                 actionBarLayer.setItemsBackground(R.drawable.bar_selector);
             }
         }

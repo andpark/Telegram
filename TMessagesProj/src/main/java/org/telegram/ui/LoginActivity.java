@@ -13,6 +13,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,8 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import com.teamjihu.ThemeManager;
 
 import org.telegram.android.AndroidUtilities;
 import org.telegram.messenger.FileLog;
@@ -36,6 +39,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class LoginActivity extends BaseFragment implements SlideView.SlideViewDelegate {
+    private ThemeManager themeManager;
+
     private int currentViewNum = 0;
     private SlideView[] views = new SlideView[3];
     private ProgressDialog progressDialog;
@@ -61,7 +66,8 @@ public class LoginActivity extends BaseFragment implements SlideView.SlideViewDe
     @Override
     public View createView(LayoutInflater inflater, ViewGroup container) {
         if (fragmentView == null) {
-            actionBarLayer.setDisplayUseLogoEnabled(true, R.drawable.ic_ab_logo);
+            themeManager = new ThemeManager(getParentActivity());
+            actionBarLayer.setDisplayUseLogoEnabled(true, themeManager.getDrawable("ic_ab_logo", false));
             actionBarLayer.setTitle(LocaleController.getString("AppName", R.string.AppName));
 
             actionBarLayer.setActionBarMenuOnItemClick(new ActionBarLayer.ActionBarMenuOnItemClick() {

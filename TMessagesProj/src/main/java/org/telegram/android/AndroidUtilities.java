@@ -44,6 +44,7 @@ public class AndroidUtilities {
     private static Boolean isTablet = null;
 
     public static int[] arrColors = {0xffee4928, 0xff41a903, 0xffe09602, 0xff0f94ed, 0xff8f3bf7, 0xfffc4380, 0xff00a1c4, 0xffeb7002};
+    /*
     public static int[] arrUsersAvatars = {
             R.drawable.user_red,
             R.drawable.user_green,
@@ -53,7 +54,17 @@ public class AndroidUtilities {
             R.drawable.user_pink,
             R.drawable.user_aqua,
             R.drawable.user_orange};
-
+     */
+    public static String[] arrUsersAvatars = {
+            "user_red",
+            "user_green",
+            "user_yellow",
+            "user_blue",
+            "user_violet",
+            "user_pink",
+            "user_aqua",
+            "user_orange"};
+    /*
     public static int[] arrGroupsAvatars = {
             R.drawable.group_red,
             R.drawable.group_green,
@@ -63,7 +74,18 @@ public class AndroidUtilities {
             R.drawable.group_pink,
             R.drawable.group_aqua,
             R.drawable.group_orange};
+    */
+    public static String[] arrGroupsAvatars = {
+            "group_red",
+            "group_green",
+            "group_yellow",
+            "group_blue",
+            "group_violet",
+            "group_pink",
+            "group_aqua",
+            "group_orange"};
 
+    /*
     public static int[] arrBroadcastAvatars = {
             R.drawable.broadcast_red,
             R.drawable.broadcast_green,
@@ -73,6 +95,16 @@ public class AndroidUtilities {
             R.drawable.broadcast_pink,
             R.drawable.broadcast_aqua,
             R.drawable.broadcast_orange};
+    */
+    public static String[] arrBroadcastAvatars = {
+            "broadcast_red",
+            "broadcast_green",
+            "broadcast_yellow",
+            "broadcast_blue",
+            "broadcast_violet",
+            "broadcast_pink",
+            "broadcast_aqua",
+            "broadcast_orange"};
 
     static {
         density = ApplicationLoader.applicationContext.getResources().getDisplayMetrics().density;
@@ -306,7 +338,7 @@ public class AndroidUtilities {
     }
 
     public static int getColorIndex(int id) {
-        int[] arr;
+        String[] arr;
         if (id >= 0) {
             arr = arrUsersAvatars;
         } else {
@@ -342,18 +374,19 @@ public class AndroidUtilities {
         return arrColors[getColorIndex(id)];
     }
 
-    public static int getUserAvatarForId(int id) {
+    public static String getUserAvatarForId(int id) {
         if (id / 1000 == 333 || id / 1000 == 777) {
-            return R.drawable.telegram_avatar;
+            //return R.drawable.telegram_avatar;
+            return "telegram_avatar";
         }
         return arrUsersAvatars[getColorIndex(id)];
     }
 
-    public static int getGroupAvatarForId(int id) {
+    public static String getGroupAvatarForId(int id) {
         return arrGroupsAvatars[getColorIndex(-Math.abs(id))];
     }
 
-    public static int getBroadcastAvatarForId(int id) {
+    public static String getBroadcastAvatarForId(int id) {
         return arrBroadcastAvatars[getColorIndex(-Math.abs(id))];
     }
 

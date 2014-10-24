@@ -12,7 +12,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,6 +25,8 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.teamjihu.ThemeManager;
 
 import org.telegram.android.AndroidUtilities;
 import org.telegram.PhoneFormat.PhoneFormat;
@@ -71,6 +76,8 @@ public class UserProfileActivity extends BaseFragment implements NotificationCen
     private int sharedMediaSectionRow;
     private int sharedMediaRow;
     private int rowCount = 0;
+
+    private ThemeManager themeManager;
 
     public UserProfileActivity(Bundle args) {
         super(args);
@@ -129,7 +136,9 @@ public class UserProfileActivity extends BaseFragment implements NotificationCen
     @Override
     public View createView(LayoutInflater inflater, ViewGroup container) {
         if (fragmentView == null) {
-            actionBarLayer.setDisplayHomeAsUpEnabled(true, R.drawable.ic_ab_back);
+            themeManager = new ThemeManager(getParentActivity());
+            //actionBarLayer.setDisplayHomeAsUpEnabled(true, R.drawable.ic_ab_back);
+            actionBarLayer.setDisplayHomeAsUpEnabled(true, themeManager.getDrawable("ic_ab_back", false));
             actionBarLayer.setBackOverlay(R.layout.updating_state_layout);
             if (dialog_id != 0) {
                 actionBarLayer.setTitle(LocaleController.getString("SecretTitle", R.string.SecretTitle));
@@ -432,7 +441,8 @@ public class UserProfileActivity extends BaseFragment implements NotificationCen
             if (user == null) {
                 return;
             }
-            ActionBarMenuItem item = menu.addItem(0, R.drawable.ic_ab_other);
+            //ActionBarMenuItem item = menu.addItem(0, R.drawable.ic_ab_other);
+            ActionBarMenuItem item = menu.addItem(0, themeManager.getDrawable("ic_ab_other", false));
             if (user.phone != null && user.phone.length() != 0) {
                 item.addSubItem(add_contact, LocaleController.getString("AddContact", R.string.AddContact), 0);
                 item.addSubItem(share_contact, LocaleController.getString("ShareContact", R.string.ShareContact), 0);
@@ -441,7 +451,8 @@ public class UserProfileActivity extends BaseFragment implements NotificationCen
                 item.addSubItem(block_contact, !userBlocked ? LocaleController.getString("BlockContact", R.string.BlockContact) : LocaleController.getString("Unblock", R.string.Unblock), 0);
             }
         } else {
-            ActionBarMenuItem item = menu.addItem(0, R.drawable.ic_ab_other);
+            //ActionBarMenuItem item = menu.addItem(0, R.drawable.ic_ab_other);
+            ActionBarMenuItem item = menu.addItem(0, themeManager.getDrawable("ic_ab_other", false));
             item.addSubItem(share_contact, LocaleController.getString("ShareContact", R.string.ShareContact), 0);
             item.addSubItem(block_contact, !userBlocked ? LocaleController.getString("BlockContact", R.string.BlockContact) : LocaleController.getString("Unblock", R.string.Unblock), 0);
             item.addSubItem(edit_contact, LocaleController.getString("EditContact", R.string.EditContact), 0);
@@ -550,7 +561,14 @@ public class UserProfileActivity extends BaseFragment implements NotificationCen
                     photo = user.photo.photo_small;
                     photoBig = user.photo.photo_big;
                 }
-                avatarImage.setImage(photo, "50_50", AndroidUtilities.getUserAvatarForId(user.id));
+                //avatarImage.setImage(photo, "50_50", AndroidUtilities.getUserAvatarForId(user.id));
+                String placeHolderId = AndroidUtilities.getUserAvatarForId(user.id);
+
+                Drawable d = themeManager.getDrawable(placeHolderId, false);
+                Bitmap bm = ((BitmapDrawable)d).getBitmap();
+                Bitmap bm2 = Bitmap.createScaledBitmap(bm, 50, 50, true);
+                avatarImage.setImage(photo, "50_50", bm2);
+
                 avatarImage.imageReceiver.setVisible(!PhotoViewer.getInstance().isShowingImage(photoBig), false);
                 return view;
             } else if (type == 1) {

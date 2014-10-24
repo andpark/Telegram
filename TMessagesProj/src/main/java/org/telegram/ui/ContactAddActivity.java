@@ -10,7 +10,10 @@ package org.telegram.ui;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -20,6 +23,8 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.teamjihu.ThemeManager;
 
 import org.telegram.android.AndroidUtilities;
 import org.telegram.PhoneFormat.PhoneFormat;
@@ -41,6 +46,8 @@ public class ContactAddActivity extends BaseFragment implements NotificationCent
     private BackupImageView avatarImage;
     private TextView onlineText;
     private TextView phoneText;
+
+    private ThemeManager themeManager;
 
     public ContactAddActivity(Bundle args) {
         super(args);
@@ -64,6 +71,7 @@ public class ContactAddActivity extends BaseFragment implements NotificationCent
     @Override
     public View createView(LayoutInflater inflater, ViewGroup container) {
         if (fragmentView == null) {
+            themeManager = new ThemeManager(getParentActivity());
             actionBarLayer.setCustomView(R.layout.settings_do_action_layout);
             Button cancelButton = (Button)actionBarLayer.findViewById(R.id.cancel_button);
             cancelButton.setOnClickListener(new View.OnClickListener() {
@@ -164,7 +172,13 @@ public class ContactAddActivity extends BaseFragment implements NotificationCent
         if (user.photo != null) {
             photo = user.photo.photo_small;
         }
-        avatarImage.setImage(photo, "50_50", AndroidUtilities.getUserAvatarForId(user.id));
+        //avatarImage.setImage(photo, "50_50", AndroidUtilities.getUserAvatarForId(user.id));
+        String placeHolderId = AndroidUtilities.getUserAvatarForId(user.id);
+
+        Drawable d = themeManager.getDrawable(placeHolderId, false);
+        Bitmap bm = ((BitmapDrawable)d).getBitmap();
+        Bitmap bm2 = Bitmap.createScaledBitmap(bm, 50, 50, true);
+        avatarImage.setImage(photo, "50_50", bm2);
     }
 
     public void didReceivedNotification(int id, Object... args) {

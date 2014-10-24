@@ -21,8 +21,7 @@
         android:textColor="#808080"
         android:gravity="center"
         android:textSize="24dp"
-        android:id="@+id/searchEmptyView"
-        android:visibility="invisible"/>
+        android:id="@+id/searchEmptyView"/>
 
     <LinearLayout
         android:layout_width="fill_parent"

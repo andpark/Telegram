@@ -24,6 +24,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.teamjihu.ThemeManager;
+
 import org.telegram.messenger.FileLog;
 import org.telegram.android.LocaleController;
 import org.telegram.messenger.phonethemeshop.R;
@@ -59,6 +61,8 @@ public class DocumentSelectActivity extends BaseFragment {
     private ArrayList<HistoryEntry> history = new ArrayList<HistoryEntry>();
     private long sizeLimit = 1024 * 1024 * 1024;
     private DocumentSelectActivityDelegate delegate;
+
+    private ThemeManager themeManager;
 
     private class ListItem {
         int icon;
@@ -130,7 +134,9 @@ public class DocumentSelectActivity extends BaseFragment {
         }
 
         if (fragmentView == null) {
-            actionBarLayer.setDisplayHomeAsUpEnabled(true, R.drawable.ic_ab_back);
+            themeManager = new ThemeManager(getParentActivity());
+            //actionBarLayer.setDisplayHomeAsUpEnabled(true, R.drawable.ic_ab_back);
+            actionBarLayer.setDisplayHomeAsUpEnabled(true, themeManager.getDrawable("ic_ab_back", false));
             actionBarLayer.setBackOverlay(R.layout.updating_state_layout);
             actionBarLayer.setTitle(LocaleController.getString("SelectFile", R.string.SelectFile));
             actionBarLayer.setActionBarMenuOnItemClick(new ActionBarLayer.ActionBarMenuOnItemClick() {
@@ -147,7 +153,8 @@ public class DocumentSelectActivity extends BaseFragment {
                 }
             });
             ActionBarMenu menu = actionBarLayer.createMenu();
-            ActionBarMenuItem item = menu.addItem(1, R.drawable.ic_ab_other);
+            //ActionBarMenuItem item = menu.addItem(1, R.drawable.ic_ab_other);
+            ActionBarMenuItem item = menu.addItem(1, themeManager.getDrawable("ic_ab_other", false));
 
             fragmentView = inflater.inflate(R.layout.document_select_layout, container, false);
             listAdapter = new ListAdapter(getParentActivity());

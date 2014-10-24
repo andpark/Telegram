@@ -26,6 +26,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.teamjihu.ThemeManager;
+
 import org.telegram.android.MessagesController;
 import org.telegram.android.MessagesStorage;
 import org.telegram.messenger.ConnectionsManager;
@@ -52,6 +54,8 @@ public class ProfileNotificationsActivity extends BaseFragment implements Notifi
     private int settingsLedRow;
     private int rowCount = 0;
 
+    private ThemeManager themeManager;
+
     public ProfileNotificationsActivity(Bundle args) {
         super(args);
         dialog_id = args.getLong("dialog_id");
@@ -76,7 +80,9 @@ public class ProfileNotificationsActivity extends BaseFragment implements Notifi
     @Override
     public View createView(LayoutInflater inflater, ViewGroup container) {
         if (fragmentView == null) {
-            actionBarLayer.setDisplayHomeAsUpEnabled(true, R.drawable.ic_ab_back);
+            themeManager = new ThemeManager(getParentActivity());
+            //actionBarLayer.setDisplayHomeAsUpEnabled(true, R.drawable.ic_ab_back);
+            actionBarLayer.setDisplayHomeAsUpEnabled(true, themeManager.getDrawable("ic_ab_back", false));
             actionBarLayer.setBackOverlay(R.layout.updating_state_layout);
 
             actionBarLayer.setTitle(LocaleController.getString("NotificationsAndSounds", R.string.NotificationsAndSounds));

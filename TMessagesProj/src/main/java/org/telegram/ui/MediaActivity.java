@@ -24,6 +24,8 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import com.teamjihu.ThemeManager;
+
 import org.telegram.android.AndroidUtilities;
 import org.telegram.android.LocaleController;
 import org.telegram.messenger.FileLoader;
@@ -54,6 +56,8 @@ public class MediaActivity extends BaseFragment implements NotificationCenter.No
     private int max_id = Integer.MAX_VALUE;
     private View progressView;
     private TextView emptyView;
+
+    private ThemeManager themeManager;
 
     public MediaActivity(Bundle args) {
         super(args);
@@ -87,7 +91,9 @@ public class MediaActivity extends BaseFragment implements NotificationCenter.No
     @Override
     public View createView(LayoutInflater inflater, ViewGroup container) {
         if (fragmentView == null) {
-            actionBarLayer.setDisplayHomeAsUpEnabled(true, R.drawable.ic_ab_back);
+            themeManager = new ThemeManager(getParentActivity());
+            //actionBarLayer.setDisplayHomeAsUpEnabled(true, R.drawable.ic_ab_back);
+            actionBarLayer.setDisplayHomeAsUpEnabled(true, themeManager.getDrawable("ic_ab_back", false));
             actionBarLayer.setBackOverlay(R.layout.updating_state_layout);
             actionBarLayer.setTitle(LocaleController.getString("SharedMedia", R.string.SharedMedia));
             actionBarLayer.setActionBarMenuOnItemClick(new ActionBarLayer.ActionBarMenuOnItemClick() {

@@ -9,13 +9,17 @@
 package org.telegram.ui.Cells;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.view.MotionEvent;
 import android.view.SoundEffectConstants;
+
+import com.teamjihu.ThemeManager;
 
 import org.telegram.android.AndroidUtilities;
 import org.telegram.messenger.FileLoader;
@@ -58,8 +62,11 @@ public class ChatAudioCell extends ChatBaseCell implements SeekBar.SeekBarDelega
     private TLRPC.FileLocation currentPhoto;
     private String currentNameString;
 
+    private ThemeManager themeManager;
+
     public ChatAudioCell(Context context) {
         super(context);
+        themeManager = new ThemeManager(context);
         TAG = MediaController.getInstance().generateObserverTag();
 
         avatarImage = new ImageReceiver(this);
@@ -354,9 +361,17 @@ public class ChatAudioCell extends ChatBaseCell implements SeekBar.SeekBarDelega
                 if (audioUser.photo != null) {
                     currentPhoto = audioUser.photo.photo_small;
                 }
-                avatarImage.setImage(currentPhoto, "50_50", getResources().getDrawable(AndroidUtilities.getUserAvatarForId(uid)), false);
+                //avatarImage.setImage(currentPhoto, "50_50", getResources().getDrawable(AndroidUtilities.getUserAvatarForId(uid)), false);
+                String placeHolderId = AndroidUtilities.getUserAvatarForId(uid);
+
+                Drawable d = themeManager.getDrawable(placeHolderId, false);
+                avatarImage.setImage(currentPhoto, "50_50", d, false);
             } else {
-                avatarImage.setImage((TLRPC.FileLocation)null, "50_50", getResources().getDrawable(AndroidUtilities.getUserAvatarForId(uid)), false);
+                //avatarImage.setImage((TLRPC.FileLocation)null, "50_50", getResources().getDrawable(AndroidUtilities.getUserAvatarForId(uid)), false);
+                String placeHolderId = AndroidUtilities.getUserAvatarForId(uid);
+
+                Drawable d = themeManager.getDrawable(placeHolderId, false);
+                avatarImage.setImage((TLRPC.FileLocation)null, "50_50", d, false);
             }
 
             if (messageObject.isOut()) {

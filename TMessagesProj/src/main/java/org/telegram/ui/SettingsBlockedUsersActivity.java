@@ -20,6 +20,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.teamjihu.ThemeManager;
+
 import org.telegram.PhoneFormat.PhoneFormat;
 import org.telegram.android.LocaleController;
 import org.telegram.messenger.TLRPC;
@@ -41,6 +43,8 @@ public class SettingsBlockedUsersActivity extends BaseFragment implements Notifi
 
     private final static int block_user = 1;
 
+    private ThemeManager themeManager;
+
     @Override
     public boolean onFragmentCreate() {
         super.onFragmentCreate();
@@ -60,7 +64,9 @@ public class SettingsBlockedUsersActivity extends BaseFragment implements Notifi
     @Override
     public View createView(LayoutInflater inflater, ViewGroup container) {
         if (fragmentView == null) {
-            actionBarLayer.setDisplayHomeAsUpEnabled(true, R.drawable.ic_ab_back);
+            themeManager = new ThemeManager(getParentActivity());
+            //actionBarLayer.setDisplayHomeAsUpEnabled(true, R.drawable.ic_ab_back);
+            actionBarLayer.setDisplayHomeAsUpEnabled(true, themeManager.getDrawable("ic_ab_back", false));
             actionBarLayer.setBackOverlay(R.layout.updating_state_layout);
             actionBarLayer.setTitle(LocaleController.getString("BlockedUsers", R.string.BlockedUsers));
             actionBarLayer.setActionBarMenuOnItemClick(new ActionBarLayer.ActionBarMenuOnItemClick() {

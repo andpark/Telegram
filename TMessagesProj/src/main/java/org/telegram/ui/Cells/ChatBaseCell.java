@@ -22,6 +22,8 @@ import android.view.MotionEvent;
 import android.view.SoundEffectConstants;
 import android.view.ViewConfiguration;
 
+import com.teamjihu.ThemeManager;
+
 import org.telegram.android.AndroidUtilities;
 import org.telegram.android.ContactsController;
 import org.telegram.android.LocaleController;
@@ -119,6 +121,8 @@ public class ChatBaseCell extends BaseCell {
 
     private int last_send_state = 0;
 
+    private ThemeManager themeManager;
+
     private final class CheckForTap implements Runnable {
         public void run() {
             if (pendingCheckForLongPress == null) {
@@ -160,7 +164,9 @@ public class ChatBaseCell extends BaseCell {
     }
 
     private void init() {
+        themeManager = new ThemeManager(getContext());
         if (backgroundDrawableIn == null) {
+            /*
             backgroundDrawableIn = getResources().getDrawable(R.drawable.msg_in);
             backgroundDrawableInSelected = getResources().getDrawable(R.drawable.msg_in_selected);
             backgroundDrawableOut = getResources().getDrawable(R.drawable.msg_out);
@@ -179,6 +185,25 @@ public class ChatBaseCell extends BaseCell {
             mediaBackgroundDrawable = getResources().getDrawable(R.drawable.phototime);
             broadcastDrawable = getResources().getDrawable(R.drawable.broadcast3);
             broadcastMediaDrawable = getResources().getDrawable(R.drawable.broadcast4);
+            */
+            backgroundDrawableIn = themeManager.getDrawable("msg_in", false);
+            backgroundDrawableInSelected = themeManager.getDrawable("msg_in_selected", false);
+            backgroundDrawableOut = themeManager.getDrawable("msg_out", false);
+            backgroundDrawableOutSelected = themeManager.getDrawable("msg_out_selected", false);
+            backgroundMediaDrawableIn = themeManager.getDrawable("msg_in_photo", false);
+            backgroundMediaDrawableInSelected = themeManager.getDrawable("msg_in_photo_selected", false);
+            backgroundMediaDrawableOut = themeManager.getDrawable("msg_out_photo", false);
+            backgroundMediaDrawableOutSelected = themeManager.getDrawable("msg_out_photo_selected", false);
+            checkDrawable = themeManager.getDrawable("msg_check", false);
+            halfCheckDrawable = themeManager.getDrawable("msg_halfcheck", false);
+            clockDrawable = themeManager.getDrawable("msg_clock", false);
+            checkMediaDrawable = themeManager.getDrawable("msg_check_w", false);
+            halfCheckMediaDrawable = themeManager.getDrawable("msg_halfcheck_w", false);
+            clockMediaDrawable = themeManager.getDrawable("msg_clock_photo", false);
+            errorDrawable = themeManager.getDrawable("msg_warning", false);
+            mediaBackgroundDrawable = themeManager.getDrawable("phototime", false);
+            broadcastDrawable = themeManager.getDrawable("broadcast3", false);
+            broadcastMediaDrawable = themeManager.getDrawable("broadcast4", false);
 
             timePaintIn = new TextPaint(TextPaint.ANTI_ALIAS_FLAG);
             timePaintIn.setTextSize(AndroidUtilities.dp(12));
@@ -265,7 +290,11 @@ public class ChatBaseCell extends BaseCell {
                 } else {
                     currentPhoto = null;
                 }
-                avatarImage.setImage(currentPhoto, "50_50", getResources().getDrawable(AndroidUtilities.getUserAvatarForId(currentUser.id)), false);
+                //avatarImage.setImage(currentPhoto, "50_50", getResources().getDrawable(AndroidUtilities.getUserAvatarForId(currentUser.id)), false);
+                String placeHolderId = AndroidUtilities.getUserAvatarForId(currentUser.id);
+
+                Drawable d = themeManager.getDrawable(placeHolderId, false);
+                avatarImage.setImage(currentPhoto, "50_50", d, false);
             } else {
                 avatarImage.setImage(null, "50_50", null, false);
             }

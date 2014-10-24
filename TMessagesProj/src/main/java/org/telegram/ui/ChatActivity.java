@@ -22,6 +22,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
@@ -49,6 +50,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.teamjihu.ThemeManager;
 
 import org.telegram.android.AndroidUtilities;
 import org.telegram.PhoneFormat.PhoneFormat;
@@ -185,6 +188,8 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     private final static int attach_document = 9;
     private final static int attach_location = 10;
     private final static int chat_menu_avatar = 11;
+
+    private ThemeManager themeManager;
 
     public ChatActivity(Bundle args) {
         super(args);
@@ -406,7 +411,8 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
 
     public View createView(LayoutInflater inflater, ViewGroup container) {
         if (fragmentView == null) {
-            actionBarLayer.setDisplayHomeAsUpEnabled(true, R.drawable.ic_ab_back);
+            themeManager = new ThemeManager(getParentActivity());
+            actionBarLayer.setDisplayHomeAsUpEnabled(true, themeManager.getDrawable("ic_ab_back", false));
             if (AndroidUtilities.isTablet()) {
                 actionBarLayer.setExtraLeftMargin(4);
             }
@@ -569,12 +575,18 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 timeItem = menu.addItemResource(chat_enc_timer, R.layout.chat_header_enc_layout);
             }
 
-            ActionBarMenuItem item = menu.addItem(chat_menu_attach, R.drawable.ic_ab_attach);
-            item.addSubItem(attach_photo, LocaleController.getString("ChatTakePhoto", R.string.ChatTakePhoto), R.drawable.ic_attach_photo);
-            item.addSubItem(attach_gallery, LocaleController.getString("ChatGallery", R.string.ChatGallery), R.drawable.ic_attach_gallery);
-            item.addSubItem(attach_video, LocaleController.getString("ChatVideo", R.string.ChatVideo), R.drawable.ic_attach_video);
-            item.addSubItem(attach_document, LocaleController.getString("ChatDocument", R.string.ChatDocument), R.drawable.ic_ab_doc);
-            item.addSubItem(attach_location, LocaleController.getString("ChatLocation", R.string.ChatLocation), R.drawable.ic_attach_location);
+            //ActionBarMenuItem item = menu.addItem(chat_menu_attach, R.drawable.ic_ab_attach);
+            ActionBarMenuItem item = menu.addItem(0, themeManager.getDrawable("ic_ab_attach", false));
+//            item.addSubItem(attach_photo, LocaleController.getString("ChatTakePhoto", R.string.ChatTakePhoto), R.drawable.ic_attach_photo);
+//            item.addSubItem(attach_gallery, LocaleController.getString("ChatGallery", R.string.ChatGallery), R.drawable.ic_attach_gallery);
+//            item.addSubItem(attach_video, LocaleController.getString("ChatVideo", R.string.ChatVideo), R.drawable.ic_attach_video);
+//            item.addSubItem(attach_document, LocaleController.getString("ChatDocument", R.string.ChatDocument), R.drawable.ic_ab_doc);
+//            item.addSubItem(attach_location, LocaleController.getString("ChatLocation", R.string.ChatLocation), R.drawable.ic_attach_location);
+            item.addSubItem(attach_photo, LocaleController.getString("ChatTakePhoto", R.string.ChatTakePhoto), themeManager.getDrawable("ic_attach_photo", false));
+            item.addSubItem(attach_gallery, LocaleController.getString("ChatGallery", R.string.ChatGallery),themeManager.getDrawable("ic_attach_gallery", false));
+            item.addSubItem(attach_video, LocaleController.getString("ChatVideo", R.string.ChatVideo), themeManager.getDrawable("ic_attach_video", false));
+            item.addSubItem(attach_document, LocaleController.getString("ChatDocument", R.string.ChatDocument), themeManager.getDrawable("ic_ab_doc", false));
+            item.addSubItem(attach_location, LocaleController.getString("ChatLocation", R.string.ChatLocation), themeManager.getDrawable("ic_attach_location", false));
             menuItem = item;
 
             actionModeViews.clear();
@@ -1051,7 +1063,8 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
 
         if (avatarImageView != null) {
             TLRPC.FileLocation photo = null;
-            int placeHolderId = 0;
+            //int placeHolderId = 0;
+            String placeHolderId = "";
             if (currentUser != null) {
                 if (currentUser.photo != null) {
                     photo = currentUser.photo.photo_small;
@@ -1067,7 +1080,11 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                     placeHolderId = AndroidUtilities.getGroupAvatarForId(currentChat.id);
                 }
             }
-            avatarImageView.setImage(photo, "50_50", placeHolderId);
+            //avatarImageView.setImage(photo, "50_50", placeHolderId);
+            Drawable d = themeManager.getDrawable(placeHolderId, false);
+            Bitmap bm = ((BitmapDrawable)d).getBitmap();
+            Bitmap bm2 = Bitmap.createScaledBitmap(bm, 50, 50, true);
+            avatarImageView.setImage(photo, "50_50", bm2);
         }
     }
 
@@ -1298,7 +1315,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
 
     private void checkAndUpdateAvatar() {
         TLRPC.FileLocation newPhoto = null;
-        int placeHolderId = 0;
+        String placeHolderId = "";
         if (currentUser != null) {
             TLRPC.User user = MessagesController.getInstance().getUser(currentUser.id);
             if (user == null) {
@@ -1325,7 +1342,11 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             }
         }
         if (avatarImageView != null) {
-            avatarImageView.setImage(newPhoto, "50_50", placeHolderId);
+            //avatarImageView.setImage(newPhoto, "50_50", placeHolderId);
+            Drawable d = themeManager.getDrawable(placeHolderId, false);
+            Bitmap bm = ((BitmapDrawable)d).getBitmap();
+            Bitmap bm2 = Bitmap.createScaledBitmap(bm, 50, 50, true);
+            avatarImageView.setImage(newPhoto, "50_50", bm2);
         }
     }
 
@@ -3180,16 +3201,20 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
         } else {
             if (messageType == 12) {
                 if (selected) {
-                    holder.chatBubbleView.setBackgroundResource(R.drawable.msg_out_selected);
+                    //holder.chatBubbleView.setBackgroundResource(R.drawable.msg_out_selected);
+                    themeManager.setBackgroundDrawable(holder.chatBubbleView, themeManager.getDrawable("msg_out_selected", false));
                 } else {
-                    holder.chatBubbleView.setBackgroundResource(R.drawable.msg_out);
+                    //holder.chatBubbleView.setBackgroundResource(R.drawable.msg_out);
+                    themeManager.setBackgroundDrawable(holder.chatBubbleView, themeManager.getDrawable("msg_out", false));
                 }
                 holder.chatBubbleView.setPadding(AndroidUtilities.dp(6), AndroidUtilities.dp(6), AndroidUtilities.dp(18), 0);
             } else if (messageType == 13) {
                 if (selected) {
-                    holder.chatBubbleView.setBackgroundResource(R.drawable.msg_in_selected);
+                    //holder.chatBubbleView.setBackgroundResource(R.drawable.msg_in_selected);
+                    themeManager.setBackgroundDrawable(holder.chatBubbleView, themeManager.getDrawable("msg_in_selected", false));
                 } else {
-                    holder.chatBubbleView.setBackgroundResource(R.drawable.msg_in);
+                    //holder.chatBubbleView.setBackgroundResource(R.drawable.msg_in);
+                    themeManager.setBackgroundDrawable(holder.chatBubbleView, themeManager.getDrawable("msg_in", false));
                 }
                 holder.chatBubbleView.setPadding(AndroidUtilities.dp(15), AndroidUtilities.dp(6), AndroidUtilities.dp(9), 0);
             }
@@ -3591,8 +3616,12 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 if (fromUser.photo != null) {
                     photo = fromUser.photo.photo_small;
                 }
-                int placeHolderId = AndroidUtilities.getUserAvatarForId(fromUser.id);
-                avatarImageView.setImage(photo, "50_50", placeHolderId);
+                String placeHolderId = AndroidUtilities.getUserAvatarForId(fromUser.id);
+                //avatarImageView.setImage(photo, "50_50", placeHolderId);
+                Drawable d = themeManager.getDrawable(placeHolderId, false);
+                Bitmap bm = ((BitmapDrawable)d).getBitmap();
+                Bitmap bm2 = Bitmap.createScaledBitmap(bm, 50, 50, true);
+                avatarImageView.setImage(photo, "50_50", bm2);
             }
 
             if (type != 12 && type != 13 && nameTextView != null && fromUser != null && type != 8 && type != 9) {
@@ -3612,17 +3641,35 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
 
                 if (type == 11) {
                     if (message.messageOwner.action instanceof TLRPC.TL_messageActionUserUpdatedPhoto) {
-                        photoImage.setImage(message.messageOwner.action.newUserPhoto.photo_small, "50_50", AndroidUtilities.getUserAvatarForId(currentUser.id));
+                        //photoImage.setImage(message.messageOwner.action.newUserPhoto.photo_small, "50_50", AndroidUtilities.getUserAvatarForId(currentUser.id));
+
+                        String placeHolderId =  AndroidUtilities.getUserAvatarForId(currentUser.id);
+                        Drawable d = themeManager.getDrawable(placeHolderId, false);
+                        Bitmap bm = ((BitmapDrawable)d).getBitmap();
+                        Bitmap bm2 = Bitmap.createScaledBitmap(bm, 50, 50, true);
+                        photoImage.setImage(message.messageOwner.action.newUserPhoto.photo_small, "50_50", bm2);
                     } else {
                         PhotoObject photo = PhotoObject.getClosestImageWithSize(message.photoThumbs, AndroidUtilities.dp(64));
                         if (photo != null) {
                             if (photo.image != null) {
                                 photoImage.setImageBitmap(photo.image);
                             } else {
-                                photoImage.setImage(photo.photoOwner.location, "50_50", AndroidUtilities.getGroupAvatarForId(currentChat.id));
+                                //photoImage.setImage(photo.photoOwner.location, "50_50", AndroidUtilities.getGroupAvatarForId(currentChat.id));
+
+                                String placeHolderId =  AndroidUtilities.getUserAvatarForId(currentChat.id);
+                                Drawable d = themeManager.getDrawable(placeHolderId, false);
+                                Bitmap bm = ((BitmapDrawable)d).getBitmap();
+                                Bitmap bm2 = Bitmap.createScaledBitmap(bm, 50, 50, true);
+                                photoImage.setImage(photo.photoOwner.location, "50_50", bm2);
                             }
                         } else {
-                            photoImage.setImageResource(AndroidUtilities.getGroupAvatarForId(currentChat.id));
+                            //photoImage.setImageResource(AndroidUtilities.getGroupAvatarForId(currentChat.id));
+
+                            String placeHolderId =  AndroidUtilities.getGroupAvatarForId(currentChat.id);
+                            Drawable d = themeManager.getDrawable(placeHolderId, false);
+                            Bitmap bm = ((BitmapDrawable)d).getBitmap();
+                            Bitmap bm2 = Bitmap.createScaledBitmap(bm, 50, 50, true);
+                            photoImage.setImageBitmap(bm2);
                         }
                     }
                     photoImage.imageReceiver.setVisible(!PhotoViewer.getInstance().isShowingImage(message), false);
@@ -3645,8 +3692,14 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                     if (contactUser.photo != null) {
                         photo = contactUser.photo.photo_small;
                     }
-                    int placeHolderId = AndroidUtilities.getUserAvatarForId(contactUser.id);
-                    contactAvatar.setImage(photo, "50_50", placeHolderId);
+                    String placeHolderId = AndroidUtilities.getUserAvatarForId(contactUser.id);
+                    //contactAvatar.setImage(photo, "50_50", placeHolderId);
+
+                    Drawable d = themeManager.getDrawable(placeHolderId, false);
+                    Bitmap bm = ((BitmapDrawable)d).getBitmap();
+                    Bitmap bm2 = Bitmap.createScaledBitmap(bm, 50, 50, true);
+                    photoImage.setImage(photo, "50_50", bm2);
+
                     if (contactUser.id != UserConfig.getClientUserId() && ContactsController.getInstance().contactsDict.get(contactUser.id) == null) {
                         addContactView.setVisibility(View.VISIBLE);
                     } else {
@@ -3664,7 +3717,14 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                     } else {
                         phoneTextView.setText("Unknown");
                     }
-                    contactAvatar.setImageResource(AndroidUtilities.getUserAvatarForId(message.messageOwner.media.user_id));
+                    //contactAvatar.setImageResource(AndroidUtilities.getUserAvatarForId(message.messageOwner.media.user_id));
+
+                    String placeHolderId  = AndroidUtilities.getUserAvatarForId(message.messageOwner.media.user_id);
+                    Drawable d = themeManager.getDrawable(placeHolderId, false);
+                    Bitmap bm = ((BitmapDrawable)d).getBitmap();
+                    Bitmap bm2 = Bitmap.createScaledBitmap(bm, 50, 50, true);
+                    contactAvatar.setImageBitmap(bm2);
+
                     addContactView.setVisibility(View.GONE);
                 }
             } else if (type == 6) {

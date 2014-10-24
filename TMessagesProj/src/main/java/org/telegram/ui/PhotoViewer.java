@@ -46,6 +46,8 @@ import android.widget.ProgressBar;
 import android.widget.Scroller;
 import android.widget.TextView;
 
+import com.teamjihu.ThemeManager;
+
 import org.telegram.android.AndroidUtilities;
 import org.telegram.android.ContactsController;
 import org.telegram.android.MessagesStorage;
@@ -183,6 +185,8 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
     private final static int gallery_menu_send = 3;
 
     private final static int PAGE_SPACING = AndroidUtilities.dp(30);
+
+    private ThemeManager themeManager;
 
     private static class OverlayView extends FrameLayout {
 
@@ -464,6 +468,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
             return;
         }
         parentActivity = activity;
+        themeManager = new ThemeManager(activity);
 
         scroller = new Scroller(activity);
 
@@ -499,7 +504,8 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
         actionBar.setLayoutParams(layoutParams);
         actionBarLayer = actionBar.createLayer();
         actionBarLayer.setItemsBackground(R.drawable.bar_selector_white);
-        actionBarLayer.setDisplayHomeAsUpEnabled(true, R.drawable.photo_back);
+        //actionBarLayer.setDisplayHomeAsUpEnabled(true, R.drawable.photo_back);
+        actionBarLayer.setDisplayHomeAsUpEnabled(true, themeManager.getDrawable("photo_back", false));
         actionBarLayer.setTitle(LocaleController.formatString("Of", R.string.Of, 1, 1));
         actionBar.setCurrentActionBarLayer(actionBarLayer);
 
@@ -582,7 +588,8 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
         });
 
         ActionBarMenu menu = actionBarLayer.createMenu();
-        menuItem = menu.addItem(0, R.drawable.ic_ab_other_white);
+        //menuItem = menu.addItem(0, R.drawable.ic_ab_other_white);
+        menuItem = menu.addItem(0, themeManager.getDrawable("ic_ab_other_white", false));
         menuItem.addSubItem(gallery_menu_save, LocaleController.getString("SaveToGallery", R.string.SaveToGallery), 0);
         menuItem.addSubItem(gallery_menu_showall, LocaleController.getString("ShowAllMedia", R.string.ShowAllMedia), 0);
 
