@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -28,6 +29,7 @@ import android.widget.TextView;
 
 import org.telegram.messenger.FileLog;
 import org.telegram.messenger.Utilities;
+import org.telegram.messenger.phonethemeshop.R;
 import org.telegram.ui.ApplicationLoader;
 
 public class Emoji {
@@ -35,8 +37,11 @@ public class Emoji {
 	private static int drawImgSize, bigImgSize;
 	private static boolean inited = false;
 	private static Paint placeholderPaint;
-	private static EmojiBitmap emojiBmp[] = new EmojiBitmap[5];
-	private static boolean loadingEmoji[] = new boolean[5];
+    public static int emojiTotalCnt = 5;
+    public static int emojiCnt = 5;
+    public static int emojiStartIndex = emojiTotalCnt - emojiCnt + 1;
+	private static EmojiBitmap emojiBmp[] = new EmojiBitmap[emojiTotalCnt];
+	private static boolean loadingEmoji[] = new boolean[emojiTotalCnt];
     private static int emojiFullSize;
 
     private static class EmojiBitmap {
@@ -73,6 +78,14 @@ public class Emoji {
     public static  long[][] data = {
             new long[]
                     {},
+            /*
+            new long[]
+                    {
+                            R.drawable.icon0, R.drawable.icon1, R.drawable.icon2, R.drawable.icon3, R.drawable.icon4, R.drawable.icon5, R.drawable.icon6,
+                            R.drawable.icon7, R.drawable.icon8, R.drawable.icon9, R.drawable.icon10, R.drawable.icon11, R.drawable.icon12, R.drawable.icon13,
+                            R.drawable.icon14,R.drawable.icon15
+                    },
+            */
             new long[]//189
                     {0x00000000D83DDE04L, 0x00000000D83DDE03L, 0x00000000D83DDE00L, 0x00000000D83DDE0AL, 0x000000000000263AL, 0x00000000D83DDE09L, 0x00000000D83DDE0DL,
                     0x00000000D83DDE18L, 0x00000000D83DDE1AL, 0x00000000D83DDE17L, 0x00000000D83DDE19L, 0x00000000D83DDE1CL, 0x00000000D83DDE1DL, 0x00000000D83DDE1BL,
@@ -201,7 +214,8 @@ public class Emoji {
                     0x00000000D83DDCAEL, 0x00000000D83DDCAFL, 0x0000000000002714L, 0x0000000000002611L, 0x00000000D83DDD18L, 0x00000000D83DDD17L, 0x00000000000027B0L,
                     0x00000000D83DDD31L, 0x00000000D83DDD32L, 0x00000000D83DDD33L, 0x00000000000025FCL, 0x00000000000025FBL, 0x00000000000025FEL, 0x00000000000025FDL,
                     0x00000000000025AAL, 0x00000000000025ABL, 0x00000000D83DDD3AL, 0x0000000000002B1CL, 0x0000000000002B1BL, 0x00000000000026ABL, 0x00000000000026AAL,
-                    0x00000000D83DDD34L, 0x00000000D83DDD35L, 0x00000000D83DDD3BL, 0x00000000D83DDD36L, 0x00000000D83DDD37L, 0x00000000D83DDD38L, 0x00000000D83DDD39L}};
+                    0x00000000D83DDD34L, 0x00000000D83DDD35L, 0x00000000D83DDD3BL, 0x00000000D83DDD36L, 0x00000000D83DDD37L, 0x00000000D83DDD38L, 0x00000000D83DDD39L}
+    };
 	
 	static {
         if (AndroidUtilities.density <= 1.0f) {
@@ -285,7 +299,7 @@ public class Emoji {
             FileLog.e("tmessages", "Error loading emoji", x);
         }
 	}
-	
+
 	private static void loadEmojiAsync(final int page) {
 		if (loadingEmoji[page]) {
             return;

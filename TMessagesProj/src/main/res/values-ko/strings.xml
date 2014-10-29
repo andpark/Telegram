@@ -6,7 +6,7 @@
     <!--theme name-->
     <string name="theme_title">기본테마</string>
     <!-- -->
-    <string name="AppName">텔레그램 with 폰테마샵</string>
+    <string name="AppName">테마그램</string>
     <string name="LanguageName">한국어</string>
     <string name="LanguageNameInEnglish">Korean</string>
     <string name="LanguageCode">ko</string>

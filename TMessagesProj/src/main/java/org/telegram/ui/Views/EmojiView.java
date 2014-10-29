@@ -10,6 +10,8 @@ package org.telegram.ui.Views;
 
 import android.content.Context;
 import android.database.DataSetObserver;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -27,12 +29,20 @@ import android.widget.TextView;
 import org.telegram.android.AndroidUtilities;
 import org.telegram.android.Emoji;
 import org.telegram.android.LocaleController;
+import org.telegram.android.PhoneThemeShopEmoji;
 import org.telegram.messenger.phonethemeshop.R;
+import org.telegram.ui.ChatActivity;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 public class EmojiView extends LinearLayout {
     private ArrayList<EmojiGridAdapter> adapters = new ArrayList<EmojiGridAdapter>();
+    private List<Drawable> iconsDrawable = new ArrayList<Drawable>();
     private int[] icons = {
             R.drawable.ic_emoji_recent,
             R.drawable.ic_emoji_smile,
@@ -45,8 +55,18 @@ public class EmojiView extends LinearLayout {
     private FrameLayout recentsWrap;
     private ArrayList<GridView> views = new ArrayList<GridView>();
 
+    ChatActivity chatActivity;
+
+    private List<PhoneThemeShopEmoji> PhoneThemeShopEmojiList = new ArrayList<PhoneThemeShopEmoji>();
+
     public EmojiView(Context paramContext) {
         super(paramContext);
+        init();
+    }
+
+    public EmojiView(Context paramContext, ChatActivity _chatActivity) {
+        super(paramContext);
+        chatActivity = _chatActivity;
         init();
     }
 
@@ -100,19 +120,46 @@ public class EmojiView extends LinearLayout {
         }
     }
 
+    private void getPhoneThemeShopEmoji() {
+        for ( int i = 0; i < icons.length; i++ )
+            iconsDrawable.add(getResources().getDrawable(icons[i]));
+
+        iconsDrawable.add(1, getResources().getDrawable(R.drawable.icon_thumb00));
+
+        PhoneThemeShopEmoji ptse;
+        ptse = new PhoneThemeShopEmoji(getResources().getDrawable(R.drawable.phonethemeshop00), 4, 4, 16);
+        PhoneThemeShopEmojiList.add(ptse);
+    }
+
     private void init() {
+        getPhoneThemeShopEmoji();
         setOrientation(LinearLayout.VERTICAL);
-        for (int i = 0; i < Emoji.data.length; i++) {
+
+        Emoji.emojiTotalCnt = ( Emoji.data.length + PhoneThemeShopEmojiList.size() );
+
+        for (int i = 0; i < Emoji.emojiTotalCnt; i++) {
+            boolean isPhoneThemeShopEmoji = false;
+            if ( i != 0 && i <= PhoneThemeShopEmojiList.size() )
+                isPhoneThemeShopEmoji = true;
+
             GridView gridView = new GridView(getContext());
             if (AndroidUtilities.isTablet()) {
-                gridView.setColumnWidth(AndroidUtilities.dp(60));
+                gridView.setColumnWidth(AndroidUtilities.dp(( isPhoneThemeShopEmoji ) ? 120 : 60));
             } else {
-                gridView.setColumnWidth(AndroidUtilities.dp(45));
+                gridView.setColumnWidth(AndroidUtilities.dp(( isPhoneThemeShopEmoji ) ? 90 : 45));
             }
             gridView.setNumColumns(-1);
             views.add(gridView);
 
-            EmojiGridAdapter localEmojiGridAdapter = new EmojiGridAdapter(Emoji.data[i]);
+            EmojiGridAdapter localEmojiGridAdapter;
+            if ( isPhoneThemeShopEmoji )
+                localEmojiGridAdapter = new EmojiGridAdapter(null, PhoneThemeShopEmojiList.get(i - 1), isPhoneThemeShopEmoji);
+            else {
+                if ( i == 0 )
+                    localEmojiGridAdapter = new EmojiGridAdapter(Emoji.data[i], null, isPhoneThemeShopEmoji);
+                else
+                    localEmojiGridAdapter = new EmojiGridAdapter(Emoji.data[i - PhoneThemeShopEmojiList.size()], null, isPhoneThemeShopEmoji);
+            }
             gridView.setAdapter(localEmojiGridAdapter);
             adapters.add(localEmojiGridAdapter);
         }
@@ -207,13 +254,20 @@ public class EmojiView extends LinearLayout {
 
     private class EmojiGridAdapter extends BaseAdapter {
         long[] data;
+        PhoneThemeShopEmoji phoneThemeShopEmoji;
+        boolean isPhoneThemeShopEmoji;
 
-        public EmojiGridAdapter(long[] arg2) {
+        public EmojiGridAdapter(long[] arg2, PhoneThemeShopEmoji _phoneThemeShopEmoji, boolean _isPhoneThemeShopEmoji) {
             this.data = arg2;
+            phoneThemeShopEmoji = _phoneThemeShopEmoji;
+            isPhoneThemeShopEmoji = _isPhoneThemeShopEmoji;
         }
 
         public int getCount() {
-            return data.length;
+            int cnt = 0;
+
+            //return data.length;
+            return ( isPhoneThemeShopEmoji ) ? phoneThemeShopEmoji.total : data.length;
         }
 
         public Object getItem(int i) {
@@ -221,7 +275,8 @@ public class EmojiView extends LinearLayout {
         }
 
         public long getItemId(int i) {
-            return data[i];
+            //return data[i];
+            return ( isPhoneThemeShopEmoji ) ? i : data[i];
         }
 
         public View getView(int i, View view, ViewGroup paramViewGroup) {
@@ -234,17 +289,47 @@ public class EmojiView extends LinearLayout {
                 };
                 imageView.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View view) {
-                        if (EmojiView.this.listener != null) {
-                            EmojiView.this.listener.onEmojiSelected(EmojiView.this.convert((Long)view.getTag()));
+                        if ( isPhoneThemeShopEmoji ) {
+                            if ( chatActivity != null ) {
+                                ArrayList<String> photos = new ArrayList<String>();
+                                //photos.add("/storage/emulated/0/Download/KakaoTalk_20140815_150707302.png");
+                                File tempFile = null;
+                                Bitmap bmp = (Bitmap)view.getTag();
+                                try {
+                                    //tempFile = File.createTempFile("tempEmojiFile.png", null, getContext().getCacheDir());
+                                    tempFile = File.createTempFile("tempEmojiFile.jpg", null, getContext().getCacheDir());
+                                    OutputStream outputStream = new FileOutputStream(tempFile);
+                                    //bmp.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+                                    bmp.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                                    outputStream.flush();
+                                    outputStream.close();
+
+                                    photos.add(tempFile.getPath());
+                                } catch ( IOException ie ) {
+                                    ie.printStackTrace();
+                                }
+                                chatActivity.didSelectPhotos(photos);
+                            }
+                        } else {
+                            if (EmojiView.this.listener != null) {
+                                EmojiView.this.listener.onEmojiSelected(EmojiView.this.convert((Long) view.getTag()));
+                            }
+                            EmojiView.this.addToRecent((Long) view.getTag());
                         }
-                        EmojiView.this.addToRecent((Long)view.getTag());
                     }
                 });
                 imageView.setBackgroundResource(R.drawable.list_selector);
                 imageView.setScaleType(ImageView.ScaleType.CENTER);
             }
-            imageView.setImageDrawable(Emoji.getEmojiBigDrawable(data[i]));
-            imageView.setTag(data[i]);
+            if ( isPhoneThemeShopEmoji ) {
+                Bitmap bmp = phoneThemeShopEmoji.getBitmap(i);
+                imageView.setImageBitmap(bmp);
+                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                imageView.setTag(bmp);
+            } else {
+                imageView.setImageDrawable(Emoji.getEmojiBigDrawable(data[i]));
+                imageView.setTag(data[i]);
+            }
             return imageView;
         }
 
@@ -275,8 +360,11 @@ public class EmojiView extends LinearLayout {
             return EmojiView.this.views.size();
         }
 
-        public int getPageIconResId(int paramInt) {
-            return EmojiView.this.icons[paramInt];
+        //public int getPageIconResId(int paramInt) {
+        public Drawable getPageIconResId(int paramInt) {
+
+            //return EmojiView.this.icons[paramInt];
+            return EmojiView.this.iconsDrawable.get(paramInt);
         }
 
         public Object instantiateItem(ViewGroup paramViewGroup, int paramInt) {

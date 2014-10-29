@@ -16,6 +16,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -37,8 +38,13 @@ import org.telegram.messenger.phonethemeshop.R;
 
 public class PagerSlidingTabStrip extends HorizontalScrollView {
 
+    /*
     public interface IconTabProvider {
         public int getPageIconResId(int position);
+    }
+    */
+    public interface IconTabProvider {
+        public Drawable getPageIconResId(int position);
     }
 
     private LinearLayout.LayoutParams defaultTabLayoutParams;
@@ -201,11 +207,13 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
     }
 
-    private void addIconTab(final int position, int resId) {
+    //private void addIconTab(final int position, int resId) {
+    private void addIconTab(final int position, Drawable d) {
 
         ImageButton tab = new ImageButton(getContext());
         tab.setFocusable(true);
-        tab.setImageResource(resId);
+        //tab.setImageResource(resId);
+        tab.setImageDrawable(d);
 
         tab.setOnClickListener(new OnClickListener() {
             @Override

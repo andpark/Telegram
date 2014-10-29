@@ -48,6 +48,7 @@ import org.telegram.android.NotificationCenter;
 import org.telegram.messenger.phonethemeshop.R;
 import org.telegram.messenger.TLRPC;
 import org.telegram.ui.ApplicationLoader;
+import org.telegram.ui.ChatActivity;
 
 public class ChatActivityEnterView implements NotificationCenter.NotificationCenterDelegate, SizeNotifierRelativeLayout.SizeNotifierRelativeLayoutDelegate {
 
@@ -85,6 +86,8 @@ public class ChatActivityEnterView implements NotificationCenter.NotificationCen
     private boolean ignoreTextChange = false;
     private ChatActivityEnterViewDelegate delegate;
 
+    private ChatActivity chatActivity;
+
     public ChatActivityEnterView() {
         NotificationCenter.getInstance().addObserver(this, NotificationCenter.recordStarted);
         NotificationCenter.getInstance().addObserver(this, NotificationCenter.recordStartError);
@@ -120,8 +123,9 @@ public class ChatActivityEnterView implements NotificationCenter.NotificationCen
         }
     }
 
-    public void setContainerView(Activity activity, View containerView) {
+    public void setContainerView(Activity activity, View containerView, ChatActivity _chatActivity) {
         parentActivity = activity;
+        chatActivity = _chatActivity;
 
         sizeNotifierRelativeLayout = (SizeNotifierRelativeLayout)containerView.findViewById(R.id.chat_layout);
         sizeNotifierRelativeLayout.delegate = this;
@@ -591,7 +595,7 @@ public class ChatActivityEnterView implements NotificationCenter.NotificationCen
         if (parentActivity == null) {
             return;
         }
-        emojiView = new EmojiView(parentActivity);
+        emojiView = new EmojiView(parentActivity, chatActivity);
         emojiView.setListener(new EmojiView.Listener() {
             public void onBackspace() {
                 messsageEditText.dispatchKeyEvent(new KeyEvent(0, 67));
