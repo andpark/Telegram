@@ -85,6 +85,7 @@ import org.telegram.ui.Views.BackupImageView;
 import org.telegram.ui.Views.ActionBar.BaseFragment;
 import org.telegram.ui.Views.ChatActivityEnterView;
 import org.telegram.android.ImageReceiver;
+import org.telegram.ui.Views.EmojiView;
 import org.telegram.ui.Views.LayoutListView;
 import org.telegram.ui.Views.MessageActionLayout;
 import org.telegram.ui.Views.SizeNotifierRelativeLayout;
@@ -412,6 +413,10 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     public View createView(LayoutInflater inflater, ViewGroup container) {
         if (fragmentView == null) {
             themeManager = new ThemeManager(getParentActivity());
+
+            //EmojiView fragment = new EmojiView();
+            //fragment.setDelegate(ChatActivity.this);
+
             actionBarLayer.setDisplayHomeAsUpEnabled(true, themeManager.getDrawable("ic_ab_back", false));
             if (AndroidUtilities.isTablet()) {
                 actionBarLayer.setExtraLeftMargin(4);
@@ -879,7 +884,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
 
             updateBottomOverlay();
 
-            chatActivityEnterView.setContainerView(getParentActivity(), fragmentView);
+            chatActivityEnterView.setContainerView(getParentActivity(), fragmentView, ChatActivity.this);
         } else {
             ViewGroup parent = (ViewGroup)fragmentView.getParent();
             if (parent != null) {

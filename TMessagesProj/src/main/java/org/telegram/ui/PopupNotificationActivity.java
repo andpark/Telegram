@@ -225,7 +225,7 @@ public class PopupNotificationActivity extends Activity implements NotificationC
             }
         });
 
-        chatActivityEnterView.setContainerView(this, findViewById(R.id.chat_layout));
+        chatActivityEnterView.setContainerView(this, findViewById(R.id.chat_layout), null);
 
         PowerManager pm = (PowerManager)ApplicationLoader.applicationContext.getSystemService(Context.POWER_SERVICE);
         wakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "screen");
