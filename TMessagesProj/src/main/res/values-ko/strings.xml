@@ -5,6 +5,8 @@
 <resources>
     <!--theme name-->
     <string name="theme_title">기본테마</string>
+    <!--emoticon name-->
+    <string name="emoticon_title">기본 이모티콘</string>
     <!-- -->
     <string name="AppName">테마그램</string>
     <string name="LanguageName">한국어</string>
@@ -259,7 +261,7 @@
     <string name="Enabled">켜기</string>
     <string name="Disabled">끄기</string>
     <string name="NotificationsService">알림 서비스</string>
-    <string name="NotificationsServiceDisableInfo">알림 서비스를 비활성화 하면 새로운 메시지의 알림이 다소 늦을 수 있습니다.<![CDATA[\n]]>텔레그램이 백그라운드에서 작동하며 알림을 바로 알릴 수 있도록 활성화 하는것을 권장합니다.</string>
+    <string name="NotificationsServiceDisableInfo">알림 서비스를 비활성화 하면 새로운 메시지의 알림이 다소 늦을 수 있습니다.<![CDATA[\n]]>테마그램이 백그라운드에서 작동하며 알림을 바로 알릴 수 있도록 활성화 하는것을 권장합니다.</string>
     <string name="SortBy">정렬</string>
     <string name="ImportContacts">연락처 가져오기</string>
     <string name="WiFiOnly">WiFi 전용</string>
@@ -283,6 +285,7 @@
     <string name="NoMediaAutoDownload">다운로드 안함</string>
     <string name="SaveToGallerySettings">앨범에 자동 저장</string>
     <string name="SelectTheme">테마 선택</string>
+    <string name="ManageEmoticon">이모티콘 관리</string>
     <!--media view-->
     <string name="NoMedia">공유한 미디어가 없습니다</string>
     <string name="CancelDownload">다운로드 취소</string>
@@ -386,7 +389,7 @@
     <string name="SendMessagesToGroup">%1$s 그룹에 메시지를 보낼까요?</string>
     <string name="ForwardMessagesToGroup">%1$s 그룹에 메시지를 전달할까요?</string>
     <!--Intro view-->
-    <string name="Page1Title">텔레그램</string>
+    <string name="Page1Title">테마그램</string>
     <string name="Page2Title">눈부신 속도</string>
     <string name="Page3Title">완전 무료</string>
     <string name="Page4Title">보안성</string>
@@ -448,6 +451,8 @@
     <string name="formatterDay24H">HH:mm</string>
     <string name="formatterDay12H">a h:mm</string>
     <string name="formatDateAtTime">%1$s %2$s</string>
+    <!--theme-->
+    <string name="usingTheme">사용중인 테마입니다.</string>
     <!--Don't change this! Not for localization!-->
     <string name="CacheTag">CACHE_TAG</string>
 </resources>

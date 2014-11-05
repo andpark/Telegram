@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<!--Translated by Telegram Team, corrected by Florian Keller-->
-
+<!-- Translated by Telegram Team, corrected by Florian Keller -->
 <resources>
-    <!--theme name-->
+
+    <!-- theme name -->
     <string name="theme_title">기본테마</string>
-    <!-- -->
+    <!--emoticon name-->
+    <string name="emoticon_title">기본 이모티콘</string>
+    <!--  -->
     <string name="AppName">Telegram for PhoneThemeShop</string>
     <string name="LanguageName">English</string>
     <string name="LanguageNameInEnglish">English</string>
     <string name="LanguageCode">en</string>
-    <!--signin view-->
+    <!-- signin view -->
     <string name="YourPhone">Your phone</string>
     <string name="StartText">Please confirm your country code\nand enter your phone number.</string>
     <string name="ChooseCountry">Choose a country</string>
     <string name="WrongCountry">Wrong country code</string>
-    <!--code enter view-->
+    <!-- code enter view -->
     <string name="YourCode">Your code</string>
     <string name="SentSmsCode">We\'ve sent an SMS with an activation code to your phone</string>
     <string name="CallText">We will call you in %1$d:%2$02d</string>
@@ -23,14 +24,14 @@
     <string name="Code">Code</string>
     <string name="WrongNumber">Wrong number?</string>
     <string name="DidNotGetTheCode">Didn\'t get the code?</string>
-    <!--signup view-->
+    <!-- signup view -->
     <string name="YourName">Your name</string>
     <string name="RegisterText">Set up your first and last name</string>
-    <!--<string name="RegisterText">Set up your name and picture</string>-->
+    <!-- <string name="RegisterText">Set up your name and picture</string> -->
     <string name="FirstName">First name (required)</string>
     <string name="LastName">Last name (optional)</string>
     <string name="CancelRegistration">Cancel registration</string>
-    <!--chats view-->
+    <!-- chats view -->
     <string name="Chats">Chats</string>
     <string name="Search">Search</string>
     <string name="NewMessages">New messages</string>
@@ -54,14 +55,14 @@
     <string name="DeleteChat">Delete and exit</string>
     <string name="HiddenName">Hidden Name</string>
     <string name="SelectChat">Select Chat</string>
-    <!--broadcasts-->
+    <!-- broadcasts -->
     <string name="BroadcastList">Broadcast List</string>
     <string name="NewBroadcastList">New Broadcast List</string>
     <string name="EnterListName">Enter list name</string>
     <string name="YouCreatedBroadcastList">You created a broadcast list</string>
     <string name="AddRecipient">Add Recipient</string>
     <string name="KickFromBroadcast">Remove from broadcast list</string>
-    <!--documents view-->
+    <!-- documents view -->
     <string name="SelectFile">Select File</string>
     <string name="FreeOfTotal">Free %1$s of %2$s</string>
     <string name="UnknownError">Unknown error</string>
@@ -74,7 +75,7 @@
     <string name="ExternalStorage">External Storage</string>
     <string name="SystemRoot">System Root</string>
     <string name="SdCard">SD Card</string>
-    <!--chat view-->
+    <!-- chat view -->
     <string name="Invisible">invisible</string>
     <string name="Typing">typing...</string>
     <string name="Attach">Attach</string>
@@ -114,7 +115,7 @@
     <string name="SaveToDownloads">Save to downloads</string>
     <string name="ApplyLocalizationFile">Apply localization file</string>
     <string name="UnsupportedAttachment">Unsupported attachment</string>
-    <!--notification-->
+    <!-- notification -->
     <string name="EncryptedChatRequested">Secret chat requested</string>
     <string name="EncryptedChatAccepted">Secret chat started</string>
     <string name="MessageLifetimeChanged">%1$s set the self-destruct timer to %2$s</string>
@@ -158,7 +159,7 @@
     <string name="ReplyToGroup">Reply to %1$s</string>
     <string name="ReplyToUser">Reply to %1$s</string>
     <string name="NotificationMessagesPeopleDisplayOrder">%1$s %2$s</string>
-    <!--contacts view-->
+    <!-- contacts view -->
     <string name="SelectContact">Select Contact</string>
     <string name="NoContacts">No contacts yet</string>
     <string name="InviteText">Hey, let\'s switch to Telegram: http://telegram.org/dl2</string>
@@ -169,13 +170,13 @@
     <string name="LastSeen">last seen</string>
     <string name="LastSeenDate">last seen</string>
     <string name="InviteFriends">Invite Friends</string>
-    <!--group create view-->
+    <!-- group create view -->
     <string name="SendMessageTo">Send message to...</string>
     <string name="EnterGroupNamePlaceholder">Enter group name</string>
     <string name="GroupName">Group name</string>
     <string name="AllContacts">ALL CONTACTS</string>
     <string name="MembersCount">%1$d/%2$d members</string>
-    <!--group info view-->
+    <!-- group info view -->
     <string name="EnterGroupNameTitle">ENTER GROUP NAME</string>
     <string name="SharedMedia">Shared Media</string>
     <string name="GroupInfo">Group Info</string>
@@ -185,7 +186,7 @@
     <string name="DeleteAndExit">Delete and leave group</string>
     <string name="Notifications">Notifications</string>
     <string name="KickFromGroup">Remove from group</string>
-    <!--contact info view-->
+    <!-- contact info view -->
     <string name="ShareContact">Share</string>
     <string name="AddContact">Add</string>
     <string name="BlockContact">Block</string>
@@ -212,7 +213,7 @@
     <string name="ShortMessageLifetime1d">1d</string>
     <string name="ShortMessageLifetime1w">1w</string>
     <string name="EncryptionKeyDescription">This image is a visualization of the encryption key for this secret chat with <![CDATA[<b>]]>%1$s<![CDATA[</b>]]>.<![CDATA[<br><br>]]>If this image looks the same on <![CDATA[<b>]]>%2$s\'s<![CDATA[</b>]]> phone, your chat is 200%% secure.<![CDATA[<br><br>]]>Learn more at telegram.org</string>
-    <!--settings view-->
+    <!-- settings view -->
     <string name="ResetNotificationsText">Reset all notification settings to default</string>
     <string name="TextSize">Messages Text Size</string>
     <string name="AskAQuestion">Ask a Question</string>
@@ -283,10 +284,11 @@
     <string name="NoMediaAutoDownload">No media</string>
     <string name="SaveToGallerySettings">Save to gallery</string>
     <string name="SelectTheme">Select Theme</string>
-    <!--media view-->
+    <string name="ManageEmoticon">Manage Emoticon</string>
+    <!-- media view -->
     <string name="NoMedia">No shared media yet</string>
     <string name="CancelDownload">Cancel Download</string>
-    <!--map view-->
+    <!-- map view -->
     <string name="MyLocation">My location</string>
     <string name="Map">Map</string>
     <string name="Satellite">Satellite</string>
@@ -295,20 +297,20 @@
     <string name="KMetersAway">km away</string>
     <string name="SendLocation">Send Location</string>
     <string name="ShareLocation">Share Location</string>
-    <!--photo gallery view-->
+    <!-- photo gallery view -->
     <string name="ShowAllMedia">Show all media</string>
     <string name="SaveToGallery">Save to gallery</string>
     <string name="Of">%1$d of %2$d</string>
     <string name="Gallery">Gallery</string>
     <string name="AllPhotos">All Photos</string>
     <string name="NoPhotos">No photos yet</string>
-    <!--edit video view-->
+    <!-- edit video view -->
     <string name="EditVideo">Edit Video</string>
     <string name="OriginalVideo">Original Video</string>
     <string name="EditedVideo">Edited Video</string>
     <string name="SendingVideo">Sending video...</string>
     <string name="CompressVideo">Compress Video</string>
-    <!--button titles-->
+    <!-- button titles -->
     <string name="Next">Next</string>
     <string name="Back">Back</string>
     <string name="Done">Done</string>
@@ -328,7 +330,7 @@
     <string name="OpenPhoto">Open photo</string>
     <string name="Set">Set</string>
     <string name="OK">OK</string>
-    <!--messages-->
+    <!-- messages -->
     <string name="ActionKickUser">un1 removed un2</string>
     <string name="ActionLeftUser">un1 left group</string>
     <string name="ActionAddUser">un1 added un2</string>
@@ -355,7 +357,7 @@
     <string name="FromYou">You</string>
     <string name="ActionTakeScreenshootYou">You took a screenshot!</string>
     <string name="ActionTakeScreenshoot">un1 took a screenshot!</string>
-    <!--Alert messages-->
+    <!-- Alert messages -->
     <string name="InvalidPhoneNumber">Invalid phone number</string>
     <string name="CodeExpired">Code expired, please login again</string>
     <string name="FloodWait">Too many attempts, please try again later</string>
@@ -385,8 +387,8 @@
     <string name="ForwardFromMyName">forward from my name</string>
     <string name="SendMessagesToGroup">Send messages to %1$s?</string>
     <string name="ForwardMessagesToGroup">Forward messages to %1$s?</string>
-    <!--Intro view-->
-    <string name="Page1Title">Telegram</string>
+    <!-- Intro view -->
+    <string name="Page1Title">Themegram</string>
     <string name="Page2Title">Fast</string>
     <string name="Page3Title">Free</string>
     <string name="Page4Title">Secure</string>
@@ -401,7 +403,7 @@
     <string name="Page6Message"><![CDATA[<b>Telegram</b>]]> lets you access your messages<![CDATA[<br/>]]>from multiple devices.</string>
     <string name="Page7Message"><![CDATA[<b>Telegram</b>]]> messages are heavily encrypted<![CDATA[<br/>]]>and can self-destruct.</string>
     <string name="StartMessaging">Start Messaging</string>
-    <!--plural-->
+    <!-- plural -->
     <string name="Online_zero">%1$d online</string>
     <string name="Online_one">%1$d online</string>
     <string name="Online_two">%1$d online</string>
@@ -438,7 +440,7 @@
     <string name="FromContacts_few">from %1$d contacts</string>
     <string name="FromContacts_many">from %1$d contacts</string>
     <string name="FromContacts_other">from %1$d contacts</string>
-    <!--date formatters-->
+    <!-- date formatters -->
     <string name="formatterMonth">MMM dd</string>
     <string name="formatterYear">dd.MM.yy</string>
     <string name="formatterYearMax">dd.MM.yyyy</string>
@@ -448,6 +450,21 @@
     <string name="formatterDay24H">HH:mm</string>
     <string name="formatterDay12H">h:mm a</string>
     <string name="formatDateAtTime">%1$s at %2$s</string>
-    <!--Don't change this! Not for localization!-->
+    <!--theme-->
+    <string name="usingTheme">사용중인 테마입니다.</string>
+    <!-- Don't change this! Not for localization! -->
     <string name="CacheTag">CACHE_TAG</string>
+    <string name="title_activity_magic_app_restart">MagicAppRestart</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+
+
+
+
+    <!--default emoticon-->
+    <string name="col">4</string>
+    <string name="row">4</string>
+    <string name="total">16</string>
+
 </resources>

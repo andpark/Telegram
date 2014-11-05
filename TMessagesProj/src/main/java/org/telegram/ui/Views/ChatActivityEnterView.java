@@ -34,7 +34,10 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.teamjihu.ThemeManager;
 
 import org.telegram.android.AndroidUtilities;
 import org.telegram.android.Emoji;
@@ -49,6 +52,8 @@ import org.telegram.messenger.phonethemeshop.R;
 import org.telegram.messenger.TLRPC;
 import org.telegram.ui.ApplicationLoader;
 import org.telegram.ui.ChatActivity;
+import org.telegram.ui.Views.ActionBar.BaseFragment;
+import org.telegram.ui.ZzalActivity;
 
 public class ChatActivityEnterView implements NotificationCenter.NotificationCenterDelegate, SizeNotifierRelativeLayout.SizeNotifierRelativeLayoutDelegate {
 
@@ -63,6 +68,7 @@ public class ChatActivityEnterView implements NotificationCenter.NotificationCen
     private ImageView emojiButton;
     private EmojiView emojiView;
     private TextView recordTimeText;
+    private ImageButton zzalButton;
     private ImageButton audioSendButton;
     private View recordPanel;
     private View slideText;
@@ -86,7 +92,9 @@ public class ChatActivityEnterView implements NotificationCenter.NotificationCen
     private boolean ignoreTextChange = false;
     private ChatActivityEnterViewDelegate delegate;
 
-    private ChatActivity chatActivity;
+    private ChatActivity chatActivity = null;
+
+    private ThemeManager themeManager;
 
     public ChatActivityEnterView() {
         NotificationCenter.getInstance().addObserver(this, NotificationCenter.recordStarted);
@@ -127,21 +135,39 @@ public class ChatActivityEnterView implements NotificationCenter.NotificationCen
         parentActivity = activity;
         chatActivity = _chatActivity;
 
+        themeManager = new ThemeManager(parentActivity);
+
         sizeNotifierRelativeLayout = (SizeNotifierRelativeLayout)containerView.findViewById(R.id.chat_layout);
         sizeNotifierRelativeLayout.delegate = this;
+
+        RelativeLayout chatComposePanel = (RelativeLayout)containerView.findViewById(R.id.chat_compose_panel);
+        themeManager.setBackgroundDrawable(chatComposePanel, themeManager.getDrawable("compose_panel", false));
 
         messsageEditText = (EditText)containerView.findViewById(R.id.chat_text_edit);
         messsageEditText.setHint(LocaleController.getString("TypeMessage", R.string.TypeMessage));
 
+        zzalButton = (ImageButton)containerView.findViewById(R.id.chat_zzal_button);
+        zzalButton.setImageDrawable(themeManager.getDrawable("ic_zzal", false));
         sendButton = (ImageButton)containerView.findViewById(R.id.chat_send_button);
+        sendButton.setImageDrawable(themeManager.getDrawable("ic_send", false));
         sendButton.setVisibility(View.INVISIBLE);
         emojiButton = (ImageView)containerView.findViewById(R.id.chat_smile_button);
+        emojiButton.setImageDrawable(themeManager.getDrawable("ic_msg_panel_smiles", false));
         audioSendButton = (ImageButton)containerView.findViewById(R.id.chat_audio_send_button);
+        audioSendButton.setImageDrawable(themeManager.getDrawable("mic_button_states", false));
         recordPanel = containerView.findViewById(R.id.record_panel);
         recordTimeText = (TextView)containerView.findViewById(R.id.recording_time_text);
         slideText = containerView.findViewById(R.id.slideText);
         TextView textView = (TextView)containerView.findViewById(R.id.slideToCancelTextView);
         textView.setText(LocaleController.getString("SlideToCancel", R.string.SlideToCancel));
+
+        zzalButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if ( chatActivity != null )
+                    chatActivity.presentFragment(new ZzalActivity(chatActivity));
+            }
+        });
 
         emojiButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -569,7 +595,8 @@ public class ChatActivityEnterView implements NotificationCenter.NotificationCen
             return;
         }
         if (emojiButton != null) {
-            emojiButton.setImageResource(R.drawable.ic_msg_panel_smiles);
+            //emojiButton.setImageResource(R.drawable.ic_msg_panel_smiles);
+            emojiButton.setImageDrawable(themeManager.getDrawable("ic_msg_panel_smiles", false));
         }
         if (emojiPopup != null) {
             emojiPopup.dismiss();

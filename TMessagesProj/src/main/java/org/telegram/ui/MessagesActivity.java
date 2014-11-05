@@ -21,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.telegram.android.AndroidUtilities;
@@ -80,6 +81,8 @@ public class MessagesActivity extends BaseFragment implements NotificationCenter
     private final static int messages_list_menu_contacts = 4;
     private final static int messages_list_menu_settings = 5;
     private final static int messages_list_menu_new_broadcast = 6;
+
+    private final static int messages_list_menu_select_theme = 7;
 
     private ThemeManager themeManager;
 
@@ -193,6 +196,7 @@ public class MessagesActivity extends BaseFragment implements NotificationCenter
                 item.addSubItem(messages_list_menu_new_broadcast, LocaleController.getString("NewBroadcastList", R.string.NewBroadcastList), 0);
                 item.addSubItem(messages_list_menu_contacts, LocaleController.getString("Contacts", R.string.Contacts), 0);
                 item.addSubItem(messages_list_menu_settings, LocaleController.getString("Settings", R.string.Settings), 0);
+                item.addSubItem(messages_list_menu_select_theme, LocaleController.getString("SelectTheme", R.string.SelectTheme), 0);
             }
             actionBarLayer.setBackOverlay(R.layout.updating_state_layout);
 
@@ -226,6 +230,8 @@ public class MessagesActivity extends BaseFragment implements NotificationCenter
                         Bundle args = new Bundle();
                         args.putBoolean("broadcast", true);
                         presentFragment(new GroupCreateActivity(args));
+                    } else if (id == messages_list_menu_select_theme) {
+                        presentFragment(new SettingsThemeActivity());
                     }
                 }
             });
@@ -234,6 +240,9 @@ public class MessagesActivity extends BaseFragment implements NotificationCenter
             searchWas = false;
 
             fragmentView = inflater.inflate(R.layout.messages_list, container, false);
+
+            RelativeLayout messagesListContainer = (RelativeLayout)fragmentView.findViewById(R.id.messages_list_container);
+            themeManager.setBackgroundDrawable(messagesListContainer, themeManager.getDrawable("bg_msglistcontainer", false));
 
             messagesListViewAdapter = new MessagesAdapter(getParentActivity());
 

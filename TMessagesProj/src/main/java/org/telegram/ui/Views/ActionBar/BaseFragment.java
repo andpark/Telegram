@@ -73,7 +73,8 @@ public class BaseFragment {
                 themeManager = new ThemeManager(getParentActivity());
                 themeManager.setBackgroundDrawable(actionBarLayer, themeManager.getDrawable("bg_actionbar", false));
 
-                actionBarLayer.setItemsBackground(R.drawable.bar_selector);
+                //actionBarLayer.setItemsBackground(R.drawable.bar_selector);
+                actionBarLayer.setItemsBackground("bar_selector");
             }
         }
     }

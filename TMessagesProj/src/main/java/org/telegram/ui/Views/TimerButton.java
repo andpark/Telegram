@@ -19,6 +19,8 @@ import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.teamjihu.ThemeManager;
+
 import org.telegram.android.AndroidUtilities;
 import org.telegram.messenger.FileLog;
 import org.telegram.messenger.phonethemeshop.R;
@@ -33,6 +35,8 @@ public class TimerButton extends View {
     private int timeHeight = 0;
     private int time = 0;
 
+    private ThemeManager themeManager;
+
     private void init() {
         if (emptyTimerDrawable == null) {
             emptyTimerDrawable = getResources().getDrawable(R.drawable.header_timer);
@@ -43,21 +47,28 @@ public class TimerButton extends View {
             timePaint.setTypeface(Typeface.DEFAULT_BOLD);
         }
 
-        setBackgroundResource(R.drawable.bar_selector);
+        //setBackgroundResource(R.drawable.bar_selector);
+        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN)
+            setBackgroundDrawable(themeManager.getDrawable("bar_selector", false));
+        else
+            setBackground(themeManager.getDrawable("bar_selector", false));
     }
 
     public TimerButton(Context context) {
         super(context);
+        themeManager = new ThemeManager(context);
         init();
     }
 
     public TimerButton(Context context, AttributeSet attrs) {
         super(context, attrs);
+        themeManager = new ThemeManager(context);
         init();
     }
 
     public TimerButton(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        themeManager = new ThemeManager(context);
         init();
     }
 
