@@ -118,6 +118,11 @@ public class ChatBaseCell extends BaseCell {
     private int last_delete_date = 0;
     private ThemeManager themeManager;
 
+    public ChatBaseCell(Context context) {
+        super(context);
+        init();
+        avatarImage = new ImageReceiver(this);
+    }
     public ChatBaseCell(Context context, boolean init) {
         super(context);
         init2();
