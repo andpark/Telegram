@@ -22,6 +22,8 @@ import android.view.SoundEffectConstants;
 
 import com.teamjihu.ThemeManager;
 
+import com.teamjihu.ThemeManager;
+
 import org.telegram.android.AndroidUtilities;
 import org.telegram.android.ContactsController;
 import org.telegram.android.LocaleController;
@@ -116,15 +118,13 @@ public class ChatBaseCell extends BaseCell {
     private int last_delete_date = 0;
     private ThemeManager themeManager;
 
-
-    public ChatBaseCell(Context context) {
-        super(context);
     public ChatBaseCell(Context context, boolean init) {
         super(context);
         init2();
         avatarImage = new ImageReceiver(this);
     }
 
+private void init() {
         themeManager = new ThemeManager(getContext());
         if (backgroundDrawableIn == null) {
             /*
@@ -192,6 +192,47 @@ public class ChatBaseCell extends BaseCell {
         super.onDetachedFromWindow();
         avatarImage.clearImage();
         currentPhoto = null;
+    }
+
+    private void init2() {
+        themeManager = new ThemeManager(getContext());
+
+        backgroundDrawableIn = themeManager.getDrawable("msg_in", false);
+        backgroundDrawableInSelected = themeManager.getDrawable("msg_in_selected", false);
+        backgroundDrawableOut = themeManager.getDrawable("msg_out", false);
+        backgroundDrawableOutSelected = themeManager.getDrawable("msg_out_selected", false);
+        backgroundMediaDrawableIn = themeManager.getDrawable("msg_in_photo", false);
+        backgroundMediaDrawableInSelected = themeManager.getDrawable("msg_in_photo_selected", false);
+        backgroundMediaDrawableOut = themeManager.getDrawable("msg_out_photo", false);
+        backgroundMediaDrawableOutSelected = themeManager.getDrawable("msg_out_photo_selected", false);
+        checkDrawable = themeManager.getDrawable("msg_check", false);
+        halfCheckDrawable = themeManager.getDrawable("msg_halfcheck", false);
+        clockDrawable = themeManager.getDrawable("msg_clock", false);
+        checkMediaDrawable = themeManager.getDrawable("msg_check_w", false);
+        halfCheckMediaDrawable = themeManager.getDrawable("msg_halfcheck_w", false);
+        clockMediaDrawable = themeManager.getDrawable("msg_clock_photo", false);
+        errorDrawable = themeManager.getDrawable("msg_warning", false);
+        mediaBackgroundDrawable = themeManager.getDrawable("phototime", false);
+        broadcastDrawable = themeManager.getDrawable("broadcast3", false);
+        broadcastMediaDrawable = themeManager.getDrawable("broadcast4", false);
+
+        timePaintIn = new TextPaint(TextPaint.ANTI_ALIAS_FLAG);
+        timePaintIn.setTextSize(AndroidUtilities.dp(12));
+        timePaintIn.setColor(0xffa1aab3);
+
+        timePaintOut = new TextPaint(TextPaint.ANTI_ALIAS_FLAG);
+        timePaintOut.setTextSize(AndroidUtilities.dp(12));
+        timePaintOut.setColor(0xff70b15c);
+
+        timeMediaPaint = new TextPaint(TextPaint.ANTI_ALIAS_FLAG);
+        timeMediaPaint.setTextSize(AndroidUtilities.dp(12));
+        timeMediaPaint.setColor(0xffffffff);
+
+        namePaint = new TextPaint(TextPaint.ANTI_ALIAS_FLAG);
+        namePaint.setTextSize(AndroidUtilities.dp(15));
+
+        forwardNamePaint = new TextPaint(TextPaint.ANTI_ALIAS_FLAG);
+        forwardNamePaint.setTextSize(AndroidUtilities.dp(14));
     }
 
     private void init2() {

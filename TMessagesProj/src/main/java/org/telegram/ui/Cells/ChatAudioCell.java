@@ -64,6 +64,8 @@ public class ChatAudioCell extends ChatBaseCell implements SeekBar.SeekBarDelega
 
     private ThemeManager themeManager;
 
+    private ThemeManager themeManager;
+
     public ChatAudioCell(Context context) {
         super(context);
         themeManager = new ThemeManager(context);

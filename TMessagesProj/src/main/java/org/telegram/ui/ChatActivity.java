@@ -3266,6 +3266,12 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                     } else if (view instanceof ChatContactCell) {
                         ((ChatContactCell)view).setContactDelegate(new ChatContactCell.ChatContactCellDelegate() {
 
+
+
+
+
+
+
                             @Override
                             public void didClickAddButton(ChatContactCell cell, TLRPC.User user) {
                                 if (actionBarLayer.isActionModeShowed()) {
