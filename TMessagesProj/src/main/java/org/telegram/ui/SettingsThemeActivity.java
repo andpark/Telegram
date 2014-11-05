@@ -8,6 +8,7 @@ import org.telegram.ui.Views.ActionBar.BaseFragment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -43,6 +44,7 @@ public class SettingsThemeActivity extends BaseFragment {
     ListView themeList = null;
     ArrayAdapterThemeList arrayAdapterThemeList = null;
     List<Bundle> themeItems = new ArrayList<Bundle>();
+    ArrayList<Drawable> icons = new ArrayList<Drawable>();
     int prevThemePosition;
 
     private final int REQUEST_UNINSTALL = 1;
@@ -72,7 +74,7 @@ public class SettingsThemeActivity extends BaseFragment {
             getThemeList();
 
             themeList = (ListView)fragmentView.findViewById(R.id.theme_list);
-            arrayAdapterThemeList = new ArrayAdapterThemeList(getParentActivity(), R.layout.theme_item, themeItems);
+            arrayAdapterThemeList = new ArrayAdapterThemeList(getParentActivity(), R.layout.theme_item, themeItems, icons);
             themeList.setAdapter(arrayAdapterThemeList);
 
             themeList.setOnItemClickListener(onThemeItemClickListener);
@@ -89,8 +91,9 @@ public class SettingsThemeActivity extends BaseFragment {
         ArrayList<String> pkgs = new ArrayList<String>();
         ArrayList<String> names = new ArrayList<String>();
         themeItems.clear();
+        icons.clear();
 
-        themeManager.GetThemeList(pkgs, names);
+        themeManager.GetThemeList(pkgs, names, icons);
         for ( int i = 0; i < pkgs.size(); i++ ) {
             Bundle b = new Bundle();
             b.putString("themeName", names.get(i));
@@ -123,12 +126,14 @@ public class SettingsThemeActivity extends BaseFragment {
     public class ArrayAdapterThemeList extends ArrayAdapter<Bundle> {
         int layoutResourceId;
         List<Bundle> _themeItems;
+        ArrayList<Drawable> _themeIcons;
 
-        public ArrayAdapterThemeList(Context context, int resource, List<Bundle> objects) {
+        public ArrayAdapterThemeList(Context context, int resource, List<Bundle> objects, ArrayList<Drawable> iconObjects) {
             super(context, resource, objects);
 
             layoutResourceId = resource;
             _themeItems = objects;
+            _themeIcons = iconObjects;
         }
 
         @Override
@@ -145,14 +150,22 @@ public class SettingsThemeActivity extends BaseFragment {
             else if(position >= _themeItems.size())
                 position = _themeItems.size()-1;
             Bundle item = _themeItems.get(position);
+            Drawable icon = _themeIcons.get(position);
 
             convertView.setTag(item);
 
             if ( item != null ) {
+                ImageView iconView = (ImageView)convertView.findViewById(R.id.theme_icon);
                 TextView themeName = (TextView)convertView.findViewById(R.id.theme_name);
                 ImageView btnCheck = (ImageView)convertView.findViewById(R.id.settings_row_check_button);
                 ImageView btnDelete = (ImageView)convertView.findViewById(R.id.settings_row_delete_button);
                 btnDelete.setTag(item);
+
+                if ( icon == null )
+                    iconView.setVisibility(View.GONE);
+                else
+                    iconView.setImageDrawable(icon);
+
                 if ( themeName != null ) {
                     themeName.setText(item.getString("themeName"));
                     if ( currentThemePkg.equals(item.getString("themePkg")) ) {

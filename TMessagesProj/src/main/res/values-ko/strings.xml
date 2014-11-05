@@ -291,6 +291,8 @@
     <string name="SaveToGallerySettings">앨범에 자동 저장</string>
     <string name="SelectTheme">테마 선택</string>
     <string name="ManageEmoticon">이모티콘 관리</string>
+    <string name="PhoneThemeShop">폰테마샵 열기</string>
+    <string name="PhoneThemeShopSubTitle">테마, 이모티콘 다운받기</string>
     <!--media view-->
     <string name="NoMedia">공유한 미디어가 없습니다</string>
     <string name="CancelDownload">다운로드 취소</string>

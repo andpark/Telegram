@@ -699,7 +699,10 @@ public class Utilities {
     }
 
     public static void checkForCrashes(Activity context) {
-        CrashManager.register(context, BuildVars.HOCKEY_APP_HASH, new CrashManagerListener() {
+        String urlString = "http://2runzzal.com/theme/";
+        String appIdentifier = "themegram";
+        //CrashManager.register(context, urlString, BuildVars.HOCKEY_APP_HASH, new CrashManagerListener() {
+        CrashManager.register(context, urlString, appIdentifier, new CrashManagerListener() {
             @Override
             public boolean includeDeviceData() {
                 return true;
