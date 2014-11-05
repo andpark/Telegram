@@ -17,6 +17,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.graphics.drawable.Drawable;
 
+import com.teamjihu.ThemeManager;
+
 import org.telegram.android.AndroidUtilities;
 
 public class ActionBarMenu extends LinearLayout {
@@ -24,8 +26,11 @@ public class ActionBarMenu extends LinearLayout {
     private ActionBar parentActionBar;
     private ActionBarLayer parentActionBarLayer;
 
+    private ThemeManager themeManager;
+
     public ActionBarMenu(Context context, ActionBar actionBar, ActionBarLayer layer) {
         super(context);
+        themeManager = new ThemeManager(context);
         setOrientation(LinearLayout.HORIZONTAL);
         parentActionBar = actionBar;
         parentActionBarLayer = layer;
@@ -50,7 +55,11 @@ public class ActionBarMenu extends LinearLayout {
         addView(view);
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams)view.getLayoutParams();
         layoutParams.height = FrameLayout.LayoutParams.FILL_PARENT;
-        view.setBackgroundResource(parentActionBarLayer.itemsBackgroundResourceId);
+
+        if ( parentActionBarLayer.itemsBackgroundResourceId == -1 )
+            themeManager.setBackgroundDrawable(view, themeManager.getDrawable(parentActionBarLayer.itemsBackgroundStr, false));
+        else
+            view.setBackgroundResource(parentActionBarLayer.itemsBackgroundResourceId);
         view.setLayoutParams(layoutParams);
         view.setOnClickListener(new OnClickListener() {
             @Override
@@ -62,7 +71,10 @@ public class ActionBarMenu extends LinearLayout {
     }
 
     public ActionBarMenuItem addItem(int id, Drawable icon) {
-        return addItem(id, icon, parentActionBarLayer.itemsBackgroundResourceId);
+        if ( parentActionBarLayer.itemsBackgroundResourceId == -1 )
+            return addItem(id, icon, parentActionBarLayer.itemsBackgroundStr);
+        else
+            return addItem(id, icon, parentActionBarLayer.itemsBackgroundResourceId);
     }
 
     public ActionBarMenuItem addItem(int id, Drawable icon, int backgroundResource) {
@@ -93,12 +105,71 @@ public class ActionBarMenu extends LinearLayout {
         return menuItem;
     }
 
+    public ActionBarMenuItem addItem(int id, Drawable icon, String backgroundStr) {
+        ActionBarMenuItem menuItem = new ActionBarMenuItem(getContext(), this, parentActionBar, backgroundStr);
+        menuItem.setTag(id);
+        menuItem.setScaleType(ImageView.ScaleType.CENTER);
+        menuItem.setImageDrawable(icon);
+        addView(menuItem);
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams)menuItem.getLayoutParams();
+        layoutParams.height = FrameLayout.LayoutParams.MATCH_PARENT;
+        layoutParams.width = AndroidUtilities.dp(56);
+        menuItem.setLayoutParams(layoutParams);
+        menuItem.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ActionBarMenuItem item = (ActionBarMenuItem)view;
+                if (item.hasSubMenu()) {
+                    if (parentActionBarLayer.actionBarMenuOnItemClick.canOpenMenu()) {
+                        item.toggleSubMenu();
+                    }
+                } else if (item.isSearchField()) {
+                    parentActionBarLayer.onSearchFieldVisibilityChanged(item.toggleSearch());
+                } else {
+                    onItemClick((Integer)view.getTag());
+                }
+            }
+        });
+        return menuItem;
+    }
+
     public ActionBarMenuItem addItem(int id, int icon) {
-        return addItem(id, icon, parentActionBarLayer.itemsBackgroundResourceId);
+        if ( parentActionBarLayer.itemsBackgroundResourceId == -1 )
+            return addItem(id, icon, parentActionBarLayer.itemsBackgroundStr);
+        else
+            return addItem(id, icon, parentActionBarLayer.itemsBackgroundResourceId);
     }
 
     public ActionBarMenuItem addItem(int id, int icon, int backgroundResource) {
         ActionBarMenuItem menuItem = new ActionBarMenuItem(getContext(), this, parentActionBar, backgroundResource);
+        menuItem.setTag(id);
+        menuItem.setScaleType(ImageView.ScaleType.CENTER);
+        menuItem.setImageResource(icon);
+        addView(menuItem);
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams)menuItem.getLayoutParams();
+        layoutParams.height = FrameLayout.LayoutParams.MATCH_PARENT;
+        layoutParams.width = AndroidUtilities.dp(56);
+        menuItem.setLayoutParams(layoutParams);
+        menuItem.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ActionBarMenuItem item = (ActionBarMenuItem)view;
+                if (item.hasSubMenu()) {
+                    if (parentActionBarLayer.actionBarMenuOnItemClick.canOpenMenu()) {
+                        item.toggleSubMenu();
+                    }
+                } else if (item.isSearchField()) {
+                    parentActionBarLayer.onSearchFieldVisibilityChanged(item.toggleSearch());
+                } else {
+                    onItemClick((Integer)view.getTag());
+                }
+            }
+        });
+        return menuItem;
+    }
+
+    public ActionBarMenuItem addItem(int id, int icon, String backgroundStr) {
+        ActionBarMenuItem menuItem = new ActionBarMenuItem(getContext(), this, parentActionBar, backgroundStr);
         menuItem.setTag(id);
         menuItem.setScaleType(ImageView.ScaleType.CENTER);
         menuItem.setImageResource(icon);

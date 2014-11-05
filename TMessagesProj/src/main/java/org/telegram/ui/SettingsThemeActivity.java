@@ -1,10 +1,14 @@
 package org.telegram.ui;
 
 import org.telegram.android.LocaleController;
+import org.telegram.ui.Cells.ChatBaseCell;
 import org.telegram.ui.Views.ActionBar.ActionBarLayer;
 import org.telegram.ui.Views.ActionBar.BaseFragment;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +21,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.teamjihu.ThemeManager;
 
 import org.telegram.messenger.phonethemeshop.R;
+import org.telegram.ui.Views.ChatActivityEnterView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,12 +37,15 @@ import java.util.List;
 public class SettingsThemeActivity extends BaseFragment {
     ThemeManager themeManager;
     String currentThemePkg;
+    String prevThemePkg;
     LayoutInflater INFLATER;
 
     ListView themeList = null;
     ArrayAdapterThemeList arrayAdapterThemeList = null;
     List<Bundle> themeItems = new ArrayList<Bundle>();
     int prevThemePosition;
+
+    private final int REQUEST_UNINSTALL = 1;
 
     @Override
     public View createView(LayoutInflater inflater, ViewGroup container) {
@@ -59,6 +68,7 @@ public class SettingsThemeActivity extends BaseFragment {
             fragmentView = inflater.inflate(R.layout.settings_theme_layout, container, false);
 
             currentThemePkg = themeManager.getCurrentTheme();
+            prevThemePkg = currentThemePkg;
             getThemeList();
 
             themeList = (ListView)fragmentView.findViewById(R.id.theme_list);
@@ -78,6 +88,7 @@ public class SettingsThemeActivity extends BaseFragment {
     private void getThemeList() {
         ArrayList<String> pkgs = new ArrayList<String>();
         ArrayList<String> names = new ArrayList<String>();
+        themeItems.clear();
 
         themeManager.GetThemeList(pkgs, names);
         for ( int i = 0; i < pkgs.size(); i++ ) {
@@ -102,6 +113,8 @@ public class SettingsThemeActivity extends BaseFragment {
                 FrameLayout prevThemeItem = (FrameLayout)parent.getChildAt(prevThemePosition);
                 btnCheck = (ImageView)prevThemeItem.findViewById(R.id.settings_row_check_button);
                 btnCheck.setImageResource(R.drawable.btn_check_off);
+
+                currentThemePkg = b.getString("themePkg");
             }
             prevThemePosition = pos;
         }
@@ -138,16 +151,63 @@ public class SettingsThemeActivity extends BaseFragment {
             if ( item != null ) {
                 TextView themeName = (TextView)convertView.findViewById(R.id.theme_name);
                 ImageView btnCheck = (ImageView)convertView.findViewById(R.id.settings_row_check_button);
+                ImageView btnDelete = (ImageView)convertView.findViewById(R.id.settings_row_delete_button);
+                btnDelete.setTag(item);
                 if ( themeName != null ) {
                     themeName.setText(item.getString("themeName"));
                     if ( currentThemePkg.equals(item.getString("themePkg")) ) {
                         btnCheck.setImageResource(R.drawable.btn_check_on);
                         prevThemePosition = position;
                     }
+                    if ( item.getString("themeName").equals(getParentActivity().getString(R.string.theme_title)) ) {
+                        btnDelete.setVisibility(View.GONE);
+                    }
                 }
+                btnDelete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Bundle b = (Bundle)view.getTag();
+                        String selectedThemeName = b.getString("themeName");
+                        String selectedThemePkg = b.getString("themePkg");
+
+                        if ( !currentThemePkg.equals(selectedThemePkg) ) {
+                            int index = -1;
+                            for ( int i = 0; i < themeItems.size(); i++ )
+                                if ( themeItems.get(i).getString("themeName").equals(selectedThemeName) ) {
+                                    index = i;
+                                    break;
+                                }
+                            if ( index != -1 ) {
+                                Uri packageURI = Uri.parse("package:" + selectedThemePkg);
+                                Intent uninstallIntent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageURI);
+                                startActivityForResult(uninstallIntent, index);
+                            }
+                        } else
+                            Toast.makeText(getParentActivity(), R.string.usingTheme, Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             return convertView;
+        }
+    }
+
+    @Override
+    public void onActivityResultFragment(int index, int resultCode, Intent data) {
+        getThemeList();
+        arrayAdapterThemeList.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onFragmentDestroy() {
+        super.onFragmentDestroy();
+
+        if ( !currentThemePkg.equals(prevThemePkg) ) {
+            ChatBaseCell chatBaseCell = new ChatBaseCell(getParentActivity(), true);
+            Intent i = getParentActivity().getBaseContext().getPackageManager().getLaunchIntentForPackage(getParentActivity().getBaseContext().getPackageName());
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            getParentActivity().finish();
+            getParentActivity().startActivity(i);
         }
     }
 }

@@ -14,8 +14,10 @@ import android.content.SharedPreferences;
 import android.view.View;
 
 public class ThemeManager {
-	private static final String CUSTOM_PERMISSION = "com.teamjihu.theme.telegram.v1";
+    private static final String CUSTOM_PERMISSION = "com.teamjihu.theme.telegram.v1";
     private static final String DEFAULT_THEME_PACKAGE = "org.telegram.messenger.phonethemeshop";
+
+    private static final String CUSTOM_EMOTICON_PERMISSION = "com.teamjihu.emoticon.telegram.v1";
 
     private static final String PREF_NAME = "THEME_PREF";
     private static final String PREF_THEME_PACKAGE = "PREF_THEME_PACKAGE";

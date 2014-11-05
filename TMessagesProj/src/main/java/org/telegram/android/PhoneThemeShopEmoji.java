@@ -12,20 +12,27 @@ import android.graphics.drawable.Drawable;
  * Created by OOO on 2014-10-28.
  */
 public class PhoneThemeShopEmoji {
+    public Drawable icon;
     public Drawable emojis;
     public int col;
     public int row;
     public int total;
+    public String pkg;
+    public String name;
     private int twidth;
     private int theight;
     private int width;
     private int height;
     private Bitmap bmp;
     private Paint paint = new Paint();
+    private final int MAX_WIDTH_HEIGHT = 120;
 
-    public PhoneThemeShopEmoji (Drawable _emojis, int _col, int _row, int _total ) {
+    public PhoneThemeShopEmoji (String _pkg, String _name, Drawable _icon, Drawable _emojis, int _col, int _row, int _total ) {
         paint.setFilterBitmap(true);
 
+        pkg = _pkg;
+        name = _name;
+        icon = _icon;
         emojis = _emojis;
         col = _col;
         row = _row;
@@ -51,9 +58,16 @@ public class PhoneThemeShopEmoji {
     }
 
     public Bitmap getBitmap( int index ) {
-        Bitmap targetBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        int _width = MAX_WIDTH_HEIGHT;
+        int _height = MAX_WIDTH_HEIGHT;
 
-        targetBitmap = Bitmap.createBitmap(bmp, ( index % col ) * width, ( index / row ) * height, width, height);
+        if ( width > height )
+            _height = _height * height / width;
+        else
+            _width = _width * width / height;
+
+        Bitmap targetBitmap = Bitmap.createBitmap(bmp, ( index % col ) * width, ( index / col ) * height, width, height);
+        //targetBitmap = Bitmap.createScaledBitmap(targetBitmap, _width, _height, true);
 
         return targetBitmap;
     }

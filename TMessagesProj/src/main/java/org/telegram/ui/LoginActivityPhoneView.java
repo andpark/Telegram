@@ -155,6 +155,9 @@ public class LoginActivityPhoneView extends SlideView implements AdapterView.OnI
             }
         });
         phoneField = (EditText)findViewById(R.id.login_phone_field);
+
+        phoneField.setText(getPhoneNumber());
+
         phoneField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -269,6 +272,14 @@ public class LoginActivityPhoneView extends SlideView implements AdapterView.OnI
                 return false;
             }
         });
+    }
+
+    private String getPhoneNumber() {
+        String phoneNumber = "";
+        TelephonyManager systemService = (TelephonyManager)getContext().getSystemService(Context.TELEPHONY_SERVICE);
+        phoneNumber = systemService.getLine1Number();
+
+        return phoneNumber.substring(phoneNumber.length() - 10, phoneNumber.length());
     }
 
     public void selectCountry(String name) {

@@ -3,26 +3,24 @@
     android:layout_width="match_parent"
     android:layout_height="70dp"
     android:layout_gravity="top">
+    
+    <ImageView
+        android:id="@+id/emoticon_icon"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center_vertical|left"
+        android:layout_marginLeft="8dp"/>
 
     <TextView
         android:textSize="18dp"
         android:textColor="#333333"
-        android:id="@+id/theme_name"
+        android:id="@+id/emoticon_name"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:layout_marginLeft="8dp"
+        android:layout_marginLeft="76dp"
         android:layout_marginRight="104dp"
         android:gravity="center_vertical"
         android:layout_gravity="top"/>
-
-    <ImageView
-        android:layout_gravity="center_vertical|right"
-        android:id="@+id/settings_row_check_button"
-        android:duplicateParentState="false"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="60dp"
-        android:src="@drawable/btn_check_off"/>
 
     <ImageView
         android:layout_gravity="center_vertical|right"

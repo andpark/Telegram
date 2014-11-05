@@ -200,7 +200,8 @@ public class PopupNotificationActivity extends Activity implements NotificationC
         //actionBarLayer.setDisplayHomeAsUpEnabled(true, R.drawable.ic_ab_back);
         actionBarLayer.setDisplayHomeAsUpEnabled(true, themeManager.getDrawable("ic_ab_back", false));
         actionBarLayer.setBackgroundResource(R.color.header);
-        actionBarLayer.setItemsBackground(R.drawable.bar_selector);
+        //actionBarLayer.setItemsBackground(R.drawable.bar_selector);
+        actionBarLayer.setItemsBackground("bar_selector");
         actionBar.setCurrentActionBarLayer(actionBarLayer);
 
         ActionBarMenu menu = actionBarLayer.createMenu();

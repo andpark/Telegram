@@ -55,7 +55,8 @@ public class ActionBarLayer extends FrameLayout {
     private boolean oldUseBack;
     private View actionOverlay;
     protected boolean isSearchFieldVisible;
-    protected int itemsBackgroundResourceId;
+    protected int itemsBackgroundResourceId = -1;
+    protected String itemsBackgroundStr = null;
     private boolean isBackOverlayVisible;
     protected BaseFragment parentFragment;
     public ActionBarMenuOnItemClick actionBarMenuOnItemClick;
@@ -286,7 +287,7 @@ public class ActionBarLayer extends FrameLayout {
             subTitleTextView = new TextView(getContext());
             backButtonFrameLayout.addView(subTitleTextView);
             subTitleTextView.setGravity(Gravity.LEFT);
-            subTitleTextView.setTextColor(0xffd7e8f7);
+            subTitleTextView.setTextColor(themeManager.getColor("subtitle"));
             subTitleTextView.setSingleLine(true);
             subTitleTextView.setLines(1);
             subTitleTextView.setMaxLines(1);
@@ -304,7 +305,7 @@ public class ActionBarLayer extends FrameLayout {
             subTitleTextView = new TextView(getContext());
             backButtonFrameLayout.addView(subTitleTextView);
             subTitleTextView.setGravity(Gravity.LEFT);
-            subTitleTextView.setTextColor(0xffd7e8f7);
+            subTitleTextView.setTextColor(themeManager.getColor("subtitle"));
             subTitleTextView.setSingleLine(true);
             subTitleTextView.setLines(1);
             subTitleTextView.setMaxLines(1);
@@ -330,7 +331,7 @@ public class ActionBarLayer extends FrameLayout {
             titleTextView.setMaxLines(1);
             titleTextView.setEllipsize(TextUtils.TruncateAt.END);
             backButtonFrameLayout.addView(titleTextView);
-            titleTextView.setTextColor(0xffffffff);
+            titleTextView.setTextColor(themeManager.getColor("title"));
         }
         if (titleTextView != null) {
             titleTextView.setVisibility(value != null ? VISIBLE : GONE);
@@ -344,7 +345,8 @@ public class ActionBarLayer extends FrameLayout {
             titleTextView = new TextView(getContext());
             titleTextView.setGravity(Gravity.LEFT);
             backButtonFrameLayout.addView(titleTextView);
-            titleTextView.setTextColor(0xffffffff);
+            //titleTextView.setTextColor(0xffffffff);
+            titleTextView.setTextColor(themeManager.getColor("title"));
             titleTextView.setSingleLine(true);
             titleTextView.setLines(1);
             titleTextView.setMaxLines(1);
@@ -549,5 +551,10 @@ public class ActionBarLayer extends FrameLayout {
     public void setItemsBackground(int resourceId) {
         itemsBackgroundResourceId = resourceId;
         backButtonFrameLayout.setBackgroundResource(itemsBackgroundResourceId);
+    }
+
+    public void setItemsBackground(String str) {
+        itemsBackgroundStr = str;
+        themeManager.setBackgroundDrawable(backButtonFrameLayout, themeManager.getDrawable(itemsBackgroundStr, false));
     }
 }

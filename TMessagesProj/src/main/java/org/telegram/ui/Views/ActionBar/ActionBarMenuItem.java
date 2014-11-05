@@ -31,6 +31,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.teamjihu.ThemeManager;
+
 import org.telegram.android.AndroidUtilities;
 import org.telegram.android.LocaleController;
 import org.telegram.messenger.phonethemeshop.R;
@@ -56,9 +58,24 @@ public class ActionBarMenuItem extends ImageView {
     private int[] location = null;
     private View selectedMenuView = null;
 
+    private ThemeManager themeManager;
+
     public ActionBarMenuItem(Context context, ActionBarMenu menu, ActionBar actionBar, int background) {
         super(context);
         setBackgroundResource(background);
+        parentMenu = menu;
+        parentActionBar = actionBar;
+    }
+
+    public ActionBarMenuItem(Context context, ActionBarMenu menu, ActionBar actionBar, String backgroundStr) {
+        super(context);
+        themeManager = new ThemeManager(context);
+
+        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN)
+            setBackgroundDrawable(themeManager.getDrawable(backgroundStr, false));
+        else
+            setBackground(themeManager.getDrawable(backgroundStr, false));
+
         parentMenu = menu;
         parentActionBar = actionBar;
     }
@@ -360,7 +377,8 @@ public class ActionBarMenuItem extends ImageView {
         if (value && searchField == null) {
             searchField = new EditText(getContext());
             searchField.setTextSize(18);
-            searchField.setTextColor(0xffffffff);
+            //searchField.setTextColor(0xffffffff);
+            searchField.setTextColor(themeManager.getColor("title"));
             searchField.setSingleLine(true);
             searchField.setBackgroundResource(R.drawable.search_light_states);
             searchField.setPadding(AndroidUtilities.dp(6), 0, AndroidUtilities.dp(6), 0);

@@ -6,4 +6,7 @@
     <color name="settings_background_color">#ffffffff</color>
     <color name="divider">#dcdcdc</color>
     <color name="header">#ff54759e</color>
+
+    <color name="title">#ffffffff</color>
+    <color name="subtitle">#ffd7e8f7</color>
 </resources>

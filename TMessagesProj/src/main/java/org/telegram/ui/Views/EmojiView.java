@@ -26,6 +26,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.teamjihu.EmoticonManager;
+
 import org.telegram.android.AndroidUtilities;
 import org.telegram.android.Emoji;
 import org.telegram.android.LocaleController;
@@ -55,28 +57,33 @@ public class EmojiView extends LinearLayout {
     private FrameLayout recentsWrap;
     private ArrayList<GridView> views = new ArrayList<GridView>();
 
+    EmoticonManager emoticonManager;
     ChatActivity chatActivity;
 
     private List<PhoneThemeShopEmoji> PhoneThemeShopEmojiList = new ArrayList<PhoneThemeShopEmoji>();
 
     public EmojiView(Context paramContext) {
         super(paramContext);
+        emoticonManager = new EmoticonManager(paramContext);
         init();
     }
 
     public EmojiView(Context paramContext, ChatActivity _chatActivity) {
         super(paramContext);
+        emoticonManager = new EmoticonManager(paramContext);
         chatActivity = _chatActivity;
         init();
     }
 
     public EmojiView(Context paramContext, AttributeSet paramAttributeSet) {
         super(paramContext, paramAttributeSet);
+        emoticonManager = new EmoticonManager(paramContext);
         init();
     }
 
     public EmojiView(Context paramContext, AttributeSet paramAttributeSet, int paramInt) {
         super(paramContext, paramAttributeSet, paramInt);
+        emoticonManager = new EmoticonManager(paramContext);
         init();
     }
 
@@ -124,11 +131,12 @@ public class EmojiView extends LinearLayout {
         for ( int i = 0; i < icons.length; i++ )
             iconsDrawable.add(getResources().getDrawable(icons[i]));
 
-        iconsDrawable.add(1, getResources().getDrawable(R.drawable.icon_thumb00));
+        List<PhoneThemeShopEmoji> emoticonList = emoticonManager.GetEmoticonList();
 
-        PhoneThemeShopEmoji ptse;
-        ptse = new PhoneThemeShopEmoji(getResources().getDrawable(R.drawable.phonethemeshop00), 4, 4, 16);
-        PhoneThemeShopEmojiList.add(ptse);
+        for ( int i = emoticonList.size() - 1 ; i >= 0; i-- ) {
+            iconsDrawable.add(1, emoticonList.get(i).icon);
+            PhoneThemeShopEmojiList.add(0, emoticonList.get(i));
+        }
     }
 
     private void init() {

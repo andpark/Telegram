@@ -516,7 +516,8 @@ public class ChatMediaCell extends ChatBaseCell implements MediaController.FileD
                 if (AndroidUtilities.isTablet()) {
                     photoWidth = (int) (AndroidUtilities.getMinTabletSide() * 0.7f);
                 } else {
-                    photoWidth = (int) (Math.min(AndroidUtilities.displaySize.x, AndroidUtilities.displaySize.y) * 0.7f);
+                    //photoWidth = (int) (Math.min(AndroidUtilities.displaySize.x, AndroidUtilities.displaySize.y) * 0.7f);
+                    photoWidth = (int) (Math.min(AndroidUtilities.displaySize.x, AndroidUtilities.displaySize.y) * 0.4f);
                 }
                 photoHeight = photoWidth + AndroidUtilities.dp(100);
 
@@ -804,7 +805,7 @@ public class ChatMediaCell extends ChatBaseCell implements MediaController.FileD
     }
 
     @Override
-    protected void onAfterBackgroundDraw(Canvas canvas) {
+    protected void onAfterBackgroundDraw(Canvas canvas ) {
         boolean imageDrawn = false;
         if (gifDrawable != null) {
             canvas.save();
