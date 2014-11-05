@@ -1345,7 +1345,9 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                                     return 5;
                                 }
                             }
-                            //return 4;
+                            if (messageObject.messageOwner.ttl <= 0) {
+                                return 4;
+                            }
                         }
                     }
                     return 2;
@@ -2695,7 +2697,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                                 }
                             } else {
                                 if (i == 0) {
-
+                                    processSelectedOption(4);
                                 } else if (i == 1) {
                                     processSelectedOption(1);
                                 }
@@ -2796,6 +2798,12 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
         } else if (option == 4) {
             String fileName = selectedObject.getFileName();
             String path = selectedObject.messageOwner.attachPath;
+            if (path != null && path.length() > 0) {
+                File temp = new File(path);
+                if (!temp.exists()) {
+                    path = null;
+                }
+            }
             if (path == null || path.length() == 0) {
                 path = FileLoader.getPathToMessage(selectedObject.messageOwner).toString();
             }
