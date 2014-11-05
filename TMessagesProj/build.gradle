@@ -74,7 +74,7 @@ android {
         minSdkVersion 8
         targetSdkVersion 19
         versionCode 379
-        versionName "1.9.7"
+        versionName '1.9.7'
     }
     productFlavors {
     }
