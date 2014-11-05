@@ -51,6 +51,8 @@ import android.webkit.JsResult;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
+import android.app.ProgressDialog;
+
 /**
  * Created by soohwanpark on 2014-10-22.
  */
@@ -110,12 +112,32 @@ public class ZzalActivity extends BaseFragment {
         */
     }
 
+    static ProgressDialog searchProgressDialog = null;
+    public static void ShowProgressDialog(Context context, int progressDialogResId, boolean bShow) {
+        if(bShow) {
+            if(searchProgressDialog != null) {
+                searchProgressDialog.dismiss();
+                searchProgressDialog = null;
+            }
+            searchProgressDialog = new ProgressDialog(context);
+            searchProgressDialog.setCancelable(false);
+            searchProgressDialog.show();
+            searchProgressDialog.setContentView(progressDialogResId);
+        } else {
+            if(searchProgressDialog != null) {
+                searchProgressDialog.dismiss();
+                searchProgressDialog = null;
+            }
+        }
+    }
+
     public class JsInterface {
         public JsInterface() {
         }
 
         @JavascriptInterface
         public void sendZzal(String url) {
+            //ShowProgressDialog(getParentActivity(), R.layout.progressdialog, true);
             DownloadZzalTask task = new DownloadZzalTask(chatActivity);
             task.execute(url);
             try {
@@ -123,7 +145,12 @@ public class ZzalActivity extends BaseFragment {
             } catch (Exception ex) {
                 Toast.makeText(chatActivity.getParentActivity(), "짤 전송에 실패하였습니다.", Toast.LENGTH_SHORT).show();
             }
-            finishFragment(true);
+            //ShowProgressDialog(getParentActivity(), R.layout.progressdialog, false);
+            parentLayout.post(new Runnable() {
+                public void run() {
+                    finishFragment();
+                }
+            });
         }
     }
 

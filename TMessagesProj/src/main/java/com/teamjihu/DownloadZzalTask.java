@@ -68,6 +68,9 @@ public class DownloadZzalTask extends AsyncTask<String, Void, ArrayList<String>>
             outputStream.flush();
             outputStream.close();
 
+            bmp.recycle();
+            bmp = null;
+
             photos.add(tempFile.getPath());
 
 
@@ -102,7 +105,6 @@ public class DownloadZzalTask extends AsyncTask<String, Void, ArrayList<String>>
     protected void onPostExecute(ArrayList<String> photos) {
         if(photos.size() > 0) {
             chatActivity.didSelectPhotos(photos);
-            Toast.makeText(chatActivity.getParentActivity(), "짤을 전송합니다.", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(chatActivity.getParentActivity(), "짤 전송에 실패하였습니다.", Toast.LENGTH_SHORT).show();
         }
