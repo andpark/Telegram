@@ -43,6 +43,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.webkit.WebChromeClient;
+import android.webkit.GeolocationPermissions;
+import android.webkit.JsPromptResult;
+import android.webkit.JsResult;
+
 /**
  * Created by soohwanpark on 2014-10-22.
  */
@@ -52,6 +57,9 @@ public class ZzalActivity extends BaseFragment {
 
     ChatActivity chatActivity;
     WebView webviewZzal;
+
+    FrameLayout topLoadingBar;
+    ImageView imgLoading;
 
     public ZzalActivity( ChatActivity _chatActivity ) {
         chatActivity = _chatActivity;
@@ -74,10 +82,14 @@ public class ZzalActivity extends BaseFragment {
     }
 
     private void init() {
-        webviewZzal = (WebView)((LinearLayout)fragmentView).findViewById(R.id.webview_zzal);
-        webviewZzal.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+        topLoadingBar = (FrameLayout)fragmentView.findViewById(R.id.topLoadingBar);
+        imgLoading = (ImageView)fragmentView.findViewById(R.id.imgLoading);
+
+        webviewZzal = (WebView)fragmentView.findViewById(R.id.webview_zzal);
+        webviewZzal.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
         webviewZzal.getSettings().setJavaScriptEnabled(true);
         webviewZzal.setWebViewClient(new WebViewClientClass());
+        webviewZzal.setWebChromeClient(new MyWebChromeClient());
         webviewZzal.loadUrl("http://2runzzal.com/themegram");
 
         webviewZzal.setOnLongClickListener(new View.OnLongClickListener() {
@@ -105,6 +117,41 @@ public class ZzalActivity extends BaseFragment {
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             view.loadUrl(url);
             return true;
+        }
+    }
+
+    public class MyWebChromeClient extends WebChromeClient {
+        @Override
+        public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
+            callback.invoke(origin, true, false);
+        }
+        @Override
+        public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
+            return false;
+        }
+        @Override
+        public boolean onJsConfirm(WebView view, String url, String message, JsResult result) {
+            return false;
+        }
+        @Override
+        public boolean onJsPrompt(WebView view, String url, String message, String defaultValue, JsPromptResult result) {
+            return false;
+        }
+        Runnable hideLoadingBar = new Runnable() {
+            @Override
+            public void run() {
+                topLoadingBar.setVisibility(View.INVISIBLE);
+            }
+        };
+        @Override
+        public void onProgressChanged(WebView view, int newProgress) {
+            if(newProgress >= 0) {
+                topLoadingBar.setVisibility(View.VISIBLE);
+                imgLoading.getLayoutParams().width = (int) (fragmentView.getWidth() * (double)newProgress/100);
+                imgLoading.requestLayout();
+            }
+            if(newProgress >= 100)
+                (new Handler()).postDelayed(hideLoadingBar, 1000);
         }
     }
 
