@@ -22,6 +22,7 @@ import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -86,6 +87,8 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
     private ActionBar actionBar;
     private ActionBarLayer actionBarLayer;
     private boolean isActionBarVisible = true;
+
+    private static Drawable[] progressDrawables = null;
 
     private WindowManager.LayoutParams windowLayoutParams;
     private FrameLayoutDrawer containerView;
@@ -470,6 +473,14 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
         }
         parentActivity = activity;
         themeManager = new ThemeManager(activity);
+
+        if (progressDrawables == null) {
+            progressDrawables = new Drawable[4];
+            progressDrawables[0] = parentActivity.getDrawable(R.drawable.cancel_big);
+            progressDrawables[1] = parentActivity.getDrawable(R.drawable.circle_big);
+            progressDrawables[2] = parentActivity.getDrawable(R.drawable.load_big);
+            progressDrawables[3] = parentActivity.getDrawable(R.drawable.play_big);
+        }
 
         scroller = new Scroller(activity);
 
