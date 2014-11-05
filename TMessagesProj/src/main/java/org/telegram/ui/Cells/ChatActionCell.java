@@ -21,6 +21,8 @@ import android.text.style.URLSpan;
 import android.view.MotionEvent;
 import android.view.SoundEffectConstants;
 
+import com.teamjihu.ThemeManager;
+
 import org.telegram.android.AndroidUtilities;
 import org.telegram.android.ImageReceiver;
 import org.telegram.android.MessageObject;
@@ -61,8 +63,11 @@ public class ChatActionCell extends BaseCell {
 
     private ChatActionCellDelegate delegate;
 
+    private ThemeManager themeManager;
+
     public ChatActionCell(Context context) {
         super(context);
+        themeManager = new ThemeManager(context);
         if (backgroundBlack == null) {
             backgroundBlack = getResources().getDrawable(R.drawable.system_black);
             backgroundBlue = getResources().getDrawable(R.drawable.system_blue);
@@ -98,17 +103,26 @@ public class ChatActionCell extends BaseCell {
                 }
             }
             if (currentMessageObject.messageOwner.action instanceof TLRPC.TL_messageActionUserUpdatedPhoto) {
-                imageReceiver.setImage(currentMessageObject.messageOwner.action.newUserPhoto.photo_small, "50_50", getResources().getDrawable(AndroidUtilities.getUserAvatarForId(id)), false);
+                //imageReceiver.setImage(currentMessageObject.messageOwner.action.newUserPhoto.photo_small, "50_50", getResources().getDrawable(AndroidUtilities.getUserAvatarForId(id)), false);
+                String placeHolderId = AndroidUtilities.getUserAvatarForId(id);
+                Drawable d = themeManager.getDrawable(placeHolderId, false);
+                imageReceiver.setImage(currentMessageObject.messageOwner.action.newUserPhoto.photo_small, "50_50", d, false);
             } else {
                 PhotoObject photo = PhotoObject.getClosestImageWithSize(currentMessageObject.photoThumbs, AndroidUtilities.dp(64));
                 if (photo != null) {
                     if (photo.image != null) {
                         imageReceiver.setImageBitmap(photo.image);
                     } else {
-                        imageReceiver.setImage(photo.photoOwner.location, "50_50", getResources().getDrawable(AndroidUtilities.getGroupAvatarForId(id)), false);
+                        //imageReceiver.setImage(photo.photoOwner.location, "50_50", getResources().getDrawable(AndroidUtilities.getGroupAvatarForId(id)), false);
+                        String placeHolderId = AndroidUtilities.getGroupAvatarForId(id);
+                        Drawable d = themeManager.getDrawable(placeHolderId, false);
+                        imageReceiver.setImage(photo.photoOwner.location, "50_50", d, false);
                     }
                 } else {
-                    imageReceiver.setImageBitmap(getResources().getDrawable(AndroidUtilities.getGroupAvatarForId(id)));
+                    //imageReceiver.setImageBitmap(getResources().getDrawable(AndroidUtilities.getGroupAvatarForId(id)));
+                    String placeHolderId = AndroidUtilities.getGroupAvatarForId(id);
+                    Drawable d = themeManager.getDrawable(placeHolderId, false);
+                    imageReceiver.setImageBitmap(d);
                 }
             }
             imageReceiver.setVisible(!PhotoViewer.getInstance().isShowingImage(currentMessageObject), false);

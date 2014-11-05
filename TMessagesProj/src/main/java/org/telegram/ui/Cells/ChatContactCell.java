@@ -9,6 +9,7 @@
 package org.telegram.ui.Cells;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.text.Layout;
@@ -17,6 +18,8 @@ import android.text.TextPaint;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.SoundEffectConstants;
+
+import com.teamjihu.ThemeManager;
 
 import org.telegram.PhoneFormat.PhoneFormat;
 import org.telegram.android.AndroidUtilities;
@@ -56,8 +59,11 @@ public class ChatContactCell extends ChatBaseCell {
 
     private ChatContactCellDelegate contactDelegate = null;
 
+    private ThemeManager themeManager;
+
     public ChatContactCell(Context context) {
         super(context);
+        themeManager = new ThemeManager(context);
         if (namePaint == null) {
             namePaint = new TextPaint(TextPaint.ANTI_ALIAS_FLAG);
             namePaint.setTextSize(AndroidUtilities.dp(15));
@@ -184,9 +190,17 @@ public class ChatContactCell extends ChatBaseCell {
                 if (contactUser.photo != null) {
                     currentPhoto = contactUser.photo.photo_small;
                 }
-                avatarImage.setImage(currentPhoto, "50_50", getResources().getDrawable(AndroidUtilities.getUserAvatarForId(uid)), false);
+                //avatarImage.setImage(currentPhoto, "50_50", getResources().getDrawable(AndroidUtilities.getUserAvatarForId(uid)), false);
+                String placeHolderId = AndroidUtilities.getUserAvatarForId(uid);
+
+                Drawable d = themeManager.getDrawable(placeHolderId, false);
+                avatarImage.setImage(currentPhoto, "50_50", d, false);
             } else {
-                avatarImage.setImage(null, "50_50", getResources().getDrawable(AndroidUtilities.getUserAvatarForId(uid)), false);
+                //avatarImage.setImage(null, "50_50", getResources().getDrawable(AndroidUtilities.getUserAvatarForId(uid)), false);
+                String placeHolderId = AndroidUtilities.getUserAvatarForId(uid);
+
+                Drawable d = themeManager.getDrawable(placeHolderId, false);
+                avatarImage.setImage(null, "50_50", d, false);
             }
 
             String currentNameString = ContactsController.formatName(messageObject.messageOwner.media.first_name, messageObject.messageOwner.media.last_name);

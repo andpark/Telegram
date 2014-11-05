@@ -1059,6 +1059,10 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
         return fragmentView;
     }
 
+    public void didSelectPhotos(ArrayList<String> photos) {
+        SendMessagesHelper.prepareSendingPhotos(photos, null, dialog_id);
+    }
+
     private boolean sendSecretMessageRead(MessageObject messageObject) {
         if (messageObject == null || messageObject.isOut() || !messageObject.isSecretMedia() || messageObject.messageOwner.destroyTime != 0 || messageObject.messageOwner.ttl <= 0) {
             return false;
