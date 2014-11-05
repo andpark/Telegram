@@ -12,7 +12,7 @@
         android:layout_marginLeft="8dp"/>
 
     <TextView
-        android:textSize="18dp"
+        android:textSize="15dp"
         android:textColor="#333333"
         android:id="@+id/emoticon_name"
         android:layout_width="wrap_content"
@@ -28,7 +28,6 @@
         android:duplicateParentState="false"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="8dp"
         android:src="@drawable/doccancel_g"/>
 
     <View

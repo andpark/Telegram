@@ -187,6 +187,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     private final static int attach_document = 9;
     private final static int attach_location = 10;
     private final static int chat_menu_avatar = 11;
+    private final static int noti_toggle = 12;
 
     private ThemeManager themeManager;
 
@@ -635,6 +636,25 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                         MessagesActivity fragment = new MessagesActivity(args);
                         fragment.setDelegate(ChatActivity.this);
                         presentFragment(fragment);
+                    } else if (id == noti_toggle) {
+                        SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("Notifications", Activity.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = preferences.edit();
+                        int noti = preferences.getInt("notify2_" + dialog_id, 1);
+
+                        ActionBarMenu menu = actionBarLayer.createMenu();
+
+                        if ( noti == 2 ) {
+                            editor.putInt("notify2_" + dialog_id, 1);
+                            if ( menu != null )
+                                menu.getItem(noti_toggle).setImageDrawable(themeManager.getDrawable("ic_noti_on", false));
+                        }else {
+                            editor.putInt("notify2_" + dialog_id, 2);
+                            if (menu != null)
+                                menu.getItem(noti_toggle).setImageDrawable(themeManager.getDrawable("ic_noti_off", false));
+                        }
+                        editor.commit();
+
+
                     }
                 }
             });
@@ -653,8 +673,16 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 timeItem = menu.addItemResource(chat_enc_timer, R.layout.chat_header_enc_layout);
             }
 
+
+            SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("Notifications", Activity.MODE_PRIVATE);
+            int noti = preferences.getInt("notify2_" + dialog_id, 1);
+            if ( noti == 2 )
+                menu.addItem(noti_toggle, themeManager.getDrawable("ic_noti_off", false));
+            else
+                menu.addItem(noti_toggle, themeManager.getDrawable("ic_noti_on", false));
+
             //ActionBarMenuItem item = menu.addItem(chat_menu_attach, R.drawable.ic_ab_attach);
-            ActionBarMenuItem item = menu.addItem(0, themeManager.getDrawable("ic_ab_attach", false));
+            ActionBarMenuItem item = menu.addItem(1, themeManager.getDrawable("ic_ab_attach", false));
 //            item.addSubItem(attach_photo, LocaleController.getString("ChatTakePhoto", R.string.ChatTakePhoto), R.drawable.ic_attach_photo);
 //            item.addSubItem(attach_gallery, LocaleController.getString("ChatGallery", R.string.ChatGallery), R.drawable.ic_attach_gallery);
 //            item.addSubItem(attach_video, LocaleController.getString("ChatVideo", R.string.ChatVideo), R.drawable.ic_attach_video);
@@ -749,7 +777,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
 
             updateContactStatus();
 
-            SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Activity.MODE_PRIVATE);
+            preferences = ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Activity.MODE_PRIVATE);
             int selectedBackground = preferences.getInt("selectedBackground", 1000001);
             int selectedColor = preferences.getInt("selectedColor", 0);
             if (selectedColor != 0) {

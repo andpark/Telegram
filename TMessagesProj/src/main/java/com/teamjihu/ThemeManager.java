@@ -78,22 +78,39 @@ public class ThemeManager {
 		String themeTitle = mCurrentThemeResource.getString(themeTitleId);
 		return themeTitle;
 	}
-	
-	public void GetThemeList(ArrayList<String> pkgs, ArrayList<String> names) {
-		getThemeList(pkgs);
-		
-		for(String pkgName : pkgs) {
-			try {
-				Resources res = mPackageManager.getResourcesForApplication(pkgName);
-				String themeTitle = res.getString(res.getIdentifier("theme_title", "string", pkgName));
-				names.add(themeTitle);
-			} catch (NameNotFoundException e) {
-				names.add("NO_THEME_NAME");
-			} catch(Resources.NotFoundException e) {
+
+    public void GetThemeList(ArrayList<String> pkgs, ArrayList<String> names) {
+        getThemeList(pkgs);
+
+        for(String pkgName : pkgs) {
+            try {
+                Resources res = mPackageManager.getResourcesForApplication(pkgName);
+                String themeTitle = res.getString(res.getIdentifier("theme_title", "string", pkgName));
+                names.add(themeTitle);
+            } catch (NameNotFoundException e) {
+                names.add("NO_THEME_NAME");
+            } catch(Resources.NotFoundException e) {
                 names.add("NO_THEME_NAME");
             }
-		}
-	}
+        }
+    }
+
+    public void GetThemeList(ArrayList<String> pkgs, ArrayList<String> names, ArrayList<Drawable> icons) {
+        getThemeList(pkgs);
+
+        for(String pkgName : pkgs) {
+            try {
+                Resources res = mPackageManager.getResourcesForApplication(pkgName);
+                String themeTitle = res.getString(res.getIdentifier("theme_title", "string", pkgName));
+                names.add(themeTitle);
+                icons.add(getIconImage(res, pkgName));
+            } catch (NameNotFoundException e) {
+                names.add("NO_THEME_NAME");
+            } catch(Resources.NotFoundException e) {
+                names.add("NO_THEME_NAME");
+            }
+        }
+    }
 	
 	public void getThemeList(ArrayList<String> pkgs){
     	List<PackageInfo> installedList = mPackageManager.getInstalledPackages(PackageManager.GET_PERMISSIONS);
@@ -149,5 +166,14 @@ public class ThemeManager {
             v.setBackgroundDrawable(d);
         else
             v.setBackground(d);
+    }
+
+    public Drawable getIconImage(Resources res, String emoticonPkg) {
+        int id = res.getIdentifier("ic_launcher", "drawable", emoticonPkg);
+        try{
+            return res.getDrawable(id);
+        } catch(Resources.NotFoundException ex) {
+            return null;
+        }
     }
 }

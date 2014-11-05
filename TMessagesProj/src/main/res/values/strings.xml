@@ -291,6 +291,8 @@
     <string name="SaveToGallerySettings">Save to gallery</string>
     <string name="SelectTheme">Select Theme</string>
     <string name="ManageEmoticon">Manage Emoticon</string>
+    <string name="PhoneThemeShop">PhoneThemeShop</string>
+    <string name="PhoneThemeShopSubTitle">Download Theme and Emoticon</string>
     <!-- media view -->
     <string name="NoMedia">No shared media yet</string>
     <string name="CancelDownload">Cancel Download</string>

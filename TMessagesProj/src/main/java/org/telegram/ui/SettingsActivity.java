@@ -16,6 +16,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
@@ -106,6 +107,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
     private int contactsSortRow;
     private int selectThemeRow;
     private int manageEmoticonRow;
+    private int PhoneThemeShowRow;
     private int rowCount;
 
     private ThemeManager themeManager;
@@ -192,6 +194,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
         settingsSectionRow = rowCount++;
         selectThemeRow = rowCount++;
         manageEmoticonRow = rowCount++;
+        PhoneThemeShowRow = rowCount++;
         enableAnimationsRow = rowCount++;
         languageRow = rowCount++;
         notificationRow = rowCount++;
@@ -301,6 +304,19 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                         presentFragment(new SettingsThemeActivity());
                     } else if (i == manageEmoticonRow) {
                         presentFragment(new SettingsEmoticonActivity());
+                    } else if ( i == PhoneThemeShowRow ) {
+                        Intent intent = new Intent();
+                        String targetPackage = "com.iconnect.app.pts.a";
+
+                        PackageManager pm = getParentActivity().getPackageManager();
+                        try {
+                            PackageInfo info=pm.getPackageInfo(targetPackage,PackageManager.GET_META_DATA);
+                            intent.setData(Uri.parse("pts://theme?serverType=telegram"));
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            getParentActivity().startActivity(intent);
+                        } catch (PackageManager.NameNotFoundException e) {
+                            getParentActivity().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + targetPackage)));
+                        }
                     }
                     /*else if (i == askQuestionRow) {
                         if (getParentActivity() == null) {
@@ -736,7 +752,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                     /*i == askQuestionRow ||*/ i == sendLogsRow || i == sendByEnterRow || i == terminateSessionsRow || i == wifiDownloadRow ||
                     i == mobileDownloadRow || i == clearLogsRow || i == roamingDownloadRow || i == languageRow || i == usernameRow ||
                     i == switchBackendButtonRow || i == telegramFaqRow || i == contactsSortRow || i == contactsReimportRow || i == saveToGalleryRow || i == selectThemeRow ||
-                    i == manageEmoticonRow;
+                    i == manageEmoticonRow || i == PhoneThemeShowRow;
         }
 
         @Override
@@ -1076,6 +1092,10 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                     textView.setText(LocaleController.getString("SelectTheme", R.string.SelectTheme));
                     divider.setVisibility(View.VISIBLE);
                     text = themeManager.getCurrentThemeName();
+                } else if ( i == PhoneThemeShowRow ) {
+                    textView.setText(LocaleController.getString("PhoneThemeShop", R.string.PhoneThemeShop));
+                    divider.setVisibility(View.VISIBLE);
+                    text = LocaleController.getString("PhoneThemeShopSubTitle", R.string.PhoneThemeShopSubTitle);
                 }
                 if ((mask & MediaController.AUTODOWNLOAD_MASK_PHOTO) != 0) {
                     text += LocaleController.getString("AttachPhoto", R.string.AttachPhoto);
@@ -1116,13 +1136,14 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                 return 5;
             } else if (i == enableAnimationsRow || i == sendByEnterRow || i == saveToGalleryRow) {
                 return 3;
-            } else if (i == notificationRow || i == blockedRow || i == backgroundRow /*|| i == askQuestionRow*/ || i == sendLogsRow || i == terminateSessionsRow || i == clearLogsRow || i == switchBackendButtonRow || i == telegramFaqRow || i == contactsReimportRow || i == manageEmoticonRow) {
+            } else if (i == notificationRow || i == blockedRow || i == backgroundRow /*|| i == askQuestionRow*/ || i == sendLogsRow || i == terminateSessionsRow || i == clearLogsRow ||
+                    i == switchBackendButtonRow || i == telegramFaqRow || i == contactsReimportRow || i == manageEmoticonRow) {
                 return 2;
             } else if (i == logoutRow) {
                 return 4;
             } else if (i == versionRow) {
                 return 6;
-            } else if (i == wifiDownloadRow || i == mobileDownloadRow || i == roamingDownloadRow || i == selectThemeRow) {
+            } else if (i == wifiDownloadRow || i == mobileDownloadRow || i == roamingDownloadRow || i == selectThemeRow || i == PhoneThemeShowRow) {
                 return 7;
             } else {
                 return 2;
