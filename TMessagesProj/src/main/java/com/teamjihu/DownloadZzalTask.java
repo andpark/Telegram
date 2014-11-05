@@ -68,6 +68,9 @@ public class DownloadZzalTask extends AsyncTask<String, Void, ArrayList<String>>
             outputStream.flush();
             outputStream.close();
 
+            bmp.recycle();
+            bmp = null;
+
             photos.add(tempFile.getPath());
 
 
@@ -94,14 +97,16 @@ public class DownloadZzalTask extends AsyncTask<String, Void, ArrayList<String>>
             }
         } catch ( IOException ie ) {
             ie.printStackTrace();
-            Toast.makeText(chatActivity.getParentActivity(), "짤 전송에 실패하였습니다.", Toast.LENGTH_SHORT).show();
         }
 
         return photos;
     }
 
     protected void onPostExecute(ArrayList<String> photos) {
-        chatActivity.didSelectPhotos(photos);
-        Toast.makeText(chatActivity.getParentActivity(), "짤을 전송합니다.", Toast.LENGTH_SHORT).show();
+        if(photos.size() > 0) {
+            chatActivity.didSelectPhotos(photos);
+        } else {
+            Toast.makeText(chatActivity.getParentActivity(), "짤 전송에 실패하였습니다.", Toast.LENGTH_SHORT).show();
+        }
     }
 }

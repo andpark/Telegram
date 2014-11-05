@@ -42,6 +42,16 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import android.webkit.WebChromeClient;
+import android.webkit.GeolocationPermissions;
+import android.webkit.JsPromptResult;
+import android.webkit.JsResult;
+import android.webkit.JavascriptInterface;
+import android.widget.Toast;
+
+import android.app.ProgressDialog;
 
 /**
  * Created by soohwanpark on 2014-10-22.
@@ -52,6 +62,9 @@ public class ZzalActivity extends BaseFragment {
 
     ChatActivity chatActivity;
     WebView webviewZzal;
+
+    FrameLayout topLoadingBar;
+    ImageView imgLoading;
 
     public ZzalActivity( ChatActivity _chatActivity ) {
         chatActivity = _chatActivity;
@@ -74,12 +87,17 @@ public class ZzalActivity extends BaseFragment {
     }
 
     private void init() {
-        webviewZzal = (WebView)((LinearLayout)fragmentView).findViewById(R.id.webview_zzal);
-        webviewZzal.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+        topLoadingBar = (FrameLayout)fragmentView.findViewById(R.id.topLoadingBar);
+        imgLoading = (ImageView)fragmentView.findViewById(R.id.imgLoading);
+
+        webviewZzal = (WebView)fragmentView.findViewById(R.id.webview_zzal);
+        webviewZzal.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
         webviewZzal.getSettings().setJavaScriptEnabled(true);
         webviewZzal.setWebViewClient(new WebViewClientClass());
+        webviewZzal.setWebChromeClient(new MyWebChromeClient());
+        webviewZzal.addJavascriptInterface(new JsInterface(), "native");
         webviewZzal.loadUrl("http://2runzzal.com/themegram");
-
+/*
         webviewZzal.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -91,6 +109,49 @@ public class ZzalActivity extends BaseFragment {
                 return false;
             }
         });
+        */
+    }
+
+    static ProgressDialog searchProgressDialog = null;
+    public static void ShowProgressDialog(Context context, int progressDialogResId, boolean bShow) {
+        if(bShow) {
+            if(searchProgressDialog != null) {
+                searchProgressDialog.dismiss();
+                searchProgressDialog = null;
+            }
+            searchProgressDialog = new ProgressDialog(context);
+            searchProgressDialog.setCancelable(false);
+            searchProgressDialog.show();
+            searchProgressDialog.setContentView(progressDialogResId);
+        } else {
+            if(searchProgressDialog != null) {
+                searchProgressDialog.dismiss();
+                searchProgressDialog = null;
+            }
+        }
+    }
+
+    public class JsInterface {
+        public JsInterface() {
+        }
+
+        @JavascriptInterface
+        public void sendZzal(String url) {
+            //ShowProgressDialog(getParentActivity(), R.layout.progressdialog, true);
+            DownloadZzalTask task = new DownloadZzalTask(chatActivity);
+            task.execute(url);
+            try {
+                task.get(7, TimeUnit.SECONDS);
+            } catch (Exception ex) {
+                Toast.makeText(chatActivity.getParentActivity(), "짤 전송에 실패하였습니다.", Toast.LENGTH_SHORT).show();
+            }
+            //ShowProgressDialog(getParentActivity(), R.layout.progressdialog, false);
+            parentLayout.post(new Runnable() {
+                public void run() {
+                    finishFragment();
+                }
+            });
+        }
     }
 
     private Handler mClickHandler = new Handler() {
@@ -105,6 +166,41 @@ public class ZzalActivity extends BaseFragment {
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             view.loadUrl(url);
             return true;
+        }
+    }
+
+    public class MyWebChromeClient extends WebChromeClient {
+        @Override
+        public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
+            callback.invoke(origin, true, false);
+        }
+        @Override
+        public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
+            return false;
+        }
+        @Override
+        public boolean onJsConfirm(WebView view, String url, String message, JsResult result) {
+            return false;
+        }
+        @Override
+        public boolean onJsPrompt(WebView view, String url, String message, String defaultValue, JsPromptResult result) {
+            return false;
+        }
+        Runnable hideLoadingBar = new Runnable() {
+            @Override
+            public void run() {
+                topLoadingBar.setVisibility(View.INVISIBLE);
+            }
+        };
+        @Override
+        public void onProgressChanged(WebView view, int newProgress) {
+            if(newProgress >= 0) {
+                topLoadingBar.setVisibility(View.VISIBLE);
+                imgLoading.getLayoutParams().width = (int) (fragmentView.getWidth() * (double)newProgress/100);
+                imgLoading.requestLayout();
+            }
+            if(newProgress >= 100)
+                (new Handler()).postDelayed(hideLoadingBar, 1000);
         }
     }
 
