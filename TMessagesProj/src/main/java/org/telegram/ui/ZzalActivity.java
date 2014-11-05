@@ -42,11 +42,14 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import android.webkit.WebChromeClient;
 import android.webkit.GeolocationPermissions;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
+import android.webkit.JavascriptInterface;
+import android.widget.Toast;
 
 /**
  * Created by soohwanpark on 2014-10-22.
@@ -90,8 +93,9 @@ public class ZzalActivity extends BaseFragment {
         webviewZzal.getSettings().setJavaScriptEnabled(true);
         webviewZzal.setWebViewClient(new WebViewClientClass());
         webviewZzal.setWebChromeClient(new MyWebChromeClient());
+        webviewZzal.addJavascriptInterface(new JsInterface(), "native");
         webviewZzal.loadUrl("http://2runzzal.com/themegram");
-
+/*
         webviewZzal.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -103,6 +107,24 @@ public class ZzalActivity extends BaseFragment {
                 return false;
             }
         });
+        */
+    }
+
+    public class JsInterface {
+        public JsInterface() {
+        }
+
+        @JavascriptInterface
+        public void sendZzal(String url) {
+            DownloadZzalTask task = new DownloadZzalTask(chatActivity);
+            task.execute(url);
+            try {
+                task.get(7, TimeUnit.SECONDS);
+            } catch (Exception ex) {
+                Toast.makeText(chatActivity.getParentActivity(), "짤 전송에 실패하였습니다.", Toast.LENGTH_SHORT).show();
+            }
+            finishFragment(true);
+        }
     }
 
     private Handler mClickHandler = new Handler() {
