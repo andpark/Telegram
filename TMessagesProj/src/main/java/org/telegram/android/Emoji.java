@@ -42,8 +42,8 @@ public class Emoji {
     public static int emojiTotalCnt = 5;
     public static int emojiCnt = 5;
     public static int emojiStartIndex = emojiTotalCnt - emojiCnt + 1;
-    
-    private static EmojiBitmap emojiBmp[] = new EmojiBitmap[emojiTotalCnt];
+
+    private static Bitmap emojiBmp[] = new Bitmap[emojiTotalCnt];
     private static boolean loadingEmoji[] = new boolean[emojiTotalCnt];
 
     private static final int[] cols = {
