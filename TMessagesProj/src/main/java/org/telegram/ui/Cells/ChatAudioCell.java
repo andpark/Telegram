@@ -64,8 +64,6 @@ public class ChatAudioCell extends ChatBaseCell implements SeekBar.SeekBarDelega
 
     private ThemeManager themeManager;
 
-    private ThemeManager themeManager;
-
     public ChatAudioCell(Context context) {
         super(context);
         themeManager = new ThemeManager(context);
@@ -374,17 +372,18 @@ public class ChatAudioCell extends ChatBaseCell implements SeekBar.SeekBarDelega
                     if (audioUser.photo != null) {
                         currentPhoto = audioUser.photo.photo_small;
                     }
-                //avatarImage.setImage(currentPhoto, "50_50", getResources().getDrawable(AndroidUtilities.getUserAvatarForId(uid)), false);
-                String placeHolderId = AndroidUtilities.getUserAvatarForId(uid);
+                    //avatarImage.setImage(currentPhoto, "50_50", getResources().getDrawable(AndroidUtilities.getUserAvatarForId(uid)), false);
+                    String placeHolderId = AndroidUtilities.getUserAvatarForId(uid);
 
-                Drawable d = themeManager.getDrawable(placeHolderId, false);
-                avatarImage.setImage(currentPhoto, "50_50", d, false);
+                    Drawable d = themeManager.getDrawable(placeHolderId, false);
+                    avatarImage.setImage(currentPhoto, "50_50", d, false);
                 } else {
-                //avatarImage.setImage((TLRPC.FileLocation)null, "50_50", getResources().getDrawable(AndroidUtilities.getUserAvatarForId(uid)), false);
-                String placeHolderId = AndroidUtilities.getUserAvatarForId(uid);
+                    //avatarImage.setImage((TLRPC.FileLocation)null, "50_50", getResources().getDrawable(AndroidUtilities.getUserAvatarForId(uid)), false);
+                    String placeHolderId = AndroidUtilities.getUserAvatarForId(uid);
 
-                Drawable d = themeManager.getDrawable(placeHolderId, false);
-                avatarImage.setImage((TLRPC.FileLocation)null, "50_50", d, false);
+                    Drawable d = themeManager.getDrawable(placeHolderId, false);
+                    avatarImage.setImage((TLRPC.FileLocation) null, "50_50", d, false);
+                }
             }
 
             if (messageObject.isOut()) {
