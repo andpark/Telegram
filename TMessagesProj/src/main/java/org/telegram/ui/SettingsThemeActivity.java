@@ -245,6 +245,12 @@ public class SettingsThemeActivity extends BaseFragment {
     }
 
     @Override
+    public void onResume() {
+        getThemeList();
+        arrayAdapterThemeList.notifyDataSetChanged();
+    }
+
+    @Override
     public void onFragmentDestroy() {
         super.onFragmentDestroy();
 
