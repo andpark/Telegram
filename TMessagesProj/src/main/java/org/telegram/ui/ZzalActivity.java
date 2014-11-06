@@ -194,6 +194,8 @@ public class ZzalActivity extends BaseFragment {
         };
         @Override
         public void onProgressChanged(WebView view, int newProgress) {
+            if(fragmentView == null || topLoadingBar == null || imgLoading == null)
+                return;
             if(newProgress >= 0) {
                 topLoadingBar.setVisibility(View.VISIBLE);
                 imgLoading.getLayoutParams().width = (int) (fragmentView.getWidth() * (double)newProgress/100);

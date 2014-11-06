@@ -12,6 +12,8 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
@@ -52,6 +54,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Map;
+
+import android.os.Handler;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Context;
 
 public class LaunchActivity extends Activity implements ActionBarLayout.ActionBarLayoutDelegate, NotificationCenter.NotificationCenterDelegate, MessagesActivity.MessagesActivityDelegate {
     private boolean finished = false;
@@ -845,6 +852,17 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
         onFinish();
     }
 
+    public static int getPreference(Context context, String prefName, String name, int defaultValue) {
+        SharedPreferences prefs = context.getSharedPreferences(prefName, Context.MODE_PRIVATE);
+        return prefs.getInt(name, defaultValue);
+    }
+    public static void setPreference(Context context, String prefName, String name, int data) {
+        SharedPreferences prefs = context.getSharedPreferences(prefName, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt(name, data);
+        editor.commit();
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -858,6 +876,32 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
         ApplicationLoader.mainInterfacePaused = false;
         ConnectionsManager.getInstance().setAppPaused(false, false);
         actionBarLayout.getActionBar().setBackOverlayVisible(currentConnectionState != 0);
+
+        if(1 != getPreference(this, "PREF_THEMEGRAM", "PREF_DELETE_TELEGRAM_NOTIFIED", 0)) {
+            setPreference(this, "PREF_THEMEGRAM", "PREF_DELETE_TELEGRAM_NOTIFIED", 1);
+            (new Handler()).postDelayed(new Runnable() {
+                public void run() {
+                    final String targetPackage = "org.telegram.messenger";
+                    PackageManager pm = getPackageManager();
+                    try {
+                        PackageInfo info = pm.getPackageInfo(targetPackage, PackageManager.GET_META_DATA);
+                        new AlertDialog.Builder(LaunchActivity.this)
+                                .setMessage(R.string.recommend_to_delete_origianl_telegram)
+                                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent intent = new Intent(Intent.ACTION_DELETE);
+                                        intent.setData(Uri.parse("package:" + targetPackage));
+                                        startActivity(intent);
+                                    }
+                                })
+                                .setNegativeButton(R.string.no, null)
+                                .show();
+                    } catch (PackageManager.NameNotFoundException e) {
+                    }
+                }
+            }, 2000);
+        }
     }
 
     @Override
