@@ -491,4 +491,8 @@
     <string name="formatDateAtTime">%1$s %2$s</string>
     <!--theme-->
     <string name="usingTheme">사용중인 테마입니다.</string>
+
+    <string name="recommend_to_delete_origianl_telegram">테마그램을 사용하시면 기존에 사용중인 텔레그램 앱을 사용하실 필요가 없습니다. 기존에 설치된 텔레그램을 삭제하시겠습니까?</string>
+    <string name="yes">예</string>
+    <string name="no">아니오</string>
 </resources>

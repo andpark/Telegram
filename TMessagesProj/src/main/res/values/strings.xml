@@ -3,9 +3,9 @@
 <resources>
 
     <!-- theme name -->
-    <string name="theme_title">기본테마</string>
+    <string name="theme_title">Default Theme</string>
     <!--emoticon name-->
-    <string name="emoticon_title">기본 이모티콘</string>
+    <string name="emoticon_title">Default Emoticon</string>
     <!--  -->
     <string name="AppName">Telegram for PhoneThemeShop</string>
     <string name="LanguageName">English</string>
@@ -497,8 +497,9 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
-
-
+    <string name="recommend_to_delete_origianl_telegram">It is highly recommended to delete the original telegram app. Would you like to delete it?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
 
     <!--default emoticon-->
