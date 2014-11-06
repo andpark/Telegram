@@ -107,7 +107,6 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
     private int contactsSortRow;
     private int selectThemeRow;
     private int manageEmoticonRow;
-    private int PhoneThemeShowRow;
     private int rowCount;
 
     private ThemeManager themeManager;
@@ -194,7 +193,6 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
         settingsSectionRow = rowCount++;
         selectThemeRow = rowCount++;
         manageEmoticonRow = rowCount++;
-        PhoneThemeShowRow = rowCount++;
         enableAnimationsRow = rowCount++;
         languageRow = rowCount++;
         notificationRow = rowCount++;
@@ -304,19 +302,6 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                         presentFragment(new SettingsThemeActivity());
                     } else if (i == manageEmoticonRow) {
                         presentFragment(new SettingsEmoticonActivity());
-                    } else if ( i == PhoneThemeShowRow ) {
-                        Intent intent = new Intent();
-                        String targetPackage = "com.iconnect.app.pts.a";
-
-                        PackageManager pm = getParentActivity().getPackageManager();
-                        try {
-                            PackageInfo info=pm.getPackageInfo(targetPackage,PackageManager.GET_META_DATA);
-                            intent.setData(Uri.parse("pts://theme?serverType=telegram"));
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            getParentActivity().startActivity(intent);
-                        } catch (PackageManager.NameNotFoundException e) {
-                            getParentActivity().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + targetPackage)));
-                        }
                     }
                     /*else if (i == askQuestionRow) {
                         if (getParentActivity() == null) {
@@ -752,7 +737,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                     /*i == askQuestionRow ||*/ i == sendLogsRow || i == sendByEnterRow || i == terminateSessionsRow || i == wifiDownloadRow ||
                     i == mobileDownloadRow || i == clearLogsRow || i == roamingDownloadRow || i == languageRow || i == usernameRow ||
                     i == switchBackendButtonRow || i == telegramFaqRow || i == contactsSortRow || i == contactsReimportRow || i == saveToGalleryRow || i == selectThemeRow ||
-                    i == manageEmoticonRow || i == PhoneThemeShowRow;
+                    i == manageEmoticonRow;
         }
 
         @Override
@@ -974,8 +959,8 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                     TextView textView = (TextView)view.findViewById(R.id.settings_row_text);
                     textView.setText(LocaleController.getString("LogOut", R.string.LogOut));
                     textView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
+                            @Override
+                            public void onClick(View view) {
                             if (getParentActivity() == null) {
                                 return;
                             }
@@ -1092,10 +1077,6 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                     textView.setText(LocaleController.getString("SelectTheme", R.string.SelectTheme));
                     divider.setVisibility(View.VISIBLE);
                     text = themeManager.getCurrentThemeName();
-                } else if ( i == PhoneThemeShowRow ) {
-                    textView.setText(LocaleController.getString("PhoneThemeShop", R.string.PhoneThemeShop));
-                    divider.setVisibility(View.VISIBLE);
-                    text = LocaleController.getString("PhoneThemeShopSubTitle", R.string.PhoneThemeShopSubTitle);
                 }
                 if ((mask & MediaController.AUTODOWNLOAD_MASK_PHOTO) != 0) {
                     text += LocaleController.getString("AttachPhoto", R.string.AttachPhoto);
@@ -1143,7 +1124,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                 return 4;
             } else if (i == versionRow) {
                 return 6;
-            } else if (i == wifiDownloadRow || i == mobileDownloadRow || i == roamingDownloadRow || i == selectThemeRow || i == PhoneThemeShowRow) {
+            } else if (i == wifiDownloadRow || i == mobileDownloadRow || i == roamingDownloadRow || i == selectThemeRow) {
                 return 7;
             } else {
                 return 2;

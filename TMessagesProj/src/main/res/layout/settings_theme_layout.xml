@@ -1,12 +1,21 @@
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:paddingBottom="12dp">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <ListView
         android:id="@+id/theme_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></ListView>
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:layout_marginBottom="60dp"></ListView>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom"
+        android:id="@+id/btnMoreTheme"
+        android:background="@drawable/logout_button_states"
+        android:gravity="center"
+        android:textSize="17dp"
+        android:textColor="#000000"
+        />
+</FrameLayout>
