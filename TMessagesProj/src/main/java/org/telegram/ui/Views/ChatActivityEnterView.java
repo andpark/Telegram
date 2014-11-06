@@ -587,7 +587,8 @@ public class ChatActivityEnterView implements NotificationCenter.NotificationCen
             if (!keyboardVisible) {
                 if (sizeNotifierRelativeLayout != null) {
                     sizeNotifierRelativeLayout.setPadding(0, 0, 0, currentHeight);
-                    emojiButton.setImageResource(R.drawable.ic_msg_panel_hide);
+                    //emojiButton.setImageResource(R.drawable.ic_msg_panel_hide);
+                    emojiButton.setImageDrawable(themeManager.getDrawable("ic_msg_panel_hide", false));
                 }
                 return;
             }

@@ -279,7 +279,12 @@ public class LoginActivityPhoneView extends SlideView implements AdapterView.OnI
         TelephonyManager systemService = (TelephonyManager)getContext().getSystemService(Context.TELEPHONY_SERVICE);
         phoneNumber = systemService.getLine1Number();
 
-        return ( phoneNumber.length() >= 10 ) ? ( phoneNumber.substring(phoneNumber.length() - 10, phoneNumber.length()) ) : "";
+        if ( phoneNumber == null )
+            return "";
+
+        phoneNumber = ( phoneNumber.length() >= 10 ) ? ( phoneNumber.substring(phoneNumber.length() - 10, phoneNumber.length()) ) : "";
+
+        return phoneNumber;
     }
 
     public void selectCountry(String name) {
