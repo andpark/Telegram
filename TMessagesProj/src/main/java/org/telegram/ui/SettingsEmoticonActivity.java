@@ -147,6 +147,8 @@ public class SettingsEmoticonActivity extends BaseFragment {
                     emoticonName.setText(item.getString("emoticonName"));
                     if ( item.getString("emoticonName").equals(getParentActivity().getString(R.string.emoticon_title)) ) {
                         btnDelete.setVisibility(View.GONE);
+                    } else {
+                        btnDelete.setVisibility(View.VISIBLE);
                     }
                 }
                 btnDelete.setOnClickListener(new View.OnClickListener() {
