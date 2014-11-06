@@ -132,25 +132,25 @@ public class ZzalActivity extends BaseFragment {
     }
 
     public class JsInterface {
+        boolean isZzalSent = false;
         public JsInterface() {
+            isZzalSent = false;
         }
 
         @JavascriptInterface
         public void sendZzal(String url) {
-            //ShowProgressDialog(getParentActivity(), R.layout.progressdialog, true);
-            DownloadZzalTask task = new DownloadZzalTask(chatActivity);
-            task.execute(url);
-            try {
-                task.get(7, TimeUnit.SECONDS);
-            } catch (Exception ex) {
-                Toast.makeText(chatActivity.getParentActivity(), "짤 전송에 실패하였습니다.", Toast.LENGTH_SHORT).show();
-            }
-            //ShowProgressDialog(getParentActivity(), R.layout.progressdialog, false);
+            if(isZzalSent)
+                return;
+            isZzalSent = true;
             parentLayout.post(new Runnable() {
                 public void run() {
                     finishFragment();
                 }
             });
+            //ShowProgressDialog(getParentActivity(), R.layout.progressdialog, true);
+            DownloadZzalTask task = new DownloadZzalTask(chatActivity);
+            task.execute(url);
+            //ShowProgressDialog(getParentActivity(), R.layout.progressdialog, false);
         }
     }
 
