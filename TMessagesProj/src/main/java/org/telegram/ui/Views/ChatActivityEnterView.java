@@ -592,7 +592,8 @@ public class ChatActivityEnterView implements NotificationCenter.NotificationCen
                 }
                 return;
             }
-            emojiButton.setImageResource(R.drawable.ic_msg_panel_kb);
+            //emojiButton.setImageResource(R.drawable.ic_msg_panel_kb);
+            emojiButton.setImageDrawable(themeManager.getDrawable("ic_msg_panel_kb", false));
             return;
         }
         if (emojiButton != null) {
