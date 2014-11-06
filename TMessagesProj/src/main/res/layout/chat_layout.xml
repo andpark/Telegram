@@ -133,7 +133,7 @@
             android:layout_alignBottom="@+id/chat_text_edit"
             android:layout_centerVertical="true"
             android:enabled="false"
-            android:background="@android:color/transparent"/>
+            android:background="#00000000"/>
 
         <ImageButton
             android:layout_width="40dp"
