@@ -146,8 +146,18 @@ public class ChatActivityEnterView implements NotificationCenter.NotificationCen
         messsageEditText = (EditText)containerView.findViewById(R.id.chat_text_edit);
         messsageEditText.setHint(LocaleController.getString("TypeMessage", R.string.TypeMessage));
 
-        zzalButton = (ImageButton)containerView.findViewById(R.id.chat_zzal_button);
-        zzalButton.setImageDrawable(themeManager.getDrawable("ic_zzal", false));
+        if ( chatActivity != null ) {
+            zzalButton = (ImageButton) containerView.findViewById(R.id.chat_zzal_button);
+            zzalButton.setImageDrawable(themeManager.getDrawable("ic_zzal", false));
+
+            zzalButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if ( chatActivity != null )
+                        chatActivity.presentFragment(new ZzalActivity(chatActivity));
+                }
+            });
+        }
         sendButton = (ImageButton)containerView.findViewById(R.id.chat_send_button);
         sendButton.setImageDrawable(themeManager.getDrawable("ic_send", false));
         sendButton.setVisibility(View.INVISIBLE);
@@ -161,13 +171,6 @@ public class ChatActivityEnterView implements NotificationCenter.NotificationCen
         TextView textView = (TextView)containerView.findViewById(R.id.slideToCancelTextView);
         textView.setText(LocaleController.getString("SlideToCancel", R.string.SlideToCancel));
 
-        zzalButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if ( chatActivity != null )
-                    chatActivity.presentFragment(new ZzalActivity(chatActivity));
-            }
-        });
 
         emojiButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -11,6 +11,7 @@ package org.telegram.ui.Cells;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.text.Layout;
@@ -22,16 +23,14 @@ import android.view.SoundEffectConstants;
 
 import com.teamjihu.ThemeManager;
 
-import com.teamjihu.ThemeManager;
-
 import org.telegram.android.AndroidUtilities;
 import org.telegram.android.ContactsController;
-import org.telegram.android.LocaleController;
-import org.telegram.messenger.TLRPC;
-import org.telegram.android.MessagesController;
-import org.telegram.messenger.phonethemeshop.R;
-import org.telegram.android.MessageObject;
 import org.telegram.android.ImageReceiver;
+import org.telegram.android.LocaleController;
+import org.telegram.android.MessageObject;
+import org.telegram.android.MessagesController;
+import org.telegram.messenger.TLRPC;
+import org.telegram.messenger.phonethemeshop.R;
 
 public class ChatBaseCell extends BaseCell {
 
@@ -338,6 +337,9 @@ private void init() {
 
         namesOffset = 0;
 
+        if ( media )
+            drawName = true;
+
         if (drawName && isChat && currentUser != null && !currentMessageObject.isOut()) {
             currentNameString = ContactsController.formatName(currentUser.first_name, currentUser.last_name);
             nameWidth = getMaxNameWidth();
@@ -466,6 +468,7 @@ private void init() {
             layoutHeight = getMeasuredHeight();
 
             timeLayout = new StaticLayout(currentTimeString, currentTimePaint, timeWidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+
             if (!media) {
                 if (!currentMessageObject.isOut()) {
                     timeX = backgroundWidth - AndroidUtilities.dp(9) - timeWidth + (isChat ? AndroidUtilities.dp(52) : 0);
@@ -477,6 +480,22 @@ private void init() {
                     timeX = backgroundWidth - AndroidUtilities.dp(4) - timeWidth + (isChat ? AndroidUtilities.dp(52) : 0);
                 } else {
                     timeX = layoutWidth - timeWidth - AndroidUtilities.dpf(42.0f);
+                }
+
+                //get user name
+                if (drawName && isChat && currentUser != null && !currentMessageObject.isOut()) {
+                    currentNameString = ContactsController.formatName(currentUser.first_name, currentUser.last_name);
+                    nameWidth = getMaxNameWidth();
+
+                    CharSequence nameStringFinal = TextUtils.ellipsize(currentNameString.replace("\n", " "), namePaint, nameWidth - AndroidUtilities.dp(12), TextUtils.TruncateAt.END);
+                    nameLayout = new StaticLayout(nameStringFinal, namePaint, nameWidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+                    if (nameLayout.getLineCount() > 0) {
+                        nameWidth = (int)Math.ceil(nameLayout.getLineWidth(0));
+                        namesOffset += AndroidUtilities.dp(18);
+                        nameOffsetX = nameLayout.getLineLeft(0);
+                    } else {
+                        nameWidth = 0;
+                    }
                 }
             }
 
@@ -558,11 +577,23 @@ private void init() {
         onAfterBackgroundDraw(canvas);
 
         if (drawName && nameLayout != null) {
-            canvas.save();
-            canvas.translate(currentBackgroundDrawable.getBounds().left + AndroidUtilities.dp(19) - nameOffsetX, AndroidUtilities.dp(10));
-            namePaint.setColor(AndroidUtilities.getColorForId(currentUser.id));
-            nameLayout.draw(canvas);
-            canvas.restore();
+            if ( media && nameLayout.getText() != "" ) {
+                setDrawableBounds(mediaBackgroundDrawable, currentBackgroundDrawable.getBounds().left + AndroidUtilities.dp(7) - (int)nameOffsetX,
+                        AndroidUtilities.dp(8), nameWidth + AndroidUtilities.dp(4), AndroidUtilities.dpf(17.5f));
+                mediaBackgroundDrawable.draw(canvas);
+
+                canvas.save();
+                canvas.translate(currentBackgroundDrawable.getBounds().left + AndroidUtilities.dp(9) - nameOffsetX, AndroidUtilities.dp(8));
+                namePaint.setColor(Color.WHITE);
+                nameLayout.draw(canvas);
+                canvas.restore();
+            } else {
+                canvas.save();
+                canvas.translate(currentBackgroundDrawable.getBounds().left + AndroidUtilities.dp(19) - nameOffsetX, AndroidUtilities.dp(10));
+                namePaint.setColor(AndroidUtilities.getColorForId(currentUser.id));
+                nameLayout.draw(canvas);
+                canvas.restore();
+            }
         }
 
         if (drawForwardedName && forwardedNameLayout != null) {
@@ -577,7 +608,7 @@ private void init() {
                 forwardNameY = AndroidUtilities.dp(10 + (drawName ? 18 : 0));
             }
             canvas.translate(forwardNameX - forwardNameOffsetX, forwardNameY);
-            forwardedNameLayout.draw(canvas);
+            //forwardedNameLayout.draw(canvas);
             canvas.restore();
         }
 
