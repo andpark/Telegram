@@ -1093,6 +1093,12 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     public void showZzalListView(boolean bShow) {
         zzalListView.showZzalListView(bShow);
     }
+    public void toggleZzalListView() {
+        if(zzalListView.isShown())
+            zzalListView.showZzalListView(false);
+        else
+            zzalListView.showZzalListView(true);
+    }
 
     public void didSelectPhotos(ArrayList<String> photos) {
         SendMessagesHelper.prepareSendingPhotos(photos, null, dialog_id);
@@ -2961,7 +2967,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             chatActivityEnterView.hideEmojiPopup();
             return false;
         } else if(zzalListView.isShown()) {
-            zzalListView.showZzalListView(false);
+            showZzalListView(false);
             return false;
         }
         return true;

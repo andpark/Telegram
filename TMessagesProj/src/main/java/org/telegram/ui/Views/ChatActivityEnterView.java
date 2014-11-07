@@ -163,7 +163,7 @@ public class ChatActivityEnterView implements NotificationCenter.NotificationCen
             @Override
             public void onClick(View view) {
                 if ( chatActivity != null )
-                    chatActivity.showZzalListView(true);
+                    chatActivity.toggleZzalListView();
             }
         });
 
