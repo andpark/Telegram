@@ -49,24 +49,25 @@ import android.widget.Toast;
 
 import com.teamjihu.ThemeManager;
 
-import org.telegram.android.AndroidUtilities;
 import org.telegram.PhoneFormat.PhoneFormat;
+import org.telegram.android.AndroidUtilities;
+import org.telegram.android.ContactsController;
+import org.telegram.android.ImageReceiver;
 import org.telegram.android.LocaleController;
 import org.telegram.android.MediaController;
+import org.telegram.android.MessageObject;
+import org.telegram.android.MessagesController;
 import org.telegram.android.MessagesStorage;
+import org.telegram.android.NotificationCenter;
 import org.telegram.android.NotificationsController;
 import org.telegram.android.SendMessagesHelper;
-import org.telegram.messenger.FileLoader;
-import org.telegram.messenger.TLRPC;
-import org.telegram.android.ContactsController;
-import org.telegram.messenger.FileLog;
-import org.telegram.android.MessageObject;
 import org.telegram.messenger.ConnectionsManager;
-import org.telegram.android.MessagesController;
-import org.telegram.android.NotificationCenter;
-import org.telegram.messenger.phonethemeshop.R;
+import org.telegram.messenger.FileLoader;
+import org.telegram.messenger.FileLog;
+import org.telegram.messenger.TLRPC;
 import org.telegram.messenger.UserConfig;
 import org.telegram.messenger.Utilities;
+import org.telegram.messenger.phonethemeshop.R;
 import org.telegram.ui.Adapters.BaseFragmentAdapter;
 import org.telegram.ui.Cells.ChatActionCell;
 import org.telegram.ui.Cells.ChatAudioCell;
@@ -77,15 +78,14 @@ import org.telegram.ui.Cells.ChatMessageCell;
 import org.telegram.ui.Views.ActionBar.ActionBarLayer;
 import org.telegram.ui.Views.ActionBar.ActionBarMenu;
 import org.telegram.ui.Views.ActionBar.ActionBarMenuItem;
-import org.telegram.ui.Views.BackupImageView;
 import org.telegram.ui.Views.ActionBar.BaseFragment;
+import org.telegram.ui.Views.BackupImageView;
 import org.telegram.ui.Views.ChatActivityEnterView;
-import org.telegram.android.ImageReceiver;
-import org.telegram.ui.Views.EmojiView;
 import org.telegram.ui.Views.LayoutListView;
 import org.telegram.ui.Views.SizeNotifierRelativeLayout;
 import org.telegram.ui.Views.TimerButton;
 import org.telegram.ui.Views.TypingDotsDrawable;
+import org.telegram.ui.Views.ZzalListView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -106,6 +106,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     private View bottomOverlay;
     private ChatAdapter chatAdapter;
     private ChatActivityEnterView chatActivityEnterView;
+    private ZzalListView zzalListView;
     private View timeItem;
     private View menuItem;
     private LayoutListView chatListView;
@@ -336,6 +337,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
         } else {
             return false;
         }
+        zzalListView = new ZzalListView();
         chatActivityEnterView = new ChatActivityEnterView();
         chatActivityEnterView.setDialogId(dialog_id);
         chatActivityEnterView.setDelegate(new ChatActivityEnterView.ChatActivityEnterViewDelegate() {
@@ -1078,6 +1080,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             updateBottomOverlay();
 
             chatActivityEnterView.setContainerView(getParentActivity(), fragmentView, ChatActivity.this);
+            zzalListView.setContainerView(getParentActivity(), fragmentView, ChatActivity.this);
         } else {
             ViewGroup parent = (ViewGroup)fragmentView.getParent();
             if (parent != null) {
@@ -1085,6 +1088,16 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             }
         }
         return fragmentView;
+    }
+
+    public void showZzalListView(boolean bShow) {
+        zzalListView.showZzalListView(bShow);
+    }
+    public void toggleZzalListView() {
+        if(zzalListView.isShown())
+            zzalListView.showZzalListView(false);
+        else
+            zzalListView.showZzalListView(true);
     }
 
     public void didSelectPhotos(ArrayList<String> photos) {
@@ -2952,6 +2965,9 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             return false;
         } else if (chatActivityEnterView.isEmojiPopupShowing()) {
             chatActivityEnterView.hideEmojiPopup();
+            return false;
+        } else if(zzalListView.isShown()) {
+            showZzalListView(false);
             return false;
         }
         return true;

@@ -44,16 +44,14 @@ import org.telegram.android.Emoji;
 import org.telegram.android.LocaleController;
 import org.telegram.android.MediaController;
 import org.telegram.android.MessagesController;
+import org.telegram.android.NotificationCenter;
 import org.telegram.android.SendMessagesHelper;
 import org.telegram.messenger.ConnectionsManager;
 import org.telegram.messenger.FileLog;
-import org.telegram.android.NotificationCenter;
-import org.telegram.messenger.phonethemeshop.R;
 import org.telegram.messenger.TLRPC;
+import org.telegram.messenger.phonethemeshop.R;
 import org.telegram.ui.ApplicationLoader;
 import org.telegram.ui.ChatActivity;
-import org.telegram.ui.Views.ActionBar.BaseFragment;
-import org.telegram.ui.ZzalActivity;
 
 public class ChatActivityEnterView implements NotificationCenter.NotificationCenterDelegate, SizeNotifierRelativeLayout.SizeNotifierRelativeLayoutDelegate {
 
@@ -154,7 +152,7 @@ public class ChatActivityEnterView implements NotificationCenter.NotificationCen
                 @Override
                 public void onClick(View view) {
                     if ( chatActivity != null )
-                        chatActivity.presentFragment(new ZzalActivity(chatActivity));
+                        chatActivity.toggleZzalListView();
                 }
             });
         }
@@ -170,7 +168,6 @@ public class ChatActivityEnterView implements NotificationCenter.NotificationCen
         slideText = containerView.findViewById(R.id.slideText);
         TextView textView = (TextView)containerView.findViewById(R.id.slideToCancelTextView);
         textView.setText(LocaleController.getString("SlideToCancel", R.string.SlideToCancel));
-
 
         emojiButton.setOnClickListener(new View.OnClickListener() {
             @Override

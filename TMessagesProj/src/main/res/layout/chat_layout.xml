@@ -292,5 +292,12 @@
         android:layout_marginRight="4dp"
         android:layout_marginBottom="4dp"
         android:id="@+id/pagedown_button"/>
-
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/chat_compose_panel">
+        <include
+            android:id="@+id/zzal_layout"
+            layout="@layout/zzal_layout" />
+    </FrameLayout>
 </org.telegram.ui.Views.SizeNotifierRelativeLayout>
