@@ -47,6 +47,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.teamjihu.S3Util;
 import com.teamjihu.ThemeManager;
 
 import org.telegram.PhoneFormat.PhoneFormat;
@@ -1091,13 +1092,15 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     }
 
     public void showZzalListView(boolean bShow) {
+        if(bShow)
+            S3Util.HideKeyboard(getParentActivity());
         zzalListView.showZzalListView(bShow);
     }
     public void toggleZzalListView() {
         if(zzalListView.isShown())
-            zzalListView.showZzalListView(false);
+            showZzalListView(false);
         else
-            zzalListView.showZzalListView(true);
+            showZzalListView(true);
     }
 
     public void didSelectPhotos(ArrayList<String> photos) {
