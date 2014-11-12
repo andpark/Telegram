@@ -1097,10 +1097,15 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
         zzalListView.showZzalListView(bShow);
     }
     public void toggleZzalListView() {
-        if(zzalListView.isShown())
-            showZzalListView(false);
-        else
-            showZzalListView(true);
+        if(zzalListView.isShown()) {
+            zzalListView.showZzalListView(false);
+        }else {
+            zzalListView.showZzalListView(true);
+        }
+    }
+
+    public void changeSwipeBackEnabled( boolean value ) {
+        swipeBackEnabled = value;
     }
 
     public void didSelectPhotos(ArrayList<String> photos) {

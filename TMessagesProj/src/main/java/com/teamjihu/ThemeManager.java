@@ -1,17 +1,17 @@
 package com.teamjihu;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.PermissionInfo;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.view.View;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ThemeManager {
     private static final String CUSTOM_PERMISSION = "com.teamjihu.theme.telegram.v1";
@@ -162,10 +162,12 @@ public class ThemeManager {
 	}
 
     public void setBackgroundDrawable( View v, Drawable d ) {
-        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN)
-            v.setBackgroundDrawable(d);
-        else
-            v.setBackground(d);
+        if ( v != null && d != null ) {
+            if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN)
+                v.setBackgroundDrawable(d);
+            else
+                v.setBackground(d);
+        }
     }
 
     public Drawable getIconImage(Resources res, String emoticonPkg) {

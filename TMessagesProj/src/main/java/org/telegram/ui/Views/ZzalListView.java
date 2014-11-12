@@ -76,6 +76,7 @@ public class ZzalListView {
         } else {
             S3Util.swipeView(zzalLayout, screenWidth, null, 300);
         }
+        chatActivity.changeSwipeBackEnabled(!bShow);
     }
 
     public class JsInterface {
