@@ -1098,9 +1098,9 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     }
     public void toggleZzalListView() {
         if(zzalListView.isShown()) {
-            zzalListView.showZzalListView(false);
+            showZzalListView(false);
         }else {
-            zzalListView.showZzalListView(true);
+            showZzalListView(true);
         }
     }
 
