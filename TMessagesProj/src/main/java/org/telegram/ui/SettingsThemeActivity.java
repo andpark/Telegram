@@ -1,11 +1,5 @@
 package org.telegram.ui;
 
-import org.telegram.android.LocaleController;
-import org.telegram.ui.Cells.ChatBaseCell;
-import org.telegram.ui.Views.ActionBar.ActionBarLayer;
-import org.telegram.ui.Views.ActionBar.BaseFragment;
-
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -13,23 +7,24 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.LayoutInflater;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.teamjihu.ThemeManager;
 
+import org.telegram.android.LocaleController;
 import org.telegram.messenger.phonethemeshop.R;
-import org.telegram.ui.Views.ChatActivityEnterView;
+import org.telegram.ui.ActionBar.ActionBar;
+import org.telegram.ui.ActionBar.BaseFragment;
+import org.telegram.ui.Cells.ChatBaseCell;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,11 +51,9 @@ public class SettingsThemeActivity extends BaseFragment {
         INFLATER = inflater;
         if (fragmentView == null) {
             themeManager = new ThemeManager(getParentActivity());
-            //actionBarLayer.setDisplayHomeAsUpEnabled(true, R.drawable.ic_ab_back);
-            actionBarLayer.setDisplayHomeAsUpEnabled(true, themeManager.getDrawable("ic_ab_back", false));
-            actionBarLayer.setBackOverlay(R.layout.updating_state_layout);
-            actionBarLayer.setTitle(LocaleController.getString("SelectTheme", R.string.SelectTheme));
-            actionBarLayer.setActionBarMenuOnItemClick(new ActionBarLayer.ActionBarMenuOnItemClick() {
+            actionBar.setBackButtonDrawable(themeManager.getDrawable("ic_ab_back", false));
+            actionBar.setTitle(LocaleController.getString("SelectTheme", R.string.SelectTheme));
+            actionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
                 @Override
                 public void onItemClick(int id) {
                     if (id == -1) {
@@ -142,7 +135,7 @@ public class SettingsThemeActivity extends BaseFragment {
             if ( !currentThemePkg.equals(b.getString("themePkg")) ) {
                 themeManager.applyTheme(b.getString("themePkg"));
                 ImageView btnCheck = (ImageView)selectedThemeItem.findViewById(R.id.settings_row_check_button);
-                btnCheck.setImageResource(R.drawable.btn_check_on);
+                //btnCheck.setImageResource(R.drawable.btn_check_on);
 
                 currentThemePkg = b.getString("themePkg");
             }
@@ -197,10 +190,10 @@ public class SettingsThemeActivity extends BaseFragment {
                 if ( themeName != null ) {
                     themeName.setText(item.getString("themeName"));
                     if ( currentThemePkg.equals(item.getString("themePkg")) ) {
-                        btnCheck.setImageResource(R.drawable.btn_check_on);
+//                        btnCheck.setImageResource(R.drawable.btn_check_on);
                         prevSelectedThemePkg = item.getString("themePkg");
                     } else {
-                        btnCheck.setImageResource(R.drawable.btn_check_off);
+//                        btnCheck.setImageResource(R.drawable.btn_check_off);
                     }
 
                     if ( item.getString("themeName").equals(getParentActivity().getString(R.string.theme_title)) ) {

@@ -33,6 +33,7 @@ import org.telegram.messenger.phonethemeshop.R;
 import org.telegram.messenger.TLRPC;
 import org.telegram.messenger.UserConfig;
 import org.telegram.ui.PhotoViewer;
+import org.telegram.ui.Views.AvatarDrawable;
 
 public class ChatActionCell extends BaseCell {
 
@@ -49,6 +50,7 @@ public class ChatActionCell extends BaseCell {
     private URLSpan pressedLink;
 
     private ImageReceiver imageReceiver;
+    private AvatarDrawable avatarDrawable;
     private StaticLayout textLayout;
     private int textWidth = 0;
     private int textHeight = 0;
@@ -77,6 +79,8 @@ public class ChatActionCell extends BaseCell {
             textPaint.linkColor = 0xffffffff;
         }
         imageReceiver = new ImageReceiver(this);
+        imageReceiver.setRoundRadius(AndroidUtilities.dp(32));
+        avatarDrawable = new AvatarDrawable();
         textPaint.setTextSize(AndroidUtilities.dp(MessagesController.getInstance().fontSize));
     }
 
@@ -102,27 +106,19 @@ public class ChatActionCell extends BaseCell {
                     }
                 }
             }
+            avatarDrawable.setInfo(id, null, null, false);
             if (currentMessageObject.messageOwner.action instanceof TLRPC.TL_messageActionUserUpdatedPhoto) {
-                //imageReceiver.setImage(currentMessageObject.messageOwner.action.newUserPhoto.photo_small, "50_50", getResources().getDrawable(AndroidUtilities.getUserAvatarForId(id)), false);
-                String placeHolderId = AndroidUtilities.getUserAvatarForId(id);
-                Drawable d = themeManager.getDrawable(placeHolderId, false);
-                imageReceiver.setImage(currentMessageObject.messageOwner.action.newUserPhoto.photo_small, "50_50", d, false);
+                imageReceiver.setImage(currentMessageObject.messageOwner.action.newUserPhoto.photo_small, "50_50", avatarDrawable, false);
             } else {
                 PhotoObject photo = PhotoObject.getClosestImageWithSize(currentMessageObject.photoThumbs, AndroidUtilities.dp(64));
                 if (photo != null) {
                     if (photo.image != null) {
                         imageReceiver.setImageBitmap(photo.image);
                     } else {
-                        //imageReceiver.setImage(photo.photoOwner.location, "50_50", getResources().getDrawable(AndroidUtilities.getGroupAvatarForId(id)), false);
-                        String placeHolderId = AndroidUtilities.getGroupAvatarForId(id);
-                        Drawable d = themeManager.getDrawable(placeHolderId, false);
-                        imageReceiver.setImage(photo.photoOwner.location, "50_50", d, false);
+                        imageReceiver.setImage(photo.photoOwner.location, "50_50", avatarDrawable, false);
                     }
                 } else {
-                    //imageReceiver.setImageBitmap(getResources().getDrawable(AndroidUtilities.getGroupAvatarForId(id)));
-                    String placeHolderId = AndroidUtilities.getGroupAvatarForId(id);
-                    Drawable d = themeManager.getDrawable(placeHolderId, false);
-                    imageReceiver.setImageBitmap(d);
+                    imageReceiver.setImageBitmap(avatarDrawable);
                 }
             }
             imageReceiver.setVisible(!PhotoViewer.getInstance().isShowingImage(currentMessageObject), false);
@@ -237,7 +233,7 @@ public class ChatActionCell extends BaseCell {
             setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), textHeight + AndroidUtilities.dp(14));
             return;
         }
-        int width = MeasureSpec.getSize(widthMeasureSpec);
+        int width = Math.max(AndroidUtilities.dp(30), MeasureSpec.getSize(widthMeasureSpec));
         if (width != previousWidth) {
             previousWidth = width;
 

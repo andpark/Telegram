@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.13.+'
+        classpath 'com.android.tools.build:gradle:0.14.0'
     }
 }
 apply plugin: 'com.android.application'
@@ -17,7 +17,7 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:20.0.0'
+    compile 'com.android.support:support-v4:21.0.+'
     compile 'com.google.android.gms:play-services:3.2.+'
     compile 'net.hockeyapp.android:HockeySDK:3.0.2'
     compile 'com.googlecode.mp4parser:isoparser:1.0.+'
@@ -25,7 +25,8 @@ dependencies {
 
 android {
     compileSdkVersion 21
-    buildToolsVersion '21.0.2'
+    buildToolsVersion '21.1.1'
+
     signingConfigs {
         debug {
             storeFile file("config/debug.keystore")
@@ -38,50 +39,48 @@ android {
             keyPassword RELEASE_KEY_PASSWORD
         }
     }
+
     buildTypes {
         debug {
             debuggable true
-            jniDebugBuild false
+            jniDebuggable true
             signingConfig signingConfigs.debug
         }
+
         release {
             debuggable false
-            jniDebugBuild false
+            jniDebuggable false
             signingConfig signingConfigs.release
         }
+
         foss {
             debuggable false
-            jniDebugBuild false
+            jniDebuggable false
             signingConfig signingConfigs.release
         }
     }
+
     sourceSets.main {
         jniLibs.srcDir 'libs'
         jni.srcDirs = [] //disable automatic ndk-build call
     }
-    sourceSets {
-        debug {
-            manifest.srcFile 'config/debug/AndroidManifest.xml'
-        }
-        release {
-            manifest.srcFile 'config/release/AndroidManifest.xml'
-        }
-        foss {
-            manifest.srcFile 'config/foss/AndroidManifest.xml'
-        }
+
+    sourceSets.debug {
+        manifest.srcFile 'config/debug/AndroidManifest.xml'
     }
-    lintOptions {
-        checkReleaseBuilds false
-        // Or, if you prefer, you can continue to check for errors in release builds,
-        // but continue the build even when errors are found:
-        abortOnError false
+
+    sourceSets.release {
+        manifest.srcFile 'config/release/AndroidManifest.xml'
     }
+
+    sourceSets.foss {
+        manifest.srcFile 'config/foss/AndroidManifest.xml'
+    }
+
     defaultConfig {
         minSdkVersion 11
-        targetSdkVersion 19
-        versionCode 6
-        versionName '1.1'
-    }
-    productFlavors {
+        targetSdkVersion 21
+        versionCode 7
+        versionName "1.2"
     }
 }

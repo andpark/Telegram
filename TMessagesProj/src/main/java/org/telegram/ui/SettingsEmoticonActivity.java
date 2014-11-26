@@ -1,6 +1,5 @@
 package org.telegram.ui;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -15,7 +14,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.teamjihu.EmoticonManager;
 import com.teamjihu.ThemeManager;
@@ -23,8 +21,8 @@ import com.teamjihu.ThemeManager;
 import org.telegram.android.LocaleController;
 import org.telegram.android.PhoneThemeShopEmoji;
 import org.telegram.messenger.phonethemeshop.R;
-import org.telegram.ui.Views.ActionBar.ActionBarLayer;
-import org.telegram.ui.Views.ActionBar.BaseFragment;
+import org.telegram.ui.ActionBar.ActionBar;
+import org.telegram.ui.ActionBar.BaseFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,11 +46,9 @@ public class SettingsEmoticonActivity extends BaseFragment {
         if (fragmentView == null) {
             themeManager = new ThemeManager(getParentActivity());
             emoticonManager = new EmoticonManager(getParentActivity());
-            //actionBarLayer.setDisplayHomeAsUpEnabled(true, R.drawable.ic_ab_back);
-            actionBarLayer.setDisplayHomeAsUpEnabled(true, themeManager.getDrawable("ic_ab_back", false));
-            actionBarLayer.setBackOverlay(R.layout.updating_state_layout);
-            actionBarLayer.setTitle(LocaleController.getString("ManageEmoticon", R.string.ManageEmoticon));
-            actionBarLayer.setActionBarMenuOnItemClick(new ActionBarLayer.ActionBarMenuOnItemClick() {
+            actionBar.setBackButtonDrawable(themeManager.getDrawable("ic_ab_back", false));
+            actionBar.setTitle(LocaleController.getString("ManageEmoticon", R.string.ManageEmoticon));
+            actionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
                 @Override
                 public void onItemClick(int id) {
                     if (id == -1) {

@@ -11,7 +11,6 @@ package org.telegram.ui.Cells;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.text.Layout;
@@ -31,6 +30,7 @@ import org.telegram.android.MessageObject;
 import org.telegram.android.MessagesController;
 import org.telegram.messenger.TLRPC;
 import org.telegram.messenger.phonethemeshop.R;
+import org.telegram.ui.Views.AvatarDrawable;
 
 public class ChatBaseCell extends BaseCell {
 
@@ -80,6 +80,7 @@ public class ChatBaseCell extends BaseCell {
     protected int layoutHeight;
 
     private ImageReceiver avatarImage;
+    private AvatarDrawable avatarDrawable;
     private boolean avatarPressed = false;
     private boolean forwardNamePressed = false;
 
@@ -128,7 +129,7 @@ public class ChatBaseCell extends BaseCell {
         avatarImage = new ImageReceiver(this);
     }
 
-private void init() {
+    private void init() {
         themeManager = new ThemeManager(getContext());
         if (backgroundDrawableIn == null) {
             /*
@@ -189,6 +190,8 @@ private void init() {
             forwardNamePaint.setTextSize(AndroidUtilities.dp(14));
         }
         avatarImage = new ImageReceiver(this);
+        avatarImage.setRoundRadius(AndroidUtilities.dp(21));
+        avatarDrawable = new AvatarDrawable();
     }
 
     @Override
@@ -256,7 +259,8 @@ private void init() {
     }
 
     protected boolean isUserDataChanged() {
-        if (currentMessageObject == null || currentUser == null) {
+        //if (currentMessageObject == null || currentUser == null) {
+        if (currentMessageObject == null) {
             return false;
         }
         if (last_send_state != currentMessageObject.messageOwner.send_state) {
@@ -312,14 +316,16 @@ private void init() {
                 } else {
                     currentPhoto = null;
                 }
-                //avatarImage.setImage(currentPhoto, "50_50", getResources().getDrawable(AndroidUtilities.getUserAvatarForId(currentUser.id)), false);
-                String placeHolderId = AndroidUtilities.getUserAvatarForId(currentUser.id);
+                avatarDrawable.setInfo(currentUser);
+                //String placeHolderId = AndroidUtilities.getUserAvatarForId(currentUser.id);
 
-                Drawable d = themeManager.getDrawable(placeHolderId, false);
-                avatarImage.setImage(currentPhoto, "50_50", d, false);
+                //Drawable d = themeManager.getDrawable(placeHolderId, false);
+                //avatarImage.setImage(currentPhoto, "50_50", d, false);
             } else {
-                avatarImage.setImage(null, "50_50", null, false);
+                currentPhoto = null;
+                avatarDrawable.setInfo(messageObject.messageOwner.from_id, null, null, false);
             }
+            avatarImage.setImage(currentPhoto, "50_50", avatarDrawable, false);
         }
 
         if (!media) {
@@ -473,13 +479,13 @@ private void init() {
                 if (!currentMessageObject.isOut()) {
                     timeX = backgroundWidth - AndroidUtilities.dp(9) - timeWidth + (isChat ? AndroidUtilities.dp(52) : 0);
                 } else {
-                    timeX = layoutWidth - timeWidth - AndroidUtilities.dpf(38.5f);
+                    timeX = layoutWidth - timeWidth - AndroidUtilities.dp(38.5f);
                 }
             } else {
                 if (!currentMessageObject.isOut()) {
                     timeX = backgroundWidth - AndroidUtilities.dp(4) - timeWidth + (isChat ? AndroidUtilities.dp(52) : 0);
                 } else {
-                    timeX = layoutWidth - timeWidth - AndroidUtilities.dpf(42.0f);
+                    timeX = layoutWidth - timeWidth - AndroidUtilities.dp(42.0f);
                 }
 
                 //get user name
@@ -577,23 +583,11 @@ private void init() {
         onAfterBackgroundDraw(canvas);
 
         if (drawName && nameLayout != null) {
-            if ( media && nameLayout.getText() != "" ) {
-                setDrawableBounds(mediaBackgroundDrawable, currentBackgroundDrawable.getBounds().left + AndroidUtilities.dp(7) - (int)nameOffsetX,
-                        AndroidUtilities.dp(8), nameWidth + AndroidUtilities.dp(4), AndroidUtilities.dpf(17.5f));
-                mediaBackgroundDrawable.draw(canvas);
-
-                canvas.save();
-                canvas.translate(currentBackgroundDrawable.getBounds().left + AndroidUtilities.dp(9) - nameOffsetX, AndroidUtilities.dp(8));
-                namePaint.setColor(Color.WHITE);
-                nameLayout.draw(canvas);
-                canvas.restore();
-            } else {
-                canvas.save();
-                canvas.translate(currentBackgroundDrawable.getBounds().left + AndroidUtilities.dp(19) - nameOffsetX, AndroidUtilities.dp(10));
-                namePaint.setColor(AndroidUtilities.getColorForId(currentUser.id));
-                nameLayout.draw(canvas);
-                canvas.restore();
-            }
+            canvas.save();
+            canvas.translate(currentBackgroundDrawable.getBounds().left + AndroidUtilities.dp(19) - nameOffsetX, AndroidUtilities.dp(10));
+            namePaint.setColor(AvatarDrawable.getColorForId(currentUser.id));
+            nameLayout.draw(canvas);
+            canvas.restore();
         }
 
         if (drawForwardedName && forwardedNameLayout != null) {
@@ -614,16 +608,16 @@ private void init() {
 
         if (drawTime) {
             if (media) {
-                setDrawableBounds(mediaBackgroundDrawable, timeX - AndroidUtilities.dp(3), layoutHeight - AndroidUtilities.dpf(27.5f), timeWidth + AndroidUtilities.dp(6 + (currentMessageObject.isOut() ? 20 : 0)), AndroidUtilities.dpf(16.5f));
+                setDrawableBounds(mediaBackgroundDrawable, timeX - AndroidUtilities.dp(3), layoutHeight - AndroidUtilities.dp(27.5f), timeWidth + AndroidUtilities.dp(6 + (currentMessageObject.isOut() ? 20 : 0)), AndroidUtilities.dp(16.5f));
                 mediaBackgroundDrawable.draw(canvas);
 
                 canvas.save();
-                canvas.translate(timeX, layoutHeight - AndroidUtilities.dpf(12.0f) - timeLayout.getHeight());
+                canvas.translate(timeX, layoutHeight - AndroidUtilities.dp(12.0f) - timeLayout.getHeight());
                 timeLayout.draw(canvas);
                 canvas.restore();
             } else {
                 canvas.save();
-                canvas.translate(timeX, layoutHeight - AndroidUtilities.dpf(6.5f) - timeLayout.getHeight());
+                canvas.translate(timeX, layoutHeight - AndroidUtilities.dp(6.5f) - timeLayout.getHeight());
                 timeLayout.draw(canvas);
                 canvas.restore();
             }
@@ -659,20 +653,20 @@ private void init() {
 
                 if (drawClock) {
                     if (!media) {
-                        setDrawableBounds(clockDrawable, layoutWidth - AndroidUtilities.dpf(18.5f) - clockDrawable.getIntrinsicWidth(), layoutHeight - AndroidUtilities.dpf(8.5f) - clockDrawable.getIntrinsicHeight());
+                        setDrawableBounds(clockDrawable, layoutWidth - AndroidUtilities.dp(18.5f) - clockDrawable.getIntrinsicWidth(), layoutHeight - AndroidUtilities.dp(8.5f) - clockDrawable.getIntrinsicHeight());
                         clockDrawable.draw(canvas);
                     } else {
-                        setDrawableBounds(clockMediaDrawable, layoutWidth - AndroidUtilities.dpf(22.0f) - clockMediaDrawable.getIntrinsicWidth(), layoutHeight - AndroidUtilities.dpf(13.0f) - clockMediaDrawable.getIntrinsicHeight());
+                        setDrawableBounds(clockMediaDrawable, layoutWidth - AndroidUtilities.dp(22.0f) - clockMediaDrawable.getIntrinsicWidth(), layoutHeight - AndroidUtilities.dp(13.0f) - clockMediaDrawable.getIntrinsicHeight());
                         clockMediaDrawable.draw(canvas);
                     }
                 }
                 if (isBroadcast) {
                     if (drawCheck1 || drawCheck2) {
                         if (!media) {
-                            setDrawableBounds(broadcastDrawable, layoutWidth - AndroidUtilities.dpf(20.5f) - broadcastDrawable.getIntrinsicWidth(), layoutHeight - AndroidUtilities.dpf(8.0f) - broadcastDrawable.getIntrinsicHeight());
+                            setDrawableBounds(broadcastDrawable, layoutWidth - AndroidUtilities.dp(20.5f) - broadcastDrawable.getIntrinsicWidth(), layoutHeight - AndroidUtilities.dp(8.0f) - broadcastDrawable.getIntrinsicHeight());
                             broadcastDrawable.draw(canvas);
                         } else {
-                            setDrawableBounds(broadcastMediaDrawable, layoutWidth - AndroidUtilities.dpf(24.0f) - broadcastMediaDrawable.getIntrinsicWidth(), layoutHeight - AndroidUtilities.dpf(13.0f) - broadcastMediaDrawable.getIntrinsicHeight());
+                            setDrawableBounds(broadcastMediaDrawable, layoutWidth - AndroidUtilities.dp(24.0f) - broadcastMediaDrawable.getIntrinsicWidth(), layoutHeight - AndroidUtilities.dp(13.0f) - broadcastMediaDrawable.getIntrinsicHeight());
                             broadcastMediaDrawable.draw(canvas);
                         }
                     }
@@ -680,36 +674,36 @@ private void init() {
                     if (drawCheck2) {
                         if (!media) {
                             if (drawCheck1) {
-                                setDrawableBounds(checkDrawable, layoutWidth - AndroidUtilities.dpf(22.5f) - checkDrawable.getIntrinsicWidth(), layoutHeight - AndroidUtilities.dpf(8.5f) - checkDrawable.getIntrinsicHeight());
+                                setDrawableBounds(checkDrawable, layoutWidth - AndroidUtilities.dp(22.5f) - checkDrawable.getIntrinsicWidth(), layoutHeight - AndroidUtilities.dp(8.5f) - checkDrawable.getIntrinsicHeight());
                             } else {
-                                setDrawableBounds(checkDrawable, layoutWidth - AndroidUtilities.dpf(18.5f) - checkDrawable.getIntrinsicWidth(), layoutHeight - AndroidUtilities.dpf(8.5f) - checkDrawable.getIntrinsicHeight());
+                                setDrawableBounds(checkDrawable, layoutWidth - AndroidUtilities.dp(18.5f) - checkDrawable.getIntrinsicWidth(), layoutHeight - AndroidUtilities.dp(8.5f) - checkDrawable.getIntrinsicHeight());
                             }
                             checkDrawable.draw(canvas);
                         } else {
                             if (drawCheck1) {
-                                setDrawableBounds(checkMediaDrawable, layoutWidth - AndroidUtilities.dpf(26.0f) - checkMediaDrawable.getIntrinsicWidth(), layoutHeight - AndroidUtilities.dpf(13.0f) - checkMediaDrawable.getIntrinsicHeight());
+                                setDrawableBounds(checkMediaDrawable, layoutWidth - AndroidUtilities.dp(26.0f) - checkMediaDrawable.getIntrinsicWidth(), layoutHeight - AndroidUtilities.dp(13.0f) - checkMediaDrawable.getIntrinsicHeight());
                             } else {
-                                setDrawableBounds(checkMediaDrawable, layoutWidth - AndroidUtilities.dpf(22.0f) - checkMediaDrawable.getIntrinsicWidth(), layoutHeight - AndroidUtilities.dpf(13.0f) - checkMediaDrawable.getIntrinsicHeight());
+                                setDrawableBounds(checkMediaDrawable, layoutWidth - AndroidUtilities.dp(22.0f) - checkMediaDrawable.getIntrinsicWidth(), layoutHeight - AndroidUtilities.dp(13.0f) - checkMediaDrawable.getIntrinsicHeight());
                             }
                             checkMediaDrawable.draw(canvas);
                         }
                     }
                     if (drawCheck1) {
                         if (!media) {
-                            setDrawableBounds(halfCheckDrawable, layoutWidth - AndroidUtilities.dp(18) - halfCheckDrawable.getIntrinsicWidth(), layoutHeight - AndroidUtilities.dpf(8.5f) - halfCheckDrawable.getIntrinsicHeight());
+                            setDrawableBounds(halfCheckDrawable, layoutWidth - AndroidUtilities.dp(18) - halfCheckDrawable.getIntrinsicWidth(), layoutHeight - AndroidUtilities.dp(8.5f) - halfCheckDrawable.getIntrinsicHeight());
                             halfCheckDrawable.draw(canvas);
                         } else {
-                            setDrawableBounds(halfCheckMediaDrawable, layoutWidth - AndroidUtilities.dpf(20.5f) - halfCheckMediaDrawable.getIntrinsicWidth(), layoutHeight - AndroidUtilities.dpf(13.0f) - halfCheckMediaDrawable.getIntrinsicHeight());
+                            setDrawableBounds(halfCheckMediaDrawable, layoutWidth - AndroidUtilities.dp(20.5f) - halfCheckMediaDrawable.getIntrinsicWidth(), layoutHeight - AndroidUtilities.dp(13.0f) - halfCheckMediaDrawable.getIntrinsicHeight());
                             halfCheckMediaDrawable.draw(canvas);
                         }
                     }
                 }
                 if (drawError) {
                     if (!media) {
-                        setDrawableBounds(errorDrawable, layoutWidth - AndroidUtilities.dp(18) - errorDrawable.getIntrinsicWidth(), layoutHeight - AndroidUtilities.dpf(6.5f) - errorDrawable.getIntrinsicHeight());
+                        setDrawableBounds(errorDrawable, layoutWidth - AndroidUtilities.dp(18) - errorDrawable.getIntrinsicWidth(), layoutHeight - AndroidUtilities.dp(6.5f) - errorDrawable.getIntrinsicHeight());
                         errorDrawable.draw(canvas);
                     } else {
-                        setDrawableBounds(errorDrawable, layoutWidth - AndroidUtilities.dpf(20.5f) - errorDrawable.getIntrinsicWidth(), layoutHeight - AndroidUtilities.dpf(12.5f) - errorDrawable.getIntrinsicHeight());
+                        setDrawableBounds(errorDrawable, layoutWidth - AndroidUtilities.dp(20.5f) - errorDrawable.getIntrinsicWidth(), layoutHeight - AndroidUtilities.dp(12.5f) - errorDrawable.getIntrinsicHeight());
                         errorDrawable.draw(canvas);
                     }
                 }
