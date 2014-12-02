@@ -30,6 +30,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.teamjihu.ThemeManager;
+
 import org.telegram.android.AndroidUtilities;
 import org.telegram.android.LocaleController;
 import org.telegram.messenger.phonethemeshop.R;
@@ -57,10 +59,25 @@ public class ActionBarMenuItem extends ImageView {
     private boolean showFromBottom;
     private int menuHeight = AndroidUtilities.dp(16);
 
+    private ThemeManager themeManager;
+
     public ActionBarMenuItem(Context context, ActionBarMenu menu, int background) {
 
         super(context);
+        themeManager = new ThemeManager(context);
         setBackgroundResource(background);
+        parentMenu = menu;
+    }
+
+    public ActionBarMenuItem(Context context, ActionBarMenu menu, String backgroundStr) {
+        super(context);
+        themeManager = new ThemeManager(context);
+
+        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN)
+            setBackgroundDrawable(themeManager.getDrawable(backgroundStr, false));
+        else
+            setBackground(themeManager.getDrawable(backgroundStr, false));
+
         parentMenu = menu;
     }
 
@@ -394,7 +411,7 @@ public class ActionBarMenuItem extends ImageView {
         if (value && searchField == null) {
             searchField = new EditText(getContext());
             searchField.setTextSize(18);
-            searchField.setTextColor(0xffffffff);
+            searchField.setTextColor(themeManager.getColor("title"));
             //searchField.setTextColor(themeManager.getColor("title"));
             searchField.setSingleLine(true);
             searchField.setBackgroundResource(R.drawable.search_light_states);

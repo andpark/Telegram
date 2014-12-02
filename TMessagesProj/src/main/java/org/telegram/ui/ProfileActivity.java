@@ -31,6 +31,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.teamjihu.ThemeManager;
+
 import org.telegram.PhoneFormat.PhoneFormat;
 import org.telegram.android.AndroidUtilities;
 import org.telegram.android.ContactsController;
@@ -119,6 +121,8 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
     private int membersSectionRow;
     private int membersEndRow;
     private int rowCount = 0;
+
+    private ThemeManager themeManager;
 
     public ProfileActivity(Bundle args) {
         super(args);
@@ -219,9 +223,10 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
     @Override
     public View createView(LayoutInflater inflater, ViewGroup container) {
         if (fragmentView == null) {
-            actionBar.setBackgroundColor(AvatarDrawable.getProfileBackColorForId(user_id != 0 ? 5 : chat_id));
-            actionBar.setItemsBackground(AvatarDrawable.getButtonColorForId(user_id != 0 ? 5 : chat_id));
-            actionBar.setBackButtonImage(R.drawable.ic_ab_back);
+            themeManager = new ThemeManager(getParentActivity());
+            //actionBar.setBackgroundColor(AvatarDrawable.getProfileBackColorForId(user_id != 0 ? 5 : chat_id));
+            //actionBar.setItemsBackground(AvatarDrawable.getButtonColorForId(user_id != 0 ? 5 : chat_id));
+            actionBar.setBackButtonDrawable(themeManager.getDrawable("ic_ab_back", false));
             actionBar.setExtraHeight(AndroidUtilities.dp(88), false);
             if (AndroidUtilities.isTablet()) {
                 actionBar.setOccupyStatusBar(false);
@@ -371,7 +376,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
             });
 
             nameTextView = new TextView(getParentActivity());
-            nameTextView.setTextColor(0xffffffff);
+            nameTextView.setTextColor(themeManager.getColor("title"));
             nameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
             nameTextView.setLines(1);
             nameTextView.setMaxLines(1);
@@ -1108,7 +1113,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 if (user == null) {
                     return;
                 }
-                ActionBarMenuItem item = menu.addItem(0, R.drawable.ic_ab_other);
+                ActionBarMenuItem item = menu.addItem(0, themeManager.getDrawable("ic_ab_other", false));
                 if (user.phone != null && user.phone.length() != 0) {
                     item.addSubItem(add_contact, LocaleController.getString("AddContact", R.string.AddContact), 0);
                     item.addSubItem(share_contact, LocaleController.getString("ShareContact", R.string.ShareContact), 0);
@@ -1117,14 +1122,14 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     item.addSubItem(block_contact, !userBlocked ? LocaleController.getString("BlockContact", R.string.BlockContact) : LocaleController.getString("Unblock", R.string.Unblock), 0);
                 }
             } else {
-                ActionBarMenuItem item = menu.addItem(0, R.drawable.ic_ab_other);
+                ActionBarMenuItem item = menu.addItem(0, themeManager.getDrawable("ic_ab_other", false));
                 item.addSubItem(share_contact, LocaleController.getString("ShareContact", R.string.ShareContact), 0);
                 item.addSubItem(block_contact, !userBlocked ? LocaleController.getString("BlockContact", R.string.BlockContact) : LocaleController.getString("Unblock", R.string.Unblock), 0);
                 item.addSubItem(edit_contact, LocaleController.getString("EditContact", R.string.EditContact), 0);
                 item.addSubItem(delete_contact, LocaleController.getString("DeleteContact", R.string.DeleteContact), 0);
             }
         } else if (chat_id != 0) {
-            ActionBarMenuItem item = menu.addItem(0, R.drawable.ic_ab_other);
+            ActionBarMenuItem item = menu.addItem(0, themeManager.getDrawable("ic_ab_other", false));
             if (chat_id > 0) {
                 item.addSubItem(add_member, LocaleController.getString("AddMember", R.string.AddMember), 0);
                 item.addSubItem(edit_name, LocaleController.getString("EditName", R.string.EditName), 0);

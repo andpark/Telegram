@@ -9,11 +9,14 @@
 package org.telegram.ui.Cells;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+
+import com.teamjihu.ThemeManager;
 
 import org.telegram.PhoneFormat.PhoneFormat;
 import org.telegram.android.AndroidUtilities;
@@ -22,15 +25,20 @@ import org.telegram.messenger.TLRPC;
 import org.telegram.ui.Views.AvatarDrawable;
 import org.telegram.ui.Views.BackupImageView;
 
+
 public class DrawerProfileCell extends FrameLayout {
 
     private BackupImageView avatarImageView;
     private TextView nameTextView;
     private TextView phoneTextView;
 
+    private ThemeManager themeManager;
+
     public DrawerProfileCell(Context context) {
         super(context);
-        setBackgroundColor(0xff4c84b5);
+        themeManager = new ThemeManager(context);
+        //setBackgroundColor(0xff4c84b5);
+        themeManager.setBackgroundDrawable(this, themeManager.getDrawable("bg_actionbar", false));
 
         avatarImageView = new BackupImageView(context);
         avatarImageView.imageReceiver.setRoundRadius(AndroidUtilities.dp(32));
@@ -44,7 +52,7 @@ public class DrawerProfileCell extends FrameLayout {
         avatarImageView.setLayoutParams(layoutParams);
 
         nameTextView = new TextView(context);
-        nameTextView.setTextColor(0xffffffff);
+        nameTextView.setTextColor(themeManager.getColor("title"));
         nameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
         nameTextView.setTypeface(AndroidUtilities.getTypeface("fonts/rmedium.ttf"));
         nameTextView.setLines(1);
@@ -62,7 +70,7 @@ public class DrawerProfileCell extends FrameLayout {
         nameTextView.setLayoutParams(layoutParams);
 
         phoneTextView = new TextView(context);
-        phoneTextView.setTextColor(0xffc2e5ff);
+        phoneTextView.setTextColor(themeManager.getColor("subtitle"));
         phoneTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);
         phoneTextView.setLines(1);
         phoneTextView.setMaxLines(1);
@@ -99,7 +107,11 @@ public class DrawerProfileCell extends FrameLayout {
         nameTextView.setText(ContactsController.formatName(user.first_name, user.last_name));
         phoneTextView.setText(PhoneFormat.getInstance().format("+" + user.phone));
         AvatarDrawable avatarDrawable = new AvatarDrawable(user);
-        avatarDrawable.setColor(0xff5c98cd);
+        Drawable bg = themeManager.getDrawable("bg_pressed_actionbar_btn", true);
+        if ( bg == null )
+            avatarDrawable.setColor(0xff5c98cd);
+        else
+            avatarDrawable.setDrawable(bg);
         avatarImageView.setImage(photo, "50_50", avatarDrawable);
     }
 }

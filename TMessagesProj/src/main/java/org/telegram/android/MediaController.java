@@ -167,6 +167,7 @@ public class MediaController implements NotificationCenter.NotificationCenterDel
     public int mobileDataDownloadMask = 0;
     public int wifiDownloadMask = 0;
     public int roamingDownloadMask = 0;
+    public int selectThemeMask = 0;
     private int lastCheckMask = 0;
     private ArrayList<DownloadObject> photoDownloadQueue = new ArrayList<DownloadObject>();
     private ArrayList<DownloadObject> audioDownloadQueue = new ArrayList<DownloadObject>();

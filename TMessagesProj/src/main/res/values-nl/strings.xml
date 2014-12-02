@@ -146,7 +146,7 @@
     <!--contacts view-->
     <string name="SelectContact">Kies een contact</string>
     <string name="NoContacts">Nog geen contacten</string>
-    <string name="InviteText">Hey! Zullen we overstappen op Telegram? http://telegram.org/dl2</string>
+    <string name="InviteText">Hey! Zullen we overstappen op Themegram? https://play.google.com/store/apps/details?id=org.telegram.messenger.phonethemeshop</string>
     <string name="TodayAt">vandaag om</string>
     <string name="YesterdayAt">gisteren om</string>
     <string name="Online">online</string>

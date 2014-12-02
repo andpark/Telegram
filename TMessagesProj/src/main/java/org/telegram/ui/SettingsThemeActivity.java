@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +21,13 @@ import android.widget.Toast;
 
 import com.teamjihu.ThemeManager;
 
+import org.telegram.android.AndroidUtilities;
 import org.telegram.android.LocaleController;
 import org.telegram.messenger.phonethemeshop.R;
 import org.telegram.ui.ActionBar.ActionBar;
 import org.telegram.ui.ActionBar.BaseFragment;
 import org.telegram.ui.Cells.ChatBaseCell;
+import org.telegram.ui.Views.Switch;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -134,8 +137,6 @@ public class SettingsThemeActivity extends BaseFragment {
 
             if ( !currentThemePkg.equals(b.getString("themePkg")) ) {
                 themeManager.applyTheme(b.getString("themePkg"));
-                ImageView btnCheck = (ImageView)selectedThemeItem.findViewById(R.id.settings_row_check_button);
-                //btnCheck.setImageResource(R.drawable.btn_check_on);
 
                 currentThemePkg = b.getString("themePkg");
             }
@@ -178,8 +179,34 @@ public class SettingsThemeActivity extends BaseFragment {
             if ( item != null ) {
                 ImageView iconView = (ImageView)convertView.findViewById(R.id.theme_icon);
                 TextView themeName = (TextView)convertView.findViewById(R.id.theme_name);
-                ImageView btnCheck = (ImageView)convertView.findViewById(R.id.settings_row_check_button);
                 ImageView btnDelete = (ImageView)convertView.findViewById(R.id.settings_row_delete_button);
+
+                Switch checkBox;
+                boolean hasCheckBox = false;
+                int checkBoxIndex = 0;
+                for ( int i = 0; i < ((FrameLayout)convertView).getChildCount(); i++ ) {
+                    if ( ((FrameLayout)convertView).getChildAt(i) instanceof Switch ) {
+                        checkBoxIndex = i;
+                        hasCheckBox = true;
+                    }
+                }
+
+                if ( !hasCheckBox ) {
+                    checkBox = new Switch(getContext());
+                    checkBox.setDuplicateParentStateEnabled(false);
+                    checkBox.setFocusable(false);
+                    checkBox.setFocusableInTouchMode(false);
+                    checkBox.setClickable(false);
+                    ((FrameLayout) convertView).addView(checkBox);
+                    FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) checkBox.getLayoutParams();
+                    layoutParams.width = FrameLayout.LayoutParams.WRAP_CONTENT;
+                    layoutParams.height = FrameLayout.LayoutParams.WRAP_CONTENT;
+                    layoutParams.rightMargin = AndroidUtilities.dp(48);
+                    layoutParams.gravity = (LocaleController.isRTL ? Gravity.LEFT : Gravity.RIGHT) | Gravity.CENTER_VERTICAL;
+                    checkBox.setLayoutParams(layoutParams);
+                } else
+                    checkBox = (Switch)((FrameLayout)convertView).getChildAt(checkBoxIndex);
+
                 btnDelete.setTag(item);
 
                 if ( icon == null )
@@ -190,10 +217,10 @@ public class SettingsThemeActivity extends BaseFragment {
                 if ( themeName != null ) {
                     themeName.setText(item.getString("themeName"));
                     if ( currentThemePkg.equals(item.getString("themePkg")) ) {
-//                        btnCheck.setImageResource(R.drawable.btn_check_on);
+                        setChecked(checkBox, true);
                         prevSelectedThemePkg = item.getString("themePkg");
                     } else {
-//                        btnCheck.setImageResource(R.drawable.btn_check_off);
+                        setChecked(checkBox, false);
                     }
 
                     if ( item.getString("themeName").equals(getParentActivity().getString(R.string.theme_title)) ) {
@@ -231,6 +258,11 @@ public class SettingsThemeActivity extends BaseFragment {
         }
     }
 
+
+    public void setChecked(Switch checkBox, boolean checked) {
+        checkBox.setChecked(checked);
+    }
+
     @Override
     public void onActivityResultFragment(int index, int resultCode, Intent data) {
         getThemeList();
@@ -248,7 +280,7 @@ public class SettingsThemeActivity extends BaseFragment {
         super.onFragmentDestroy();
 
         if ( !currentThemePkg.equals(prevThemePkg) ) {
-            ChatBaseCell chatBaseCell = new ChatBaseCell(getParentActivity(), true);
+            ChatBaseCell chatBaseCell = new ChatBaseCell(getParentActivity(), true);    //init talk balloon(ex : msg_out_selected.9.png)
             Intent i = getParentActivity().getBaseContext().getPackageManager().getLaunchIntentForPackage(getParentActivity().getBaseContext().getPackageName());
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             getParentActivity().finish();

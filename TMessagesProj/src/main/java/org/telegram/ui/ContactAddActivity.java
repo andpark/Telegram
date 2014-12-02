@@ -10,9 +10,6 @@ package org.telegram.ui;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -32,19 +29,19 @@ import android.widget.TextView;
 
 import com.teamjihu.ThemeManager;
 
-import org.telegram.android.AndroidUtilities;
 import org.telegram.PhoneFormat.PhoneFormat;
+import org.telegram.android.AndroidUtilities;
 import org.telegram.android.ContactsController;
 import org.telegram.android.LocaleController;
-import org.telegram.messenger.TLRPC;
 import org.telegram.android.MessagesController;
 import org.telegram.android.NotificationCenter;
+import org.telegram.messenger.TLRPC;
 import org.telegram.messenger.phonethemeshop.R;
 import org.telegram.ui.ActionBar.ActionBar;
 import org.telegram.ui.ActionBar.ActionBarMenu;
+import org.telegram.ui.ActionBar.BaseFragment;
 import org.telegram.ui.Views.AvatarDrawable;
 import org.telegram.ui.Views.BackupImageView;
-import org.telegram.ui.ActionBar.BaseFragment;
 
 public class ContactAddActivity extends BaseFragment implements NotificationCenter.NotificationCenterDelegate {
 
@@ -87,7 +84,7 @@ public class ContactAddActivity extends BaseFragment implements NotificationCent
     public View createView(LayoutInflater inflater, ViewGroup container) {
         if (fragmentView == null) {
             themeManager = new ThemeManager(getParentActivity());
-            actionBar.setBackButtonImage(R.drawable.ic_ab_back);
+            actionBar.setBackButtonDrawable(themeManager.getDrawable("ic_ab_back", false));
             actionBar.setAllowOverlayTitle(true);
             if (addContact) {
                 actionBar.setTitle(LocaleController.getString("AddContactTitle", R.string.AddContactTitle));

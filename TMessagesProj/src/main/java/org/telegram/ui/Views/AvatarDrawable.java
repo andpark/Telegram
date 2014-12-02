@@ -8,10 +8,12 @@
 
 package org.telegram.ui.Views;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.Layout;
 import android.text.StaticLayout;
@@ -146,6 +148,11 @@ public class AvatarDrawable extends Drawable {
 
     public void setColor(int value) {
         color = value;
+    }
+
+    public void setDrawable(Drawable value) {
+        Bitmap bitmap = ((BitmapDrawable)value).getBitmap();
+        color = bitmap.getPixel(0, 0);
     }
 
     public void setInfo(int id, String firstName, String lastName, boolean isBroadcast) {

@@ -9,7 +9,10 @@
 package org.telegram.ui;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentResolver;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -20,6 +23,7 @@ import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.provider.ContactsContract;
 import android.view.ActionMode;
@@ -38,33 +42,30 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import org.telegram.android.AndroidUtilities;
+import com.teamjihu.LockManager;
+
 import org.telegram.PhoneFormat.PhoneFormat;
+import org.telegram.android.AndroidUtilities;
 import org.telegram.android.ContactsController;
+import org.telegram.android.LocaleController;
+import org.telegram.android.NotificationCenter;
 import org.telegram.android.SendMessagesHelper;
 import org.telegram.messenger.ConnectionsManager;
 import org.telegram.messenger.FileLog;
-import org.telegram.android.LocaleController;
-import org.telegram.android.NotificationCenter;
-import org.telegram.messenger.phonethemeshop.R;
 import org.telegram.messenger.TLRPC;
 import org.telegram.messenger.UserConfig;
 import org.telegram.messenger.Utilities;
-import org.telegram.ui.Adapters.DrawerLayoutAdapter;
+import org.telegram.messenger.phonethemeshop.R;
 import org.telegram.ui.ActionBar.ActionBarLayout;
 import org.telegram.ui.ActionBar.BaseFragment;
 import org.telegram.ui.ActionBar.DrawerLayoutContainer;
+import org.telegram.ui.Adapters.DrawerLayoutAdapter;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Map;
-
-import android.os.Handler;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Context;
 
 public class LaunchActivity extends Activity implements ActionBarLayout.ActionBarLayoutDelegate, NotificationCenter.NotificationCenterDelegate, MessagesActivity.MessagesActivityDelegate {
     private boolean finished;
@@ -268,10 +269,13 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
                     args.putBoolean("broadcast", true);
                     presentFragment(new GroupCreateActivity(args));
                     drawerLayoutContainer.closeDrawer(false);
-                } else if (position == 6) {
-                    presentFragment(new ContactsActivity(null));
+                } else if (position == 5) {
+                    presentFragment(new SettingsThemeActivity());
                     drawerLayoutContainer.closeDrawer(false);
                 } else if (position == 7) {
+                    presentFragment(new ContactsActivity(null));
+                    drawerLayoutContainer.closeDrawer(false);
+                } else if (position == 8) {
                     try {
                         Intent intent = new Intent(Intent.ACTION_SEND);
                         intent.setType("text/plain");
@@ -281,16 +285,11 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
                         FileLog.e("tmessages", e);
                     }
                     drawerLayoutContainer.closeDrawer(false);
-                } else if (position == 8) {
+                } else if (position == 9) {
                     presentFragment(new SettingsActivity());
                     drawerLayoutContainer.closeDrawer(false);
-                } else if (position == 9) {
-                    try {
-                        Intent pickIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(LocaleController.getString("TelegramFaqUrl", R.string.TelegramFaqUrl)));
-                        startActivity(pickIntent);
-                    } catch (Exception e) {
-                        FileLog.e("tmessages", e);
-                    }
+                } else if (position == 10) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=org.telegram.messenger.phonethemeshop")));
                     drawerLayoutContainer.closeDrawer(false);
                 }
             }
@@ -980,6 +979,24 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
                     }
                 }
             }, 2000);
+        }
+
+        if ( LockManager.isLocked() ) {
+            BaseFragment lastFragment = null;
+            if (AndroidUtilities.isTablet()) {
+                if ( !layersActionBarLayout.fragmentsStack.isEmpty() )
+                    lastFragment = layersActionBarLayout.fragmentsStack.get(layersActionBarLayout.fragmentsStack.size() - 1);
+            } else {
+                if ( !actionBarLayout.fragmentsStack.isEmpty() )
+                    lastFragment = actionBarLayout.fragmentsStack.get(actionBarLayout.fragmentsStack.size() - 1);
+            }
+            if ( lastFragment == null || !lastFragment.getClass().getSimpleName().trim().equals("LockActivity")) {
+                if (drawerLayoutContainer.isDrawerOpened())
+                    drawerLayoutContainer.closeDrawer(true);
+                LockManager.Lock();
+                presentFragment(new LockActivity());
+            } else if (AndroidUtilities.isTablet())
+                layersActionBarLayout.setVisibility(View.VISIBLE);
         }
     }
 

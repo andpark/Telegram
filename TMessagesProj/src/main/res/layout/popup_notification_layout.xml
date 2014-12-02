@@ -35,7 +35,6 @@
                     android:layout_weight="1">
 
                     <ImageView
-                        android:src="@drawable/ic_msg_panel_smiles"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:layout_marginTop="2dp"

@@ -84,7 +84,6 @@
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:id="@+id/chat_compose_panel"
-        android:background="@drawable/compose_panel"
         android:orientation="horizontal">
 
         <org.telegram.ui.Views.FrameLayoutFixed
@@ -102,15 +101,6 @@
                 android:scaleType="centerInside"
                 android:layout_gravity="bottom"
                 android:id="@+id/chat_smile_button"/>
-
-            <ImageButton
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="2dp"
-                android:scaleType="centerInside"
-                android:layout_centerVertical="true"
-                android:id="@+id/chat_zzal_button"
-                android:background="@drawable/btn_zzal_bg"/>
 
 
             <EditText
@@ -139,14 +129,24 @@
                 android:layout_marginTop="2dp"
                 android:id="@+id/chat_attach_button"
                 android:enabled="false"
-                android:layout_gravity="bottom|right"/>
+                android:layout_gravity="bottom|right"
+                android:visibility="gone"/>
+
+            <ImageButton
+                android:id="@+id/chat_zzal_button"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="2dp"
+                android:enabled="false"
+                android:layout_gravity="bottom|right"
+                android:background="@drawable/btn_zzal_bg"/>
 
             <org.telegram.ui.Views.FrameLayoutFixed
                 android:layout_height="48dp"
                 android:layout_width="fill_parent"
                 android:layout_marginTop="2dp"
                 android:layout_gravity="bottom"
-                android:background="#ffffff"
+                android:background="#ffffffff"
                 android:id="@+id/record_panel"
                 android:visibility="gone">
 
@@ -221,7 +221,7 @@
                 android:enabled="false"
                 android:src="@drawable/mic_button_states"
                 android:paddingRight="4dp"
-                android:background="@android:color/white"/>
+                android:background="@android:color/transparent"/>
 
             <ImageButton
                 android:layout_width="48dp"

@@ -106,7 +106,7 @@ public class WallpapersActivity extends BaseFragment implements NotificationCent
     public View createView(LayoutInflater inflater, ViewGroup container) {
         if (fragmentView == null) {
             themeManager = new ThemeManager(getParentActivity());
-            actionBar.setBackButtonImage(R.drawable.ic_ab_back);
+            actionBar.setBackButtonDrawable(themeManager.getDrawable("ic_ab_back", false));
             actionBar.setAllowOverlayTitle(true);
             actionBar.setTitle(LocaleController.getString("ChatBackground", R.string.ChatBackground));
             actionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {

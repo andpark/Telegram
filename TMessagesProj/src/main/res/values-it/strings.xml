@@ -146,7 +146,7 @@
     <!--contacts view-->
     <string name="SelectContact">Seleziona contatto</string>
     <string name="NoContacts">Ancora nessun contatto</string>
-    <string name="InviteText">Ehi, è il momento di passare a Telegram: http://telegram.org/dl2</string>
+    <string name="InviteText">Ehi, è il momento di passare a Themegram: https://play.google.com/store/apps/details?id=org.telegram.messenger.phonethemeshop</string>
     <string name="TodayAt">oggi alle</string>
     <string name="YesterdayAt">ieri alle</string>
     <string name="Online">in linea</string>

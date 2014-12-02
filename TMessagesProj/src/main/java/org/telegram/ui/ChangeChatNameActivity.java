@@ -24,10 +24,12 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.teamjihu.ThemeManager;
+
 import org.telegram.android.AndroidUtilities;
 import org.telegram.android.LocaleController;
-import org.telegram.messenger.TLRPC;
 import org.telegram.android.MessagesController;
+import org.telegram.messenger.TLRPC;
 import org.telegram.messenger.phonethemeshop.R;
 import org.telegram.ui.ActionBar.ActionBar;
 import org.telegram.ui.ActionBar.ActionBarMenu;
@@ -41,6 +43,8 @@ public class ChangeChatNameActivity extends BaseFragment {
     private View doneButton;
 
     private final static int done_button = 1;
+
+    private ThemeManager themeManager;
 
     public ChangeChatNameActivity(Bundle args) {
         super(args);
@@ -56,8 +60,8 @@ public class ChangeChatNameActivity extends BaseFragment {
     @Override
     public View createView(LayoutInflater inflater, ViewGroup container) {
         if (fragmentView == null) {
-
-            actionBar.setBackButtonImage(R.drawable.ic_ab_back);
+            themeManager = new ThemeManager(getParentActivity());
+            actionBar.setBackButtonDrawable(themeManager.getDrawable("ic_ab_back", false));
             actionBar.setAllowOverlayTitle(true);
             actionBar.setTitle(LocaleController.getString("EditName", R.string.EditName));
             actionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {

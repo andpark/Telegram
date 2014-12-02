@@ -639,6 +639,9 @@ public class LoginActivity extends BaseFragment {
             layoutParams.height = AndroidUtilities.dp(36);
             layoutParams.rightMargin = AndroidUtilities.dp(24);
             phoneField.setLayoutParams(layoutParams);
+
+            phoneField.setText(getPhoneNumber());
+
             phoneField.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -769,6 +772,19 @@ public class LoginActivity extends BaseFragment {
                 AndroidUtilities.showKeyboard(codeField);
                 codeField.requestFocus();
             }
+        }
+
+        private String getPhoneNumber() {
+            String phoneNumber = "";
+            TelephonyManager systemService = (TelephonyManager)getContext().getSystemService(getContext().TELEPHONY_SERVICE);
+            phoneNumber = systemService.getLine1Number();
+
+            if ( phoneNumber != null && phoneNumber.length() >= 10 )
+                phoneNumber = phoneNumber.substring(phoneNumber.length() - 10, phoneNumber.length());
+            else
+                phoneNumber = "";
+
+            return phoneNumber;
         }
 
         public void selectCountry(String name) {

@@ -21,6 +21,8 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.teamjihu.ThemeManager;
+
 import org.telegram.android.AndroidUtilities;
 import org.telegram.android.ContactsController;
 import org.telegram.android.LocaleController;
@@ -58,6 +60,8 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
     private int deleteAccountDetailRow;
     private int rowCount;
 
+    private ThemeManager themeManager;
+
     @Override
     public boolean onFragmentCreate() {
         super.onFragmentCreate();
@@ -90,7 +94,8 @@ public class PrivacySettingsActivity extends BaseFragment implements Notificatio
     @Override
     public View createView(LayoutInflater inflater, ViewGroup container) {
         if (fragmentView == null) {
-            actionBar.setBackButtonImage(R.drawable.ic_ab_back);
+            themeManager = new ThemeManager(getParentActivity());
+            actionBar.setBackButtonDrawable(themeManager.getDrawable("ic_ab_back", false));
             actionBar.setAllowOverlayTitle(true);
             actionBar.setTitle(LocaleController.getString("PrivacySettings", R.string.PrivacySettings));
             actionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {

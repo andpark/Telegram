@@ -21,6 +21,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.teamjihu.ThemeManager;
+
 import org.telegram.android.AndroidUtilities;
 import org.telegram.messenger.phonethemeshop.R;
 
@@ -50,14 +52,18 @@ public class ActionBar extends FrameLayout {
     private boolean showingOverlayTitle;
 
     protected boolean isSearchFieldVisible;
-    protected int itemsBackgroundResourceId;
+    protected int itemsBackgroundResourceId = -1;
+    protected String itemsBackgroundStr = null;
     private boolean isBackOverlayVisible;
     protected BaseFragment parentFragment;
     public ActionBarMenuOnItemClick actionBarMenuOnItemClick;
     private int extraHeight;
 
+    private ThemeManager themeManager;
+
     public ActionBar(Context context) {
         super(context);
+        themeManager = new ThemeManager(context);
         titleFrameLayout = new FrameLayout(context);
         addView(titleFrameLayout);
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams)titleFrameLayout.getLayoutParams();
@@ -185,7 +191,10 @@ public class ActionBar extends FrameLayout {
         backButtonImageView = new ImageView(getContext());
         titleFrameLayout.addView(backButtonImageView);
         backButtonImageView.setScaleType(ImageView.ScaleType.CENTER);
-        backButtonImageView.setBackgroundResource(itemsBackgroundResourceId);
+        if ( itemsBackgroundResourceId == -1 )
+            themeManager.setBackgroundDrawable(backButtonImageView, themeManager.getDrawable(itemsBackgroundStr, false));
+        else
+            backButtonImageView.setBackgroundResource(itemsBackgroundResourceId);
         backButtonImageView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -221,7 +230,8 @@ public class ActionBar extends FrameLayout {
         subTitleTextView = new TextView(getContext());
         titleFrameLayout.addView(subTitleTextView);
         subTitleTextView.setGravity(Gravity.LEFT);
-        subTitleTextView.setTextColor(0xffd7e8f7);
+        //subTitleTextView.setTextColor(0xffd7e8f7);
+        subTitleTextView.setTextColor(themeManager.getColor("subtitle"));
         subTitleTextView.setSingleLine(true);
         subTitleTextView.setLines(1);
         subTitleTextView.setMaxLines(1);
@@ -265,7 +275,8 @@ public class ActionBar extends FrameLayout {
         titleTextView.setMaxLines(1);
         titleTextView.setEllipsize(TextUtils.TruncateAt.END);
         titleFrameLayout.addView(titleTextView);
-        titleTextView.setTextColor(0xffffffff);
+        //titleTextView.setTextColor(0xffffffff);
+        titleTextView.setTextColor(themeManager.getColor("title"));
         titleTextView.setTypeface(AndroidUtilities.getTypeface("fonts/rmedium.ttf"));
     }
 
@@ -482,6 +493,13 @@ public class ActionBar extends FrameLayout {
         itemsBackgroundResourceId = resourceId;
         if (backButtonImageView != null) {
             backButtonImageView.setBackgroundResource(itemsBackgroundResourceId);
+        }
+    }
+
+    public void setItemsBackground(String str) {
+        itemsBackgroundStr = str;
+        if (backButtonImageView != null) {
+            themeManager.setBackgroundDrawable(backButtonImageView, themeManager.getDrawable(itemsBackgroundStr, false));
         }
     }
 

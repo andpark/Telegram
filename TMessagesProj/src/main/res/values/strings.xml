@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <resources>
 
     <!-- theme name -->
     <string name="theme_title">Default Theme</string>
-    <!--emoticon name-->
+    <!-- emoticon name -->
     <string name="emoticon_title">Default Emoticon</string>
     <!--  -->
     <string name="AppName">Telegram for PhoneThemeShop</string>
@@ -53,7 +52,6 @@
     <string name="DeleteChatUser">Delete chat</string>
     <string name="HiddenName">Deleted Account</string>
     <string name="SelectChat">Select Chat</string>
-
     <string name="PhotoTip">Tap and hold to view</string>
     <string name="CompatibilityChat">%1$s is using an older version of Telegram, so secret photos will be shown in compatibility mode.\n\nOnce %2$s updates Telegram, photos with timers for 1 minute or less will start working in \'Tap and hold to view\' mode, and you will be notified whenever the other party takes a screenshot.</string>
     <string name="SearchMessages">MESSAGES</string>
@@ -151,7 +149,7 @@
     <!-- contacts view -->
     <string name="SelectContact">Select Contact</string>
     <string name="NoContacts">No contacts yet</string>
-    <string name="InviteText">Hey, let\'s switch to Telegram: http://telegram.org/dl2</string>
+    <string name="InviteText">Hey, let\'s switch to Themegram: https://play.google.com/store/apps/details?id=org.telegram.messenger.phonethemeshop</string>
     <string name="TodayAt">today at</string>
     <string name="YesterdayAt">yesterday at</string>
     <string name="Online">online</string>
@@ -197,7 +195,7 @@
     <string name="NumberUnknown">Unknown</string>
     <string name="Info">Info</string>
     <string name="Phone">Phone</string>
-    <!--usernames-->
+    <!-- usernames -->
     <string name="Username">Username</string>
     <string name="UsernamePlaceholder">Your Username</string>
     <string name="UsernameInUse">Sorry, this username is already taken.</string>
@@ -248,6 +246,7 @@
     <string name="AskAQuestionInfo">Please note that Telegram Support is done by volunteers. We try to respond as quickly as possible, but it may take a while.<![CDATA[<br><br>]]>Please take a look at the <![CDATA[<a href=\"http://telegram.org/faq#general\">Telegram FAQ</a>]]>: it has answers to most questions and important tips for <![CDATA[<a href=\"http://telegram.org/faq#troubleshooting\">troubleshooting</a>]]>.</string>
     <string name="AskButton">Ask a volunteer</string>
     <string name="TelegramFaq">Telegram FAQ</string>
+    <string name="EvaluateApp">Evaluate Themegram</string>
     <string name="TelegramFaqUrl">https://telegram.org/faq</string>
     <string name="DeleteLocalization">Delete localization?</string>
     <string name="IncorrectLocalization">Incorrect localization file</string>
@@ -286,6 +285,9 @@
     <string name="SelectTheme">Select Theme</string>
     <string name="ManageEmoticon">Manage Emoticon</string>
     <string name="moreTheme">download theme</string>
+    <string name="PasswordLock">Password Lock</string>
+    <string name="TurnOnLock">Turn on password lock</string>
+    <string name="ChangeLockPassword">Change Password</string>
     <!-- media view -->
     <string name="NoMedia">No shared media yet</string>
     <!-- map view -->
@@ -304,7 +306,7 @@
     <string name="AllPhotos">All Photos</string>
     <string name="NoPhotos">No photos yet</string>
     <string name="PleaseDownload">Please download media first</string>
-    <!--privacy settings-->
+    <!-- privacy settings -->
     <string name="PrivacySettings">Privacy and Security</string>
     <string name="PrivacyTitle">Privacy</string>
     <string name="PrivacyLastSeen">Last Seen</string>
@@ -530,22 +532,31 @@
     <string name="formatterDay24H">HH:mm</string>
     <string name="formatterDay12H">h:mm a</string>
     <string name="formatDateAtTime">%1$s at %2$s</string>
-    <!--theme-->
-    <string name="usingTheme">사용중인 테마입니다.</string>
+    <!-- theme -->
+    <string name="usingTheme">The theme you are using</string>
     <!-- Don't change this! Not for localization! -->
     <string name="CacheTag">CACHE_TAG</string>
     <string name="title_activity_magic_app_restart">MagicAppRestart</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-
     <string name="recommend_to_delete_origianl_telegram">It is highly recommended to delete the original telegram app. Would you like to delete it?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
 
-
-    <!--default emoticon-->
+    <!-- default emoticon -->
     <string name="col">4</string>
     <string name="row">4</string>
     <string name="total">16</string>
+    <string name="title_activity_lock">LockActivity</string>
+
+    <!-- default lock -->
+    <string name="use_password_cannot_popup">*If you use the password lock, you can\'t use popup notification</string>
+    <string name="password">PASSWORD</string>
+    <string name="input_password">Please enter your password</string>
+    <string name="incorrect_password">incorrect password</string>
+    <string name="input_password_to_confirm">Please enter your password to confirm</string>
+    <string name="title_activity_lock_setting">LockSettingActivity</string>
+    <string name="title_activity_lock_change_password">LockChangePasswordActivity</string>
+    <string name="input_password_again">Please enter your password again</string>
 
 </resources>

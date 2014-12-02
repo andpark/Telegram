@@ -235,6 +235,7 @@ public class MessagesActivity extends BaseFragment implements NotificationCenter
             searchWas = false;
 
             fragmentView = inflater.inflate(R.layout.messages_list, container, false);
+            themeManager.setBackgroundDrawable(fragmentView, themeManager.getDrawable("bg_msglistcontainer", false));
 
             dialogsAdapter = new DialogsAdapter(getParentActivity(), serverOnly);
             if (AndroidUtilities.isTablet() && openedDialogId != 0) {

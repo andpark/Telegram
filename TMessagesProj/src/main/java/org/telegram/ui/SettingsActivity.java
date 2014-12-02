@@ -17,6 +17,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Spannable;
@@ -37,6 +38,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.teamjihu.LockManager;
 import com.teamjihu.ThemeManager;
 
 import org.telegram.PhoneFormat.PhoneFormat;
@@ -126,6 +128,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
     private int contactsSortRow;
     private int selectThemeRow;
     private int manageEmoticonRow;
+    private int lockRow;
     private int rowCount;
 
     private final static int edit_name = 1;
@@ -219,6 +222,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
         selectThemeRow = rowCount++;
         manageEmoticonRow = rowCount++;
         notificationRow = rowCount++;
+        lockRow = rowCount++;
         privacyRow = rowCount++;
         backgroundRow = rowCount++;
         languageRow = rowCount++;
@@ -235,7 +239,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
         sendByEnterRow = rowCount++;
         supportSectionRow = rowCount++;
         supportSectionRow2 = rowCount++;
-        askQuestionRow = rowCount++;
+        /*askQuestionRow = rowCount++;*/
         telegramFaqRow = rowCount++;
         if (BuildVars.DEBUG_VERSION) {
             sendLogsRow = rowCount++;
@@ -269,8 +273,10 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
     public View createView(LayoutInflater inflater, ViewGroup container) {
         if (fragmentView == null) {
             themeManager = new ThemeManager(getParentActivity());
-            actionBar.setBackgroundColor(AvatarDrawable.getProfileBackColorForId(5));
-            actionBar.setItemsBackground(AvatarDrawable.getButtonColorForId(5));
+            //actionBar.setBackgroundColor(AvatarDrawable.getProfileBackColorForId(5));
+            //themeManager.setBackgroundDrawable(actionBar, themeManager.getDrawable("bg_actionBar", false));
+            //actionBar.setItemsBackground(AvatarDrawable.getButtonColorForId(5));
+            //actionBar.setItemsBackground("bar_selector");
             actionBar.setBackButtonDrawable(themeManager.getDrawable("ic_ab_back", false));
             actionBar.setExtraHeight(AndroidUtilities.dp(88), false);
             if (AndroidUtilities.isTablet()) {
@@ -311,7 +317,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                 }
             });
             ActionBarMenu menu = actionBar.createMenu();
-            ActionBarMenuItem item = menu.addItem(0, R.drawable.ic_ab_other);
+            ActionBarMenuItem item = menu.addItem(0, themeManager.getDrawable("ic_ab_other", false));
             item.addSubItem(edit_name, LocaleController.getString("EditName", R.string.EditName), 0);
             item.addSubItem(logout, LocaleController.getString("LogOut", R.string.LogOut), 0);
 
@@ -344,7 +350,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
             });
 
             nameTextView = new TextView(getParentActivity());
-            nameTextView.setTextColor(0xffffffff);
+            nameTextView.setTextColor(themeManager.getColor("title"));
             nameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
             nameTextView.setLines(1);
             nameTextView.setMaxLines(1);
@@ -363,7 +369,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
             nameTextView.setLayoutParams(layoutParams);
 
             onlineTextView = new TextView(getParentActivity());
-            onlineTextView.setTextColor(AvatarDrawable.getProfileTextColorForId(5));
+            onlineTextView.setTextColor(themeManager.getColor("subtitle"));
             onlineTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
             onlineTextView.setLines(1);
             onlineTextView.setMaxLines(1);
@@ -479,6 +485,11 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                         }
                     } else if (i == privacyRow) {
                         presentFragment(new PrivacySettingsActivity());
+                    } else if (i == lockRow) {
+                        if ( LockManager.isLocked() )
+                            presentFragment(new LockActivity(true));
+                        else
+                            presentFragment(new LockSettingActivity());
                     } else if (i == languageRow) {
                         presentFragment(new LanguageSelectActivity());
                     } else if (i == switchBackendButtonRow) {
@@ -511,7 +522,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                         }
                         AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity());
                         builder.setTitle(LocaleController.getString("SortBy", R.string.SortBy));
-                        builder.setItems(new CharSequence[] {
+                        builder.setItems(new CharSequence[]{
                                 LocaleController.getString("Default", R.string.Default),
                                 LocaleController.getString("SortFirstName", R.string.SortFirstName),
                                 LocaleController.getString("SortLastName", R.string.SortLastName)
@@ -953,7 +964,11 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
             photoBig = user.photo.photo_big;
         }
         AvatarDrawable avatarDrawable = new AvatarDrawable(user, true);
-        avatarDrawable.setColor(0xff5c98cd);
+        Drawable bg = themeManager.getDrawable("bg_pressed_actionbar_btn", true);
+        if ( bg == null )
+            avatarDrawable.setColor(0xff5c98cd);
+        else
+            avatarDrawable.setDrawable(bg);
         avatarImage.setImage(photo, "50_50", avatarDrawable);
         avatarImage.imageReceiver.setVisible(!PhotoViewer.getInstance().isShowingImage(photoBig), false);
 
@@ -1005,7 +1020,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                     /*i == askQuestionRow ||*/ i == sendLogsRow || i == sendByEnterRow || i == privacyRow || i == wifiDownloadRow ||
                     i == mobileDownloadRow || i == clearLogsRow || i == roamingDownloadRow || i == languageRow || i == usernameRow ||
                     i == switchBackendButtonRow || i == telegramFaqRow || i == contactsSortRow || i == contactsReimportRow || i == saveToGalleryRow || i == selectThemeRow ||
-                    i == manageEmoticonRow;
+                    i == manageEmoticonRow || i == lockRow;
         }
 
         @Override
@@ -1062,6 +1077,11 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                     textCell.setTextAndValue(LocaleController.getString("TextSize", R.string.TextSize), String.format("%d", size), true);
                 } else if (i == languageRow) {
                     textCell.setTextAndValue(LocaleController.getString("Language", R.string.Language), LocaleController.getCurrentLanguageName(), true);
+                } else if(i == selectThemeRow) {
+                    textCell.setTextAndValue(LocaleController.getString("SelectTheme", R.string.SelectTheme), themeManager.getCurrentThemeName(), true);
+                } else if(i == lockRow) {
+                    String onoff = (LockManager.isLocked()) ? "ON" : "OFF";
+                    textCell.setTextAndValue(LocaleController.getString("PasswordLock", R.string.PasswordLock), onoff, true);
                 } else if (i == contactsSortRow) {
                     String value;
                     SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Activity.MODE_PRIVATE);
@@ -1144,7 +1164,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                 }
                 TextDetailSettingsCell textCell = (TextDetailSettingsCell) view;
 
-                if (i == mobileDownloadRow || i == wifiDownloadRow || i == roamingDownloadRow) {
+                if (i == mobileDownloadRow || i == wifiDownloadRow || i == roamingDownloadRow ) {
                     int mask = 0;
                     String value;
                     String text = "";
@@ -1155,11 +1175,6 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                     } else if (i == wifiDownloadRow) {
                         value = LocaleController.getString("WhenConnectedOnWiFi", R.string.WhenConnectedOnWiFi);
                         mask = MediaController.getInstance().wifiDownloadMask;
-                    } else if(i == selectThemeRow) {
-                        //textView.setText();
-                        text = LocaleController.getString("SelectTheme", R.string.SelectTheme);
-                        //divider.setVisibility(View.VISIBLE);
-                        value = themeManager.getCurrentThemeName();
                     } else {
                         value = LocaleController.getString("WhenRoaming", R.string.WhenRoaming);
                         mask = MediaController.getInstance().roamingDownloadMask;
@@ -1220,11 +1235,13 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                 return 1;
             } else if (i == enableAnimationsRow || i == sendByEnterRow || i == saveToGalleryRow) {
                 return 3;
-            } else if (i == notificationRow || i == backgroundRow /*|| i == askQuestionRow*/ || i == sendLogsRow || i == privacyRow || i == clearLogsRow || i == switchBackendButtonRow || i == telegramFaqRow || i == contactsReimportRow || i == textSizeRow || i == languageRow || i == contactsSortRow) {
+            } else if (i == notificationRow || i == backgroundRow /*|| i == askQuestionRow*/ || i == sendLogsRow || i == privacyRow || i == clearLogsRow ||
+                    i == switchBackendButtonRow || i == telegramFaqRow || i == contactsReimportRow || i == textSizeRow || i == languageRow ||
+                    i == contactsSortRow || i == selectThemeRow || i == lockRow) {
                 return 2;
             } else if (i == versionRow) {
                 return 5;
-            } else if (i == wifiDownloadRow || i == mobileDownloadRow || i == roamingDownloadRow || i == numberRow || i == usernameRow || i == selectThemeRow) {
+            } else if (i == wifiDownloadRow || i == mobileDownloadRow || i == roamingDownloadRow || i == numberRow || i == usernameRow) {
                 return 6;
             } else if (i == settingsSectionRow2 || i == messagesSectionRow2 || i == supportSectionRow2 || i == numberSectionRow || i == mediaDownloadSection2) {
                 return 4;

@@ -16,7 +16,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.graphics.drawable.Drawable;
 
 import com.teamjihu.ThemeManager;
 
@@ -55,7 +54,10 @@ public class ActionBarMenu extends LinearLayout {
         addView(view);
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams)view.getLayoutParams();
         layoutParams.height = FrameLayout.LayoutParams.FILL_PARENT;
-        view.setBackgroundResource(parentActionBar.itemsBackgroundResourceId);
+        if ( parentActionBar.itemsBackgroundResourceId == -1 )
+            themeManager.setBackgroundDrawable(view, themeManager.getDrawable(parentActionBar.itemsBackgroundStr, false));
+        else
+            view.setBackgroundResource(parentActionBar.itemsBackgroundResourceId);
         view.setLayoutParams(layoutParams);
         view.setOnClickListener(new OnClickListener() {
             @Override
@@ -67,23 +69,68 @@ public class ActionBarMenu extends LinearLayout {
     }
 
     public ActionBarMenuItem addItem(int id, Drawable drawable) {
-        return addItem(id, 0, parentActionBar.itemsBackgroundResourceId, drawable, AndroidUtilities.dp(48));
+        if ( parentActionBar.itemsBackgroundResourceId == -1 )
+            return addItem(id, 0, parentActionBar.itemsBackgroundStr, drawable, AndroidUtilities.dp(48));
+        else
+            return addItem(id, 0, parentActionBar.itemsBackgroundResourceId, drawable, AndroidUtilities.dp(48));
     }
 
     public ActionBarMenuItem addItem(int id, int icon) {
-        return addItem(id, icon, parentActionBar.itemsBackgroundResourceId);
+        if ( parentActionBar.itemsBackgroundResourceId == -1 )
+            return addItem(id, icon, parentActionBar.itemsBackgroundStr);
+        else
+            return addItem(id, icon, parentActionBar.itemsBackgroundResourceId);
     }
 
     public ActionBarMenuItem addItem(int id, int icon, int backgroundResource) {
         return addItem(id, icon, backgroundResource, null, AndroidUtilities.dp(48));
     }
 
+    public ActionBarMenuItem addItem(int id, int icon, String backgroundStr) {
+        return addItem(id, icon, backgroundStr, null, AndroidUtilities.dp(48));
+    }
+
     public ActionBarMenuItem addItemWithWidth(int id, int icon, int width) {
-        return addItem(id, icon, parentActionBar.itemsBackgroundResourceId, null, width);
+        if ( parentActionBar.itemsBackgroundResourceId == -1 )
+            return addItem(id, icon, parentActionBar.itemsBackgroundStr, null, width);
+        else
+            return addItem(id, icon, parentActionBar.itemsBackgroundResourceId, null, width);
     }
 
     public ActionBarMenuItem addItem(int id, int icon, int backgroundResource, Drawable drawable, int width) {
         ActionBarMenuItem menuItem = new ActionBarMenuItem(getContext(), this, backgroundResource);
+        menuItem.setTag(id);
+        menuItem.setScaleType(ImageView.ScaleType.CENTER);
+        if (drawable != null) {
+            menuItem.setImageDrawable(drawable);
+        } else {
+            menuItem.setImageResource(icon);
+        }
+        addView(menuItem);
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams)menuItem.getLayoutParams();
+        layoutParams.height = FrameLayout.LayoutParams.MATCH_PARENT;
+        layoutParams.width = width;
+        menuItem.setLayoutParams(layoutParams);
+        menuItem.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ActionBarMenuItem item = (ActionBarMenuItem)view;
+                if (item.hasSubMenu()) {
+                    if (parentActionBar.actionBarMenuOnItemClick.canOpenMenu()) {
+                        item.toggleSubMenu();
+                    }
+                } else if (item.isSearchField()) {
+                    parentActionBar.onSearchFieldVisibilityChanged(item.toggleSearch());
+                } else {
+                    onItemClick((Integer)view.getTag());
+                }
+            }
+        });
+        return menuItem;
+    }
+
+    public ActionBarMenuItem addItem(int id, int icon, String backgroundStr, Drawable drawable, int width) {
+        ActionBarMenuItem menuItem = new ActionBarMenuItem(getContext(), this, backgroundStr);
         menuItem.setTag(id);
         menuItem.setScaleType(ImageView.ScaleType.CENTER);
         if (drawable != null) {

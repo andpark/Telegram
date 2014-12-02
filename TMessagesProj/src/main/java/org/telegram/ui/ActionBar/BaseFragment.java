@@ -21,7 +21,6 @@ import com.teamjihu.ThemeManager;
 
 import org.telegram.messenger.ConnectionsManager;
 import org.telegram.messenger.FileLog;
-import org.telegram.messenger.phonethemeshop.R;
 
 public class BaseFragment {
     private boolean isFinished = false;
@@ -82,8 +81,7 @@ public class BaseFragment {
 
                 actionBar = new ActionBar(parentLayout.getContext());
                 actionBar.parentFragment = this;
-                actionBar.setBackgroundResource(R.color.header);
-                actionBar.setItemsBackground(R.drawable.bar_selector);
+                actionBar.setItemsBackground("bar_selector");
                 themeManager.setBackgroundDrawable(actionBar, themeManager.getDrawable("bg_actionbar", false));
             }
         }
@@ -120,7 +118,6 @@ public class BaseFragment {
     }
 
     public void onResume() {
-
     }
 
     public void onPause() {

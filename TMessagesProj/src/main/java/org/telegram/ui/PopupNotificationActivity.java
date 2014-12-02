@@ -203,9 +203,10 @@ public class PopupNotificationActivity extends Activity implements NotificationC
 
         actionBar = new ActionBar(this);
         actionBar.setOccupyStatusBar(false);
+        //actionBar.setBackgroundResource(R.color.header);
+        themeManager.setBackgroundDrawable(actionBar, themeManager.getDrawable("bg_actionbar", false));
+        actionBar.setItemsBackground("bar_selector");
         actionBar.setBackButtonDrawable(themeManager.getDrawable("ic_ab_back", false));
-        actionBar.setBackgroundResource(R.color.header);
-        actionBar.setItemsBackground(R.drawable.bar_selector);
         popupContainer.addView(actionBar);
         ViewGroup.LayoutParams layoutParams = actionBar.getLayoutParams();
         layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -218,6 +219,7 @@ public class PopupNotificationActivity extends Activity implements NotificationC
 
         View view = menu.addItemResource(2, R.layout.popup_count_layout);
         countText = (TextView) view.findViewById(R.id.count_text);
+        countText.setTextColor(themeManager.getColor("subtitle"));
 
         avatarContainer = new FrameLayoutFixed(this);
         avatarContainer.setBackgroundResource(R.drawable.bar_selector);
@@ -242,7 +244,7 @@ public class PopupNotificationActivity extends Activity implements NotificationC
         avatarImageView.setLayoutParams(layoutParams2);
 
         nameTextView = new TextView(this);
-        nameTextView.setTextColor(0xffffffff);
+        nameTextView.setTextColor(themeManager.getColor("title"));
         nameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
         nameTextView.setLines(1);
         nameTextView.setMaxLines(1);
@@ -260,7 +262,7 @@ public class PopupNotificationActivity extends Activity implements NotificationC
         nameTextView.setLayoutParams(layoutParams2);
 
         onlineTextView = new TextView(this);
-        onlineTextView.setTextColor(0xffd7e8f7);
+        onlineTextView.setTextColor(themeManager.getColor("subtitle"));
         onlineTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
         onlineTextView.setLines(1);
         onlineTextView.setMaxLines(1);

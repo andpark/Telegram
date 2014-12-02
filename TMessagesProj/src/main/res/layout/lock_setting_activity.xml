@@ -1,0 +1,66 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="org.telegram.ui.LockSettingActivity">
+
+    <FrameLayout
+        android:id="@+id/turnOnLockRow"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/list_selector">
+
+        <TextView
+            android:id="@+id/turnOnLock"
+            android:textSize="17dp"
+            android:textColor="#333333"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="70dp"
+            android:gravity="center_vertical"
+            android:layout_gravity="top"/>
+
+        <View
+            android:background="@color/divider"
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:layout_gravity="bottom"/>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/changeLockPasswordRow"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/list_selector">
+
+        <TextView
+            android:id="@+id/changeLockPassword"
+            android:textSize="17dp"
+            android:textColor="#333333"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="70dp"
+            android:gravity="center_vertical"
+            android:layout_gravity="top"/>
+
+        <View
+            android:background="@color/divider"
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:layout_gravity="bottom"/>
+
+    </FrameLayout>
+    <TextView
+        android:id="@+id/txtLockSettingComment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:textSize="12dp"
+        android:textColor="@color/gray"/>
+
+</LinearLayout>

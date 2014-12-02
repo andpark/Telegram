@@ -27,6 +27,7 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.teamjihu.LockManager;
 import com.teamjihu.ThemeManager;
 
 import org.telegram.android.AndroidUtilities;
@@ -405,12 +406,19 @@ public class NotificationsSettingsActivity extends BaseFragment implements Notif
                     } else if (i == messagePopupNotificationRow || i == groupPopupNotificationRow) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity());
                         builder.setTitle(LocaleController.getString("PopupNotification", R.string.PopupNotification));
-                        builder.setItems(new CharSequence[] {
-                                LocaleController.getString("NoPopup", R.string.NoPopup),
-                                LocaleController.getString("OnlyWhenScreenOn", R.string.OnlyWhenScreenOn),
-                                LocaleController.getString("OnlyWhenScreenOff", R.string.OnlyWhenScreenOff),
-                                LocaleController.getString("AlwaysShowPopup", R.string.AlwaysShowPopup)
-                        }, new DialogInterface.OnClickListener() {
+                        CharSequence[] popupMenus;
+                        if (LockManager.isLocked())
+                            popupMenus = new CharSequence[]{
+                                    LocaleController.getString("NoPopup", R.string.NoPopup)
+                            };
+                        else
+                            popupMenus = new CharSequence[]{
+                                    LocaleController.getString("NoPopup", R.string.NoPopup),
+                                    LocaleController.getString("OnlyWhenScreenOn", R.string.OnlyWhenScreenOn),
+                                    LocaleController.getString("OnlyWhenScreenOff", R.string.OnlyWhenScreenOff),
+                                    LocaleController.getString("AlwaysShowPopup", R.string.AlwaysShowPopup)
+                            };
+                        builder.setItems(popupMenus, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("Notifications", Activity.MODE_PRIVATE);

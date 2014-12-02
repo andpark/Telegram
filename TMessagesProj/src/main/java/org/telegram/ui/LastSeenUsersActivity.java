@@ -23,6 +23,8 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.teamjihu.ThemeManager;
+
 import org.telegram.PhoneFormat.PhoneFormat;
 import org.telegram.android.LocaleController;
 import org.telegram.android.MessagesController;
@@ -55,6 +57,8 @@ public class LastSeenUsersActivity extends BaseFragment implements NotificationC
 
     private final static int block_user = 1;
 
+    private ThemeManager themeManager;
+
     public LastSeenUsersActivity(ArrayList<Integer> users, boolean always) {
         super();
         uidArray = users;
@@ -77,7 +81,8 @@ public class LastSeenUsersActivity extends BaseFragment implements NotificationC
     @Override
     public View createView(LayoutInflater inflater, ViewGroup container) {
         if (fragmentView == null) {
-            actionBar.setBackButtonImage(R.drawable.ic_ab_back);
+            themeManager = new ThemeManager(getParentActivity());
+            actionBar.setBackButtonDrawable(themeManager.getDrawable("ic_ab_back", false));
             actionBar.setAllowOverlayTitle(true);
             if (isAlwaysShare) {
                 actionBar.setTitle(LocaleController.getString("AlwaysShareWithTitle", R.string.AlwaysShareWithTitle));

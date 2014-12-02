@@ -29,8 +29,8 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.teamjihu.ThemeManager;
@@ -68,7 +68,7 @@ public class ChatActivityEnterView implements NotificationCenter.NotificationCen
     private ImageView emojiButton;
     private EmojiView emojiView;
     private TextView recordTimeText;
-    private ImageButton zzalButton;
+    private ImageButton zzalButton = null;
     private ImageButton audioSendButton;
     private View recordPanel;
     private View slideText;
@@ -144,8 +144,8 @@ public class ChatActivityEnterView implements NotificationCenter.NotificationCen
         sizeNotifierRelativeLayout = (SizeNotifierRelativeLayout) containerView.findViewById(R.id.chat_layout);
         sizeNotifierRelativeLayout.delegate = this;
 
-//        RelativeLayout chatComposePanel = (RelativeLayout)containerView.findViewById(R.id.chat_compose_panel);
-//        themeManager.setBackgroundDrawable(chatComposePanel, themeManager.getDrawable("compose_panel", false));
+        LinearLayout chatComposePanel = (LinearLayout)containerView.findViewById(R.id.chat_compose_panel);
+        themeManager.setBackgroundDrawable(chatComposePanel, themeManager.getDrawable("compose_panel", false));
 
         messsageEditText = (EditText) containerView.findViewById(R.id.chat_text_edit);
         messsageEditText.setHint(LocaleController.getString("TypeMessage", R.string.TypeMessage));
@@ -159,6 +159,10 @@ public class ChatActivityEnterView implements NotificationCenter.NotificationCen
         }
 
         if ( chatActivity != null ) {
+            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) messsageEditText.getLayoutParams();
+            layoutParams.rightMargin = AndroidUtilities.dp(50);
+            messsageEditText.setLayoutParams(layoutParams);
+
             zzalButton = (ImageButton) containerView.findViewById(R.id.chat_zzal_button);
             zzalButton.setImageDrawable(themeManager.getDrawable("ic_zzal", false));
 
@@ -427,7 +431,10 @@ public class ChatActivityEnterView implements NotificationCenter.NotificationCen
 
                         if (messsageEditText != null) {
                             FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) messsageEditText.getLayoutParams();
-                            layoutParams.rightMargin = AndroidUtilities.dp(0);
+                            if ( zzalButton == null )
+                                layoutParams.rightMargin = AndroidUtilities.dp(0);
+                            else
+                                layoutParams.rightMargin = AndroidUtilities.dp(50);
                             messsageEditText.setLayoutParams(layoutParams);
                         }
 
@@ -476,7 +483,10 @@ public class ChatActivityEnterView implements NotificationCenter.NotificationCen
                         attachButton.clearAnimation();
 
                         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) messsageEditText.getLayoutParams();
-                        layoutParams.rightMargin = AndroidUtilities.dp(0);
+                        if ( zzalButton == null )
+                            layoutParams.rightMargin = AndroidUtilities.dp(0);
+                        else
+                            layoutParams.rightMargin = AndroidUtilities.dp(50);
                         messsageEditText.setLayoutParams(layoutParams);
                     }
                 }

@@ -200,6 +200,8 @@ public class ActionBarLayout extends FrameLayout {
         }
         if (!fragmentsStack.isEmpty()) {
             BaseFragment lastFragment = fragmentsStack.get(fragmentsStack.size() - 1);
+            //if ( lastFragment.getClass().getSimpleName().trim().equals("LockActivity") )
+            //    closeLastFragment(false);
             lastFragment.onResume();
         }
     }
@@ -386,6 +388,10 @@ public class ActionBarLayout extends FrameLayout {
                         setInnerTranslationX(dx);
                     }
                 } else if (ev != null && ev.getPointerId(0) == startedTrackingPointerId && (ev.getAction() == MotionEvent.ACTION_CANCEL || ev.getAction() == MotionEvent.ACTION_UP || ev.getAction() == MotionEvent.ACTION_POINTER_UP)) {
+                    BaseFragment currentFragment = fragmentsStack.get(fragmentsStack.size() - 1);
+                    if (!currentFragment.swipeBackEnabled) {
+                        return false;
+                    }
                     if (velocityTracker == null) {
                         velocityTracker = VelocityTracker.obtain();
                     }
@@ -540,6 +546,10 @@ public class ActionBarLayout extends FrameLayout {
 
     public boolean presentFragment(BaseFragment fragment, boolean removeLast) {
         return presentFragment(fragment, removeLast, false, true);
+    }
+
+    public boolean presentFragment(BaseFragment fragment, boolean removeLast, boolean forceWithoutAnimation ){
+        return presentFragment(fragment, removeLast, forceWithoutAnimation, true);
     }
 
     public boolean presentFragment(final BaseFragment fragment, final boolean removeLast, boolean forceWithoutAnimation, boolean check) {

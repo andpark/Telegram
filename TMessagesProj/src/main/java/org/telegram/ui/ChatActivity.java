@@ -17,9 +17,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
 import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -67,6 +65,10 @@ import org.telegram.messenger.TLRPC;
 import org.telegram.messenger.UserConfig;
 import org.telegram.messenger.Utilities;
 import org.telegram.messenger.phonethemeshop.R;
+import org.telegram.ui.ActionBar.ActionBar;
+import org.telegram.ui.ActionBar.ActionBarMenu;
+import org.telegram.ui.ActionBar.ActionBarMenuItem;
+import org.telegram.ui.ActionBar.BaseFragment;
 import org.telegram.ui.Adapters.BaseFragmentAdapter;
 import org.telegram.ui.AnimationCompat.AnimatorListenerAdapterProxy;
 import org.telegram.ui.AnimationCompat.AnimatorSetProxy;
@@ -78,11 +80,7 @@ import org.telegram.ui.Cells.ChatBaseCell;
 import org.telegram.ui.Cells.ChatContactCell;
 import org.telegram.ui.Cells.ChatMediaCell;
 import org.telegram.ui.Cells.ChatMessageCell;
-import org.telegram.ui.ActionBar.ActionBar;
-import org.telegram.ui.ActionBar.ActionBarMenu;
-import org.telegram.ui.ActionBar.ActionBarMenuItem;
 import org.telegram.ui.Views.AvatarDrawable;
-import org.telegram.ui.ActionBar.BaseFragment;
 import org.telegram.ui.Views.BackupImageView;
 import org.telegram.ui.Views.ChatActivityEnterView;
 import org.telegram.ui.Views.FrameLayoutFixed;
@@ -114,8 +112,6 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     private ZzalListView zzalListView;
     private View timeItem2;
     private TimerDrawable timerDrawable;
-    private ActionBarMenuItem menuItem;
-    private ActionBarMenuItem attachItem;
     private ActionBarMenuItem headerItem;
     private TextView addContactItem;
     private LayoutListView chatListView;
@@ -379,9 +375,6 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
 
             @Override
             public void onAttachButtonHidden() {
-                if (attachItem != null) {
-                    attachItem.setVisibility(View.VISIBLE);
-                }
                 if (headerItem != null) {
                     headerItem.setVisibility(View.INVISIBLE);
                 }
@@ -389,9 +382,6 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
 
             @Override
             public void onAttachButtonShow() {
-                if (attachItem != null) {
-                    attachItem.setVisibility(View.INVISIBLE);
-                }
                 if (headerItem != null) {
                     headerItem.setVisibility(View.VISIBLE);
                 }
@@ -759,7 +749,8 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             });
 
             avatarContainer = new FrameLayoutFixed(getParentActivity());
-            avatarContainer.setBackgroundResource(R.drawable.bar_selector);
+            //avatarContainer.setBackgroundResource(R.drawable.bar_selector);
+            themeManager.setBackgroundDrawable(avatarContainer, themeManager.getDrawable("bar_selector", false));
             avatarContainer.setPadding(AndroidUtilities.dp(8), 0, AndroidUtilities.dp(8), 0);
             actionBar.addView(avatarContainer);
             FrameLayout.LayoutParams layoutParams2 = (FrameLayout.LayoutParams) avatarContainer.getLayoutParams();
@@ -838,7 +829,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             }
 
             nameTextView = new TextView(getParentActivity());
-            nameTextView.setTextColor(0xffffffff);
+            nameTextView.setTextColor(themeManager.getColor("title"));
             nameTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
             nameTextView.setLines(1);
             nameTextView.setMaxLines(1);
@@ -856,7 +847,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             nameTextView.setLayoutParams(layoutParams2);
 
             onlineTextView = new TextView(getParentActivity());
-            onlineTextView.setTextColor(0xffd7e8f7);
+            onlineTextView.setTextColor(themeManager.getColor("subtitle"));
             onlineTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
             onlineTextView.setLines(1);
             onlineTextView.setMaxLines(1);
@@ -882,7 +873,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
 
             ActionBarMenu menu = actionBar.createMenu();
 
-            headerItem = menu.addItem(0, R.drawable.ic_ab_other);
+            headerItem = menu.addItem(0, themeManager.getDrawable("ic_ab_other", false));
             if (currentUser != null) {
                 addContactItem = headerItem.addSubItem(share_contact, "", 0);
             }
@@ -899,6 +890,10 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) headerItem.getLayoutParams();
             layoutParams.rightMargin = AndroidUtilities.dp(-48);
             headerItem.setLayoutParams(layoutParams);
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN)
+                headerItem.setImageAlpha(0);
+            else
+                headerItem.setAlpha(0);
             
             SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("Notifications", Activity.MODE_PRIVATE);
             int noti = preferences.getInt("notify2_" + dialog_id, 1);
@@ -907,35 +902,13 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             else
                 menu.addItem(noti_toggle, themeManager.getDrawable("ic_noti_on", false));
 
-            //ActionBarMenuItem item = menu.addItem(chat_menu_attach, R.drawable.ic_ab_attach);
             ActionBarMenuItem item = menu.addItem(1, themeManager.getDrawable("ic_ab_attach", false));
-//            item.addSubItem(attach_photo, LocaleController.getString("ChatTakePhoto", R.string.ChatTakePhoto), R.drawable.ic_attach_photo);
-//            item.addSubItem(attach_gallery, LocaleController.getString("ChatGallery", R.string.ChatGallery), R.drawable.ic_attach_gallery);
-//            item.addSubItem(attach_video, LocaleController.getString("ChatVideo", R.string.ChatVideo), R.drawable.ic_attach_video);
-//            item.addSubItem(attach_document, LocaleController.getString("ChatDocument", R.string.ChatDocument), R.drawable.ic_ab_doc);
-//            item.addSubItem(attach_location, LocaleController.getString("ChatLocation", R.string.ChatLocation), R.drawable.ic_attach_location);
             item.addSubItem(attach_photo, LocaleController.getString("ChatTakePhoto", R.string.ChatTakePhoto), themeManager.getDrawable("ic_attach_photo", false));
             item.addSubItem(attach_gallery, LocaleController.getString("ChatGallery", R.string.ChatGallery),themeManager.getDrawable("ic_attach_gallery", false));
             item.addSubItem(attach_video, LocaleController.getString("ChatVideo", R.string.ChatVideo), themeManager.getDrawable("ic_attach_video", false));
             item.addSubItem(attach_document, LocaleController.getString("ChatDocument", R.string.ChatDocument), themeManager.getDrawable("ic_ab_doc", false));
             item.addSubItem(attach_location, LocaleController.getString("ChatLocation", R.string.ChatLocation), themeManager.getDrawable("ic_attach_location", false));
 
-            attachItem = menu.addItem(chat_menu_attach, R.drawable.ic_ab_other);
-            attachItem.addSubItem(attach_photo, LocaleController.getString("ChatTakePhoto", R.string.ChatTakePhoto), R.drawable.ic_attach_photo);
-            attachItem.addSubItem(attach_gallery, LocaleController.getString("ChatGallery", R.string.ChatGallery), R.drawable.ic_attach_gallery);
-            attachItem.addSubItem(attach_video, LocaleController.getString("ChatVideo", R.string.ChatVideo), R.drawable.ic_attach_video);
-            attachItem.addSubItem(attach_document, LocaleController.getString("ChatDocument", R.string.ChatDocument), R.drawable.ic_ab_doc);
-            attachItem.addSubItem(attach_location, LocaleController.getString("ChatLocation", R.string.ChatLocation), R.drawable.ic_attach_location);
-            attachItem.setVisibility(View.INVISIBLE);
-
-            menuItem = menu.addItem(chat_menu_attach, R.drawable.ic_ab_attach);
-            menuItem.addSubItem(attach_photo, LocaleController.getString("ChatTakePhoto", R.string.ChatTakePhoto), R.drawable.ic_attach_photo);
-            menuItem.addSubItem(attach_gallery, LocaleController.getString("ChatGallery", R.string.ChatGallery), R.drawable.ic_attach_gallery);
-            menuItem.addSubItem(attach_video, LocaleController.getString("ChatVideo", R.string.ChatVideo), R.drawable.ic_attach_video);
-            menuItem.addSubItem(attach_document, LocaleController.getString("ChatDocument", R.string.ChatDocument), R.drawable.ic_ab_doc);
-            menuItem.addSubItem(attach_location, LocaleController.getString("ChatLocation", R.string.ChatLocation), R.drawable.ic_attach_location);
-            menuItem.setShowFromBottom(true);
-            menuItem.setBackgroundDrawable(null);
 
             actionModeViews.clear();
 
@@ -1010,10 +983,10 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             } else {
                 chatListView.setCacheColorHint(0);
                 try {
-                    if (ApplicationLoader.cachedWallpaper != null) {
+                    if ( false ) { //ApplicationLoader.cachedWallpaper != null) {
                         isCustomTheme = selectedBackground != 1000001;
                         ((SizeNotifierRelativeLayout) contentView).setBackgroundImage(ApplicationLoader.cachedWallpaper);
-                    } else {
+                    } else {    //always get background_hd, not use ApplicationLoader.cachedWallpaper
                         if (selectedBackground == 1000001) {
                         //((SizeNotifierRelativeLayout) contentView).setBackgroundImage(R.drawable.background_hd);
                             ((SizeNotifierRelativeLayout) contentView).setBackgroundImage(themeManager.getDrawable("background_hd", false));
@@ -1278,7 +1251,6 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
 
             chatActivityEnterView.setContainerView(getParentActivity(), fragmentView, ChatActivity.this);
             zzalListView.setContainerView(getParentActivity(), fragmentView, ChatActivity.this);
-            chatActivityEnterView.addToAttachLayout(menuItem);
 
             if (currentEncryptedChat != null) {
                 emptyView.setVisibility(View.INVISIBLE);
@@ -1445,9 +1417,6 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 currentChat != null && (currentChat instanceof TLRPC.TL_chatForbidden || currentChat.left) ||
                 currentUser != null && (currentUser instanceof TLRPC.TL_userDeleted || currentUser instanceof TLRPC.TL_userEmpty)) {
 
-            if (menuItem != null) {
-                menuItem.setVisibility(View.GONE);
-            }
             if (timeItem != null) {
                 timeItem.setVisibility(View.GONE);
             }
@@ -1455,9 +1424,6 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 timeItem2.setVisibility(View.GONE);
             }
         } else {
-            if (menuItem != null) {
-                menuItem.setVisibility(View.VISIBLE);
-            }
             if (timeItem != null) {
                 timeItem.setVisibility(View.VISIBLE);
             }
@@ -1705,6 +1671,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 if (lastStatus == null || lastPrintString != null || lastStatus != null && !lastStatus.equals(newStatus)) {
                     lastStatus = newStatus;
                     onlineTextView.setText(newStatus);
+                    onlineTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10);
                 }
             }
             lastPrintString = null;
